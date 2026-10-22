@@ -524,26 +524,10 @@
     var pos = new Float32Array(N * 3), prv = new Float32Array(N * 3), nrm = new Float32Array(N * 3);
     var uv = new Float32Array(N * 2);
     var pin = new Uint8Array(N);
-    var lay = new Int8Array(N);   // +1 Vorderbahn, -1 Rückbahn, 0 Streifen über der Oberkante
     var anc = new Float32Array(N * 3);
     var local = new Float32Array(N * 3);
-    var top = PH + 0.022, half = HD + 0.02, CAP = cfg.cap;
+    var top = PH + 0.022, half = HD + 0.02;
     var i, j, k;
-    // Punkt local[o..o+2] auf die Handy-Oberfläche im Abstand gap projizieren (SDF-Gradient)
-    function onSurface(o, gap) {
-      var x = local[o], y = local[o + 1], z = local[o + 2], e = 0.003;
-      for (var it = 0; it < 10; it++) {
-        var d = sdPhone(x, y, z);
-        if (Math.abs(d - gap) < 2e-4) break;
-        var f1 = sdPhone(x + e, y - e, z - e), f2 = sdPhone(x - e, y - e, z + e);
-        var f3 = sdPhone(x - e, y + e, z - e), f4 = sdPhone(x + e, y + e, z + e);
-        var gx = f1 - f2 - f3 + f4, gy = -f1 - f2 + f3 + f4, gz = -f1 + f2 - f3 + f4;
-        var gl = Math.sqrt(gx * gx + gy * gy + gz * gz) || 1;
-        var s = (d - gap) / gl;
-        x -= gx * s; y -= gy * s; z -= gz * s;
-      }
-      local[o] = x; local[o + 1] = y; local[o + 2] = z;
-    }
     for (j = 0; j < ny; j++) {
       var b = (j - jr) * sp;
       for (i = 0; i < nx; i++) {
@@ -555,16 +539,11 @@
         else { z = -half; y = top - (b - half); }
         if (y < 0.012) { var ex = 0.012 - y; y = 0.012; z += z > 0 ? ex : -ex; }
         local[k * 3] = x; local[k * 3 + 1] = y; local[k * 3 + 2] = z;
-        lay[k] = b < -half - 1e-4 ? 1 : b > half + 1e-4 ? -1 : 0;
         uv[k * 2] = i / (nx - 1);
         uv[k * 2 + 1] = j / (ny - 1);
-        // Haube (Chris 2026-10-22: keine Handy-Ecken): über die ganze Oberkante
-        // inkl. runder Ecken und ein Band CAP vorn/hinten fest auf dem Handy;
-        // eine Gitterspalte greift um die Seitenkante (Anker auf die Oberfläche projiziert).
-        if (Math.abs(b) <= half + CAP && Math.abs(a) <= HW + sp * 0.999) {
+        if (Math.abs(b) <= half + 1e-4 && Math.abs(a) <= HW + 0.012) { // auch über die runden Ecken (Chris 2026-10-22: keine Handy-Ecken), sonst Original
           pin[k] = 1;
-          onSurface(k * 3, 0.024);
-          anc[k * 3] = local[k * 3]; anc[k * 3 + 1] = local[k * 3 + 1]; anc[k * 3 + 2] = local[k * 3 + 2];
+          anc[k * 3] = x; anc[k * 3 + 1] = top - 0.004; anc[k * 3 + 2] = z;
         }
       }
     }
@@ -597,7 +576,6 @@
     var index = N > 65535 ? new Uint32Array(idx) : new Uint16Array(idx);
 
     var G = 24, DAMP = 0.982, ITER = cfg.iter, FLOOR = 0.012, MARGIN = 0.02;
-    var LIFT = cfg.lift, PUSH = cfg.push, HX = cfg.hx;
     var M = null, Mi = null;   // Float32-Referenzen auf matrixWorld / Inverse (elements)
     var fwdX = 0, fwdZ = 1;
     var jHem = Math.min(10, jr);
@@ -640,9 +618,9 @@
             wgt *= wgt;
             var cen = 1 - Math.abs(col / (nx - 1) - 0.52) * 1.3;
             if (cen < 0) cen = 0;
-            ay += imp * 78 * LIFT * wgt * (0.35 + cen);
-            ax += imp * 20 * PUSH * wgt * fwdX * cen;
-            az += imp * 20 * PUSH * wgt * fwdZ * cen;
+            ay += imp * 78 * wgt * (0.35 + cen);
+            ax += imp * 20 * wgt * fwdX * cen;
+            az += imp * 20 * wgt * fwdZ * cen;
           }
         }
         pos[o] = x + vx + ax; pos[o + 1] = y + vy + ay; pos[o + 2] = z + vz + az;
@@ -667,7 +645,7 @@
     }
 
     function collide() {
-      var e = 0.003, lim = HD + MARGIN;
+      var e = 0.003;
       for (var n = 0; n < N; n++) {
         if (pin[n]) continue;
         var o = n * 3;
@@ -675,7 +653,6 @@
         var lx = Mi[0] * x + Mi[4] * y + Mi[8] * z + Mi[12];
         var ly = Mi[1] * x + Mi[5] * y + Mi[9] * z + Mi[13];
         var lz = Mi[2] * x + Mi[6] * y + Mi[10] * z + Mi[14];
-        var hit = false;
         if (lx > -HW - 0.06 && lx < HW + 0.06 && ly > -0.05 && ly < PH + 0.07 && lz > -HD - 0.09 && lz < HD + 0.07) {
           var d = sdPhone(lx, ly, lz);
           if (d < MARGIN) {
@@ -685,19 +662,12 @@
             var gl = Math.sqrt(gx * gx + gy * gy + gz * gz) || 1;
             var push = (MARGIN - d) / gl;
             lx += gx * push; ly += gy * push; lz += gz * push;
-            hit = true;
+            x = M[0] * lx + M[4] * ly + M[8] * lz + M[12];
+            y = M[1] * lx + M[5] * ly + M[9] * lz + M[13];
+            z = M[2] * lx + M[6] * ly + M[10] * lz + M[14];
+            pos[o] = x; pos[o + 1] = y; pos[o + 2] = z;
+            prv[o] += (x - prv[o]) * 0.3; prv[o + 1] += (y - prv[o + 1]) * 0.3; prv[o + 2] += (z - prv[o + 2]) * 0.3;
           }
-        }
-        // Vorder-/Rückbahn bleiben vor bzw. hinter ihrer Handy-Ebene: die Bahn
-        // faltet sich an der Seitenkante um, statt nach hinten wegzuklappen.
-        var sd = lay[n];
-        if (sd !== 0 && ly > -0.4 && ly < PH + 0.06 && lx > -HW - HX && lx < HW + HX && (sd > 0 ? lz < lim : lz > -lim)) { lz = sd * lim; hit = true; }
-        if (hit) {
-          x = M[0] * lx + M[4] * ly + M[8] * lz + M[12];
-          y = M[1] * lx + M[5] * ly + M[9] * lz + M[13];
-          z = M[2] * lx + M[6] * ly + M[10] * lz + M[14];
-          pos[o] = x; pos[o + 1] = y; pos[o + 2] = z;
-          prv[o] += (x - prv[o]) * 0.3; prv[o + 1] += (y - prv[o + 1]) * 0.3; prv[o + 2] += (z - prv[o + 2]) * 0.3;
         }
         if (pos[o + 1] < FLOOR) {
           pos[o + 1] = FLOOR;
@@ -758,9 +728,9 @@
     P.x = tr * 0.007 * Math.sin(t * TAU * 21);
     var roll = tr * 0.014 * Math.sin(t * TAU * 17 + 1.3);
     P.y = parab(t, 3.2, 0.42, 0.075) + parab(t, 4.1, 0.64, 0.24);
-    roll += 0.035 * hump(t, 3.2, 3.62) - 0.032 * hump(t, 4.1, 4.74);
+    roll += 0.035 * hump(t, 3.2, 3.62) - 0.05 * hump(t, 4.1, 4.74);
     if (t > 3.62 && t < 4.1) roll += 0.03 * Math.exp(-(t - 3.62) * 5) * Math.sin((t - 3.62) * 14);
-    if (t > 4.74) roll += 0.05 * Math.exp(-(t - 4.74) * 3.4) * Math.sin((t - 4.74) * 12.5);
+    if (t > 4.74) roll += 0.075 * Math.exp(-(t - 4.74) * 3.0) * Math.sin((t - 4.74) * 12.5);
     var push = hump(t, 6.1, 7.3);
     P.roll = roll;
     P.pitch = 0.085 * hump(t, 4.05, 4.9) + 0.07 * push * push;
@@ -833,14 +803,12 @@
       depth: PD - 2 * bevT, bevelEnabled: true, bevelThickness: bevT, bevelSize: bev, bevelSegments: 5, curveSegments: 14
     }));
     bodyGeo.translate(0, 0, -(PD - 2 * bevT) / 2);
-    // Das Handy liegt unter der Decke: dort kommt kaum Licht an. Darum dunkel und
-    // ohne Umgebungsglanz — ein Spalt im Stoff liest sich als Schatten, nicht als Gerät.
-    var frameMat = keep(new THREE.MeshStandardMaterial({ color: 0x1c1830, metalness: 0.6, roughness: 0.55, envMapIntensity: 0.08 }));
-    var glassMat = keep(new THREE.MeshPhysicalMaterial({ color: 0x050509, metalness: 0, roughness: 0.3, clearcoat: 0.2, clearcoatRoughness: 0.4, envMapIntensity: 0.08 }));
+    var frameMat = keep(new THREE.MeshStandardMaterial({ color: 0xb4aecb, metalness: 1, roughness: 0.28 }));
+    var glassMat = keep(new THREE.MeshPhysicalMaterial({ color: 0x050509, metalness: 0, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.05 }));
     body.add(new THREE.Mesh(bodyGeo, [glassMat, frameMat]));
 
     var backGeo = keep(new THREE.ShapeGeometry(rrShape(THREE, -HW + bev + 0.004, bev + 0.004, PW - 2 * bev - 0.008, PH - 2 * bev - 0.008, PRC - bev - 0.004), 12));
-    var backMat = keep(new THREE.MeshPhysicalMaterial({ color: 0x14102a, roughness: 0.6, metalness: 0, envMapIntensity: 0.08 }));
+    var backMat = keep(new THREE.MeshPhysicalMaterial({ color: 0x3c2d68, roughness: 0.45, metalness: 0, clearcoat: 0.5, clearcoatRoughness: 0.35 }));
     var back = new THREE.Mesh(backGeo, backMat);
     back.rotation.y = Math.PI;
     back.position.z = -HD - 0.0008;
@@ -868,14 +836,14 @@
     var plateGeo = keep(new THREE.ExtrudeGeometry(rrShape(THREE, -BMH + 0.006, -BMH + 0.006, 2 * BMH - 0.012, 2 * BMH - 0.012, BMR), {
       depth: 0.008, bevelEnabled: true, bevelThickness: 0.006, bevelSize: 0.006, bevelSegments: 3, curveSegments: 10
     }));
-    var plateMat = keep(new THREE.MeshPhysicalMaterial({ color: 0x14102a, roughness: 0.6, metalness: 0.1, envMapIntensity: 0.08 }));
+    var plateMat = keep(new THREE.MeshPhysicalMaterial({ color: 0x4a3a7c, roughness: 0.25, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.1 }));
     var plate = new THREE.Mesh(plateGeo, plateMat);
     plate.rotation.y = Math.PI;
     plate.position.set(BMX, BMY, -HD - 0.006);
     body.add(plate);
     var ringGeo = keep(new THREE.CylinderGeometry(0.066, 0.066, 0.018, 28));
     var lensGeo = keep(new THREE.CylinderGeometry(0.048, 0.048, 0.022, 28));
-    var lensMat = keep(new THREE.MeshPhysicalMaterial({ color: 0x07060e, roughness: 0.4, metalness: 0.2, envMapIntensity: 0.08 }));
+    var lensMat = keep(new THREE.MeshPhysicalMaterial({ color: 0x07060e, roughness: 0.05, clearcoat: 1, metalness: 0.2 }));
     var lensPos = [[0.07, 0.07], [0.07, -0.07], [-0.07, 0]];
     for (var lp = 0; lp < 3; lp++) {
       var rg = new THREE.Mesh(ringGeo, frameMat);
@@ -896,8 +864,7 @@
     btn(-HW - 0.004, PH * 0.6, 0.13);
 
     // ── Decke ─────────────────────────────────────────────────
-    // Front reicht bis zum Boden (+ Überlänge), damit beim Hüpfer nie die Unterkante frei wird
-    var cloth = createCloth({ sp: mobile ? 0.066 : 0.054, width: 1.5, front: 1.84, back: 1.86, iter: 3, cap: 0.45, lift: 0.2, push: 0.8, hx: 0 });
+    var cloth = createCloth({ sp: mobile ? 0.074 : 0.062, width: 1.9, front: 1.3, back: 1.8, iter: 3 });
     var cGeo = keep(new THREE.BufferGeometry());
     var cPos = new THREE.BufferAttribute(cloth.pos, 3); cPos.setUsage(THREE.DynamicDrawUsage);
     var cNrm = new THREE.BufferAttribute(cloth.nrm, 3); cNrm.setUsage(THREE.DynamicDrawUsage);

@@ -806,7 +806,18 @@ html.fg-menue-offen .site-header.fg-kopf { z-index: calc(var(--z-overlay) + 10);
 }
 .fg-menue__weg:link, .fg-menue__weg:visited, .fg-menue__weg:hover, .fg-menue__weg:active { color: color-mix(in srgb, var(--text-primary) 88%, transparent); }
 .fg-menue__weg:active { background: color-mix(in srgb, var(--text-primary) 6%, transparent); }
-.fg-menue__weg .fg-mini { --m: 1.3px; }
+/* Bolt 6 (Coulson 3 J): jede Komposition sitzt mittig in derselben 56 × 56-Bildbox => alle Titel beginnen bündig.
+   Maßstab je Welt so, dass die Objekte gleich hoch wirken (≈ 32 px): Fragebogen 1,22 · Turniere 1,08 · Surprise 1,25 */
+.fg-menue__bild {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+}
+.fg-menue__weg .fg-mini { --m: 1.08px; }
+.fg-menue__weg .fg-mini--fragebogen { --m: 1.22px; }
+.fg-menue__weg .fg-mini--surprise { --m: 1.25px; }
 /* Titel und „Du bist hier“ in einer Zeile; reicht die Breite nicht (Handy < 400 px), rutscht der Hinweis unter den
    Titel, der Titel bricht nie um */
 .fg-menue__text {

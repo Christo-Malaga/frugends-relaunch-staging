@@ -169,6 +169,44 @@
     var(--rs-grund, var(--bg-deep));
 }
 
+/* Bolt 6 (Coulson 3 G, Desktop): Decke = dieselben Verläufe wie .rs-a__backdrop (gleiche Fläche => pixelgleich),
+   über dem Canvas, maskiert auf das Band oben bis knapp unter die Headline. Blendet mit dem Auswurf ein (JS setzt
+   opacity je Frame): Deckelsplitter und Produkte fliegen damit unter der Headline, nie durch die Show-Typo; die
+   Typo bleibt so groß, wie sie ist. Nur Querformat: am Handy liegt der Lichtring hinter der Headline, dort gibt es
+   keine Splitter in der Schrift (gemessen), und die Decke würde den Ring waagrecht abschneiden. */
+.rs-a__decke {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: none;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(180deg, var(--rs-grund, var(--bg-deep)) 0%, transparent 22%),
+    radial-gradient(ellipse 60% 45% at 50% 58%, rgba(124, 92, 191, 0.20), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(4, 5, 12, 0.6) 100%),
+    var(--rs-grund, var(--bg-deep));
+  --rs-decke-unten: calc(var(--rs-chrome) + clamp(14px, 4svh, 44px) + var(--rs-title-size) * 1.0);
+  -webkit-mask-image: linear-gradient(180deg, #000 0, #000 calc(var(--rs-decke-unten) - var(--rs-title-size) * 0.32), transparent var(--rs-decke-unten));
+          mask-image: linear-gradient(180deg, #000 0, #000 calc(var(--rs-decke-unten) - var(--rs-title-size) * 0.32), transparent var(--rs-decke-unten));
+}
+@media (min-aspect-ratio: 1/1) {
+  .rs.is-live .rs-a__decke { display: block; }
+}
+
+/* Bolt 6 (Coulson 3 G, +3,0 s): Die Box erscheint erst, wenn der Scroll-Hinweis weg ist. Im Querformat liegt der
+   Hinweis sonst auf der Kartonoberseite; er blendet beim Einhängen der Box aus (.ist-box, JS), die Box blendet
+   danach ein. Am Handy steht der Hinweis über der Box und bleibt. */
+.rs.is-live .rs-a surprise-box {
+  opacity: 0;
+  transition: opacity 360ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) 200ms;
+}
+.rs.is-live.ist-box .rs-a surprise-box { opacity: 1; }
+@media (min-aspect-ratio: 1/1) {
+  .rs.is-live .rs-a__hint > * { transition: opacity 180ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)); }
+  .rs.is-live.ist-box .rs-a__hint > * { opacity: 0; }
+}
+
 /* Nachtblende über dem Canvas. Runde 3 Fix (Coulson #7): zeitgebunden statt scroll-gebunden.
    JS schaltet .ist-an an der Blitz-Schwelle; .ist-sofort beim Anker-Sprung (ohne Übergang). */
 .rs-a__night {

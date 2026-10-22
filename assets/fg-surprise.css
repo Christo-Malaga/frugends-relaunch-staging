@@ -89,9 +89,11 @@
 
 /* Pfeile erst mit JS (ohne JS wischt man oder scrollt) */
 .fg-sb .pslider__arrow { display: none; }
+/* Bolt 6 (Coulson 3 I): Pfeile auf 30 % der Bildhöhe, neben der Box und über dem Bodenring der Creator-Umlaufbahn
+   (Mitte = Höhe des Rings, dort streifte die YouTube-Kachel den Pfeil) */
 .fg-sb .pslider.ist-bereit .pslider__arrow {
   display: grid;
-  top: calc((100% - var(--sb-unter)) / 2);
+  top: calc((100% - var(--sb-unter)) * 0.3);
   color: var(--text-primary);
   background: color-mix(in srgb, var(--bg-deep) 72%, transparent);
   border-color: var(--sb-linie);
@@ -245,7 +247,7 @@
 
 /* ─── 2 Röntgen (VX1 P4, Runde 3) ───
    Außen die geschlossene Box (box-zu), unter dem Licht die gepackte Box (business-Foto, 140 % der Boxbreite,
-   so gelegt, dass die beiden Frugends-Logos aufeinander liegen; die Produkte ragen über den Karton hinaus).
+   so gelegt, dass die beiden Frugends-Logos aufeinander liegen; Bolt 6: sichtbar nur innerhalb der Kartonform).
    Darüber ein Hauch Karton-Geist (cyan) und Rasterzeilen: man sieht DURCH den Karton.
    Die Linse (50 % der Boxbreite) wandert per transform, die Innenansicht gegenläufig, damit sie stehen bleibt.
    Ohne JS / reduzierte Bewegung: halbe Ansicht (rechte Hälfte durchleuchtet). */
@@ -273,6 +275,23 @@
   .sb-roe__box { left: 14%; top: 13%; width: 72%; }
 }
 .sb-roe__karton { display: block; width: 100%; height: auto; -webkit-user-drag: none; user-select: none; }
+/* Bolt 6 (Coulson 3 H, Entscheidung Fury): Linse, Innenansicht und Ring enden genau an der Karton-Silhouette.
+   Maske = Alphakanal von box-zu (dasselbe Bild wie der Karton, gleiche Fläche) => die Kante deckt sich mit der
+   Kartonkante, weich gefiltert statt Treppen. Die Maske steht; bewegt wird darunter nur per transform. */
+.sb-roe__maske {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-image: var(--sb-maske);
+          mask-image: var(--sb-maske);
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: 0 0;
+          mask-position: 0 0;
+          mask-mode: alpha;
+}
 .sb-roe__linse {
   position: absolute;
   left: 0;
@@ -331,18 +350,18 @@
   width: 50%;
   aspect-ratio: 1;
   border-radius: 50%;
+  /* kein Außenschein mehr (Cyan-Halo über der Kartonkante, Coulson 3 H): nur Kante + Innenschein, in der Maske */
   box-shadow:
-    inset 0 0 0 1.5px color-mix(in srgb, var(--sb-roe) 75%, transparent),
-    inset 0 0 22px color-mix(in srgb, var(--sb-roe) 28%, transparent),
-    0 0 26px color-mix(in srgb, var(--sb-roe) 30%, transparent);
+    inset 0 0 0 1.5px color-mix(in srgb, var(--sb-roe) 70%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--sb-roe) 22%, transparent);
   transform: translate(var(--lx), var(--ly)) translate(-50%, -50%);
   transition: transform 120ms linear, opacity var(--motion-dur-base) var(--motion-ease-out);
   pointer-events: none;
   opacity: 0.8;
 }
 .sb-roe.ist-aktiv .sb-roe__ring { opacity: 1; }
-/* Halbe Ansicht (ohne JS, reduzierte Bewegung): rechte Hälfte durchleuchtet, steht. Die Fläche reicht über den
-   Karton hinaus (links/rechts 30 %, oben 32 %, unten 20 % der Box), damit die Produkte nicht an der Kante enden;
+/* Halbe Ansicht (ohne JS, reduzierte Bewegung): rechte Hälfte durchleuchtet, steht. Die Fläche ist größer als die
+   Box (links/rechts 30 %, oben 32 %, unten 20 %), die Maske (.sb-roe__maske) schneidet sie an der Kartonkante ab;
    die Innenansicht sitzt darin wieder genau auf der Box (30/160 = 18,75 %, 32/152 = 21,05 %). */
 .sb-roe:not(.sb-roe--linse) .sb-roe__linse {
   left: -30%;

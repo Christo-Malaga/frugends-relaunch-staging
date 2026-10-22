@@ -672,6 +672,67 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
 }
 .fg-kopf__app { padding: 0 18px; }
 
+/* Bolt 6 (Chris 2026-10-22 über Fury): ab 600 px ist „Tester Club beitreten“ der Haupt-Aufruf im Kopf, „App laden“
+   steht als Linie daneben (weniger laut). Unter 600 px bleibt der Kopf wie bisher (nur App laden in Gold, beide
+   Aufrufe im Menü). */
+.fg-kopf__app--linie,
+.fg-kopf__tc { display: none; }
+.fg-kopf__app--linie { padding: 0 16px; }
+.fg-kopf__alter { font-weight: 600; font-size: 12px; opacity: 0.72; }
+@media (min-width: 600px) {
+  .fg-kopf__rechts { gap: 10px; }
+  .fg-kopf__app--handy { display: none; }
+  .fg-kopf__app--linie,
+  .fg-kopf__tc { display: inline-flex; }
+}
+
+/* Haupt-Aufruf im Kopf mit Tiefe: Glanzkante oben, weicher Schatten unten, Licht von oben. Ruhiger Impuls: alle
+   7,2 s wischt ein Glanz einmal über die Pille (nur transform/opacity, Pseudo hinter der Schrift). Zeigen hebt leicht
+   an, Drücken gibt nach. Reduzierte Bewegung: kein Glanz-Wisch. Basis .fg-pille bleibt unverändert. */
+.fg-pille--kopf {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 0 18px;
+  border-color: color-mix(in srgb, #fff 50%, transparent);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 48%),
+    linear-gradient(135deg, var(--gold) 0%, var(--orange) 140%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -2px 3px rgba(150, 70, 0, 0.22),
+    0 6px 14px -6px rgba(255, 160, 20, 0.6),
+    0 2px 5px rgba(0, 0, 0, 0.35),
+    0 0 22px var(--gold-24);
+  transition: transform 260ms var(--motion-feder-objekt);
+}
+.fg-pille--kopf::after {
+  content: '';
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  left: 0;
+  z-index: -1;
+  width: 38%;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0;
+  transform: translateX(-130%) skewX(-18deg);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fg-pille--kopf::after { animation: fg-pille-glanz 7.2s var(--motion-ease-move) 2.4s infinite; }
+}
+@keyframes fg-pille-glanz {
+  0%        { opacity: 0; transform: translateX(-130%) skewX(-18deg); }
+  2%        { opacity: 1; }
+  12%       { opacity: 1; transform: translateX(300%) skewX(-18deg); }
+  14%, 100% { opacity: 0; transform: translateX(300%) skewX(-18deg); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .fg-pille--kopf:hover { transform: translateY(-2px); }
+}
+.fg-pille--kopf:active { transform: translateY(0) scale(0.97); transition-duration: 90ms; }
+
 /* Menü-Knopf und Schließen-Knopf der Tafel: gleiche Form, gleiche Stelle (48 × 48) */
 .fg-kopf__burger,
 .fg-menue__zu {
@@ -719,13 +780,18 @@ html.fg-menue-offen .fg-kopf__burger { visibility: hidden; }
   .fg-kopf__burger { display: none; }
   .fg-menue { display: none !important; }
 }
-/* 1000–1179 px: weniger Luft und etwas kleinere Schrift, damit Logo, drei Wege, Über uns und App laden in eine Zeile
-   passen (kein Überlauf bis 1000 px, gemessen). */
-@media (min-width: 1000px) and (max-width: 1179px) {
+/* 1000–1279 px: weniger Luft und etwas kleinere Schrift, damit Logo, drei Wege, Über uns und die zwei Aufrufe
+   (App laden + Tester Club) in eine Zeile passen. Bolt 6: Grenze 1179 → 1279, weil rechts jetzt zwei Pillen stehen;
+   1000–1149 px (z. B. Tablet quer 1024) zeigen die Wege nur als Wort, ohne Mini-Visual (gemessen: sonst
+   bis 118 px Überlauf unter die Pillen). */
+@media (min-width: 1000px) and (max-width: 1279px) {
   .fg-kopf__bar { gap: var(--space-3); }
   .fg-kopf__nav { margin-left: 0; }
   .fg-kopf__weg { --weg-luft: 11px; gap: 8px; font-size: 14px; }
   .fg-kopf .fg-mini { --m: 1px; }
+}
+@media (min-width: 1000px) and (max-width: 1149px) {
+  .fg-kopf__weg .fg-mini { display: none; }
 }
 
 /* ─── MENÜ (Handy, < 1000 px) ──────────────────────────────────────────────

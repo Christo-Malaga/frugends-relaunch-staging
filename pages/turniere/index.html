@@ -160,7 +160,14 @@
     </nav>
 
     <div class="fg-kopf__rechts">
-      <a class="fg-pille fg-kopf__app" href="../../pages/turniere/"
+      <a class="fg-pille fg-pille--linie fg-kopf__app fg-kopf__app--linie" href="../../pages/turniere/"
+         data-fg-app="header" data-store-ios="https://apps.apple.com/de/app/frugends/id6749146042?ct=hp-header" data-store-android="https://play.google.com/store/apps/details?id=com.frugends.mobile&amp;referrer=utm_source%3Dfrugends.com%26utm_medium%3Dreferral%26utm_campaign%3Dwebsite%26utm_content%3Dheader"
+         aria-haspopup="dialog">App laden</a>
+      <a class="fg-pille fg-pille--kopf fg-kopf__tc" href="https://testerclub.frugends.com/?utm_source=frugends.com&utm_medium=referral&utm_campaign=website&utm_content=header" target="_blank" rel="noopener">
+Tester Club beitreten        <span class="fg-kopf__alter">ab 18</span>
+        <span class="fg-sr">(neuer Tab)</span>
+      </a>
+      <a class="fg-pille fg-kopf__app fg-kopf__app--handy" href="../../pages/turniere/"
          data-fg-app="header" data-store-ios="https://apps.apple.com/de/app/frugends/id6749146042?ct=hp-header" data-store-android="https://play.google.com/store/apps/details?id=com.frugends.mobile&amp;referrer=utm_source%3Dfrugends.com%26utm_medium%3Dreferral%26utm_campaign%3Dwebsite%26utm_content%3Dheader"
          aria-haspopup="dialog">App laden</a>
 
@@ -1251,7 +1258,7 @@ Tester Club beitreten        <span class="fg-menue__alter">ab 18</span>
 <script src="../../assets/scroll-cinema.js" defer data-fg-cinema></script>
 
 <div id="rs-template--local__preise" class="rs" data-rs
-     style="--rs-a-d:180;--rs-a-m:150;--rs-b-d:110;--rs-b-m:110;"
+     style="--rs-a-d:180;--rs-a-m:260;--rs-b-d:110;--rs-b-m:110;"
      data-bullet-d="0.85" data-bullet-m="0.75"
      data-three-src="/frugends-relaunch-staging/assets/three.min.js"
      data-sbox-src="/frugends-relaunch-staging/assets/surprise-box.js"
@@ -1557,8 +1564,8 @@ Tester Club beitreten        <span class="fg-menue__alter">ab 18</span>
         <svg class="tg-punkte__linien" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
           <path d="M37 22 L58 44"/><path d="M37 78 L58 44"/><path d="M69 44 L80 44"/>
         </svg>
-        <span class="tg-pk-quelle tg-pk-quelle--a"><span class="tg-pk-quelle__name">Jede Runde</span><span class="tg-pk-quelle__wert">+20</span></span>
-        <span class="tg-pk-quelle tg-pk-quelle--b"><span class="tg-pk-quelle__name">Jedes Turnier</span><span class="tg-pk-quelle__wert">+100</span></span>
+        <span class="tg-pk-quelle tg-pk-quelle--a"><span class="tg-pk-quelle__name">Jede Runde</span><span class="tg-pk-coins" title="ein Coin"><i class="tg-pk-coin"></i></span></span>
+        <span class="tg-pk-quelle tg-pk-quelle--b"><span class="tg-pk-quelle__name">Jedes Turnier</span><span class="tg-pk-coins tg-pk-coins--stapel" title="fünf Coins"><i class="tg-pk-coin"></i><i class="tg-pk-coin"></i><i class="tg-pk-coin"></i><i class="tg-pk-coin"></i><i class="tg-pk-coin"></i></span></span>
         <span class="tg-pk-muenze">
           <svg viewBox="0 0 40 40" focusable="false">
             <circle cx="20" cy="20" r="18" fill="#ffcd28"/>
@@ -1577,6 +1584,26 @@ Tester Club beitreten        <span class="fg-menue__alter">ab 18</span>
         <span class="tg-pk-flug tg-pk-flug--c"></span>
       </div>
     </div>
+    <style>
+      /* Punkte ohne Zahlen (Chris 2026-10-22: „Wir können noch keine Aussage über quantifizierte Punkte machen …
+         Stell sie als Coins dar: jede Runde ein Coin, jedes Turnier fünf“) */
+      .tg-pk-coins { display: flex; align-items: center; margin-top: 6px; }
+      .tg-pk-coin {
+        width: clamp(13px, 3.8cqw, 17px); aspect-ratio: 1; border-radius: 50%; flex: none;
+        background: radial-gradient(circle, #7c5cbf 0 44%, #ffe792 45% 52%, #ffcd28 53% 100%);
+        box-shadow: 0 0 7px rgba(255, 205, 40, 0.45), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+      }
+      .tg-pk-coins--stapel .tg-pk-coin + .tg-pk-coin { margin-left: -5px; }
+      @media (prefers-reduced-motion: no-preference) {
+        .tg-punkte .tg-pk-coin { transform: scale(0); }
+        .tg-punkte.is-an .tg-pk-coin { animation: tg-pk-coin-an 420ms var(--motion-feder-objekt, ease-out) both; }
+        .tg-punkte.is-an .tg-pk-coin:nth-child(2) { animation-delay: 90ms; }
+        .tg-punkte.is-an .tg-pk-coin:nth-child(3) { animation-delay: 180ms; }
+        .tg-punkte.is-an .tg-pk-coin:nth-child(4) { animation-delay: 270ms; }
+        .tg-punkte.is-an .tg-pk-coin:nth-child(5) { animation-delay: 360ms; }
+      }
+      @keyframes tg-pk-coin-an { from { transform: scale(0) translateY(6px); } to { transform: none; } }
+    </style>
     <script>
       (function (el) {
         if (!el || !('IntersectionObserver' in window)) return;

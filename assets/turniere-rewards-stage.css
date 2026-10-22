@@ -196,12 +196,13 @@
 
 /* Bolt 6 (Coulson 3 G, +3,0 s): Die Box erscheint erst, wenn der Scroll-Hinweis weg ist. Im Querformat liegt der
    Hinweis sonst auf der Kartonoberseite; er blendet beim Einhängen der Box aus (.ist-box, JS), die Box blendet
-   danach ein. Am Handy steht der Hinweis über der Box und bleibt. */
+   danach ein. Am Handy steht der Hinweis über der Box und bleibt.
+   Grundzustand sichtbar: Nur solange das JS die Box einhängt (.box-wartet, ein bis zwei Bilder), steht sie auf 0.
+   (Fury 2026-10-22: ein Zwischenstand mit „unsichtbar bis .ist-box“ ohne passendes JS ließ die Bühne leer.) */
 .rs.is-live .rs-a surprise-box {
-  opacity: 0;
   transition: opacity 360ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) 200ms;
 }
-.rs.is-live.ist-box .rs-a surprise-box { opacity: 1; }
+.rs.is-live.box-wartet .rs-a surprise-box { opacity: 0; transition: none; }
 @media (min-aspect-ratio: 1/1) {
   .rs.is-live .rs-a__hint > * { transition: opacity 180ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)); }
   .rs.is-live.ist-box .rs-a__hint > * { opacity: 0; }
@@ -532,6 +533,12 @@
     opacity 420ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) var(--rs-takt, 0ms),
     transform 680ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) var(--rs-takt, 0ms);
 }
+/* Bolt 6 (Coulson 3 G, Handy +4,35 s): Die H2 von B bleibt genau auf der Headline von A stehen, bis B deckt
+   (Cover 70 + 280 ms), und gleitet erst dann; die Headline von A blendet im selben Takt aus (JS, Übergang unten).
+   Vorher lief die H2 schon los, während A noch durchschien => blasse zweite „Rewards“-Zeile. */
+.rs.is-live.ist-enthuellt .rs-b__inner > .rs-title { --rs-takt: 360ms; }
+.rs.is-live .rs-a__flash { transition: opacity 280ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) 70ms; }
+.rs.is-live.ist-sofort .rs-a__flash { transition: none !important; }
 .rs.is-live.ist-enthuellt .rs-b__floor { --rs-takt: 140ms; }
 .rs.is-live.ist-enthuellt .rs-b__boxes { --rs-takt: 200ms; }
 .rs.is-live.ist-enthuellt .rs-b__heap { --rs-takt: 280ms; }

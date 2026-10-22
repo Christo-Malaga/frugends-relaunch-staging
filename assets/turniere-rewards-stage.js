@@ -43,6 +43,18 @@
                   Bild ist, hat WebGL. Die andere Szene gibt ihren Kontext frei
                   (Burst: Element raus + forceContextLoss; Game Nr. 2: über die
                   Section-Ereignisse des Skripts, frischer Canvas beim Zurückholen).
+  10 · GOLD       Bolt 6 (Coulson 3 G): Der Burst-Ring wirkte schmutzig (graulila Schleier
+                  mit dunklen Löchern bei normaler Mischung über Navy). Wie _progress wird
+                  nur die Instanz angepasst (surprise-box.js bleibt unverändert): der
+                  Schluss des Explosions-Shaders färbt das Licht golden-hell und mischt
+                  additiv (Licht kommt dazu, nichts verdunkelt den Grund).
+  11 · DECKE      Bolt 6 (Coulson 3 G): Im Querformat blendet mit dem Auswurf eine Kopie
+                  des Bühnengrunds über dem Canvas ein, oben bis knapp unter die Headline
+                  (CSS .rs-a__decke) => keine Splitter in der Show-Typo. Der Scroll-Hinweis
+                  blendet aus, bevor die Box erscheint (.ist-box).
+  12 · MOBIL      Bolt 6 (Fury/Chris 2026-10-22): DPR-Deckel der Instanz 1,5 mobil / 1,75 Desktop,
+                  Explosions-Shader beim Einhängen vorkompiliert (vorher 100-ms-Ruckler im
+                  ersten Burst-Bild). Spurlänge mobil: templates/page.turniere.json 260 svh.
    ═══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -165,6 +177,48 @@
     return 0;
   }
 
+  /* 10 · Gold: Schluss des Explosions-Shaders der Instanz ersetzen (Muster: _progress). Fehlt die Zeile (anderer
+     Stand von surprise-box.js), bleibt alles, wie es ist. Ausgabe vormultipliert ohne Deckkraft + additive Mischung:
+     das Licht legt sich auf Karton und Grund, dunkle Stellen sind einfach kein Licht statt dunkler Flecken. */
+  var GOLD_ALT = ' gl_FragColor=vec4(col,alpha);';
+  var GOLD_NEU = [
+    ' float hb=dot(col,vec3(0.2126,0.7152,0.0722));',
+    ' vec3 gw=mix(vec3(1.0,0.62,0.10),vec3(1.0,0.93,0.62),smoothstep(0.35,0.95,hb));',
+    ' vec3 gl=mix(gw*hb*1.35,vec3(1.0,0.97,0.86),smoothstep(0.85,1.25,hb));',
+    ' gl=mix(gl,col*vec3(1.0,0.86,0.55),0.18)*alpha;',
+    ' gl_FragColor=vec4(gl,0.0);'
+  ].join('\n');
+  function vergolden(box) {
+    if (!box || box.__gold) return;
+    var m = box._fxMat, T = window.THREE;
+    if (!m || !T) return;
+    box.__gold = true;
+    if (typeof m.fragmentShader !== 'string' || m.fragmentShader.indexOf(GOLD_ALT) < 0) return;
+    m.fragmentShader = m.fragmentShader.replace(GOLD_ALT, GOLD_NEU);
+    m.blending = T.AdditiveBlending;
+    m.premultipliedAlpha = true;
+    m.needsUpdate = true;
+  }
+  /* Shader der Explosion beim Einhängen vorkompilieren (sonst kompiliert three.js ihn im ersten Burst-Bild:
+     gemessen 100 ms Ruckler mitten im Scroll, iPhone-Emulation 390 × 844). Beim Einhängen ist die Bühne noch nicht dran. */
+  function vorkompilieren(box) {
+    try {
+      if (box && box._renderer && box._fxScene && box._fxCam && box._renderer.compile) box._renderer.compile(box._fxScene, box._fxCam);
+    } catch (e) { /* nur Vorarbeit */ }
+  }
+
+  /* 12 · DPR-Deckel der Runde (1,5 mobil / 1,75 Desktop; surprise-box.js setzt bis 1,75 bzw. 2): nur die Instanz.
+     Am Handy (iPhone DPR 3) zeichnet der Canvas damit 585 × 1266 statt 682 × 1477 Pixel (−27 % Fläche). */
+  function deckeln(box) {
+    if (!box || box.__dpr || !box._renderer || !(box._dpr > 0)) return;
+    box.__dpr = true;
+    var cap = MOBILE.matches ? 1.5 : 1.75;
+    if (box._dpr <= cap) return;
+    box._dpr = cap;
+    box._renderer.setPixelRatio(cap);
+    if (typeof box._resize === 'function') box._resize();
+  }
+
   /* ─── Lader (Guard wie fg-bignews-burst: nur einfügen, wenn noch kein Tag existiert) ─── */
   function loadThree(src) {
     return new Promise(function (resolve, reject) {
@@ -210,6 +264,7 @@
     this.a = q('[data-rs-a]');
     this.sticky = q('[data-rs-a-sticky]');
     this.night = q('[data-rs-night]');
+    this.decke = q('[data-rs-decke]');
     this.blitz = q('[data-rs-blitz]');
     this.nacht = false;       // Nacht steht (nach dem Blitz)
     this.lastP = null;
@@ -283,9 +338,21 @@
       /* Szenen-Fortschritt kommt von hier (surprise-box.js bleibt unverändert, nur die Instanz-Methode wird
          überdeckt): die Szene endet vor ihrer Weiß-Phase, siehe SZENE_MAX. */
       box._progress = function () { return self.szene(); };
-      self.sticky.insertBefore(box, self.night);
+      /* 11 · Hinweis zuerst weg, dann die Box: kurz unsichtbar einhängen (.box-wartet), zwei Bilder später
+         .ist-box (Hinweis blendet aus, Box blendet mit 200 ms Versatz ein). Ohne JS-Schritt bleibt sie sichtbar. */
+      root.classList.add('box-wartet');
+      self.sticky.insertBefore(box, self.decke || self.night);
       self.box = box;
       self.ready = true;
+      vergolden(box);
+      deckeln(box);
+      vorkompilieren(box);
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () {
+          root.classList.remove('box-wartet');
+          if (token === self.mountToken && self.mounted) root.classList.add('ist-box');
+        });
+      });
       self.update();
     }).catch(function (e) {
       /* Kein Rethrow: Spur A bleibt Navy-Bühne, die Headline kommt direkt in Gold. */
@@ -302,6 +369,7 @@
     var box = this.box;
     this.box = null;
     this.ready = false;
+    this.root.classList.remove('ist-box', 'box-wartet');
     if (box) {
       if (box.parentNode) box.parentNode.removeChild(box);
       try {
@@ -481,7 +549,10 @@
     var knall = smooth(ramp(p, 0.8, BLITZ_BEI)) * aus;     // Schlag zum Blitz
     var sc = 1 + 0.06 * knall;
 
-    setStyle(this.flash, c, 'fo', 'opacity', '1');
+    /* Mit der Nacht blendet die Headline von A im Takt des B-Covers aus (CSS-Übergang): keine Doppel-Headline */
+    setStyle(this.flash, c, 'fo', 'opacity', this.nacht ? '0' : '1');
+    if (this.decke) setStyle(this.decke, c, 'do', 'opacity', smooth(ramp(p, 0.36, 0.52)).toFixed(3));
+    if (this.box && (!this.box.__gold || !this.box.__dpr)) { vergolden(this.box); deckeln(this.box); }
     setStyle(this.flash, c, 'fv', 'visibility', 'visible');
     setStyle(this.flashTitle, c, 'fs', 'transform', sc < 1.0001 ? 'none' : 'scale(' + sc.toFixed(4) + ')');
     setVar(this.flashTitle, c, 'vl', '--rs-lade', lade.toFixed(3));

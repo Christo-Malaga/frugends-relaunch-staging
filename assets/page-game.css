@@ -544,6 +544,12 @@
 .bnb--tg .bnb-scene { grid-area: scene; }
 .bnb--tg .bnb-scene::before { width: 140%; }
 .bnb--tg .bnb-scene__frame { height: clamp(340px, 48svh, 460px); }
+/* Keine Abrisskante (Chris 2026-10-22): Die 3D-Leinwand hat eigenen Grund und Bodenlicht, ihr Rand stand als Kante
+   im Seitengrund. Weich nach außen ausblenden, die Szene in der Mitte bleibt voll. */
+.bnb--tg .bnb-scene__gl {
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 48%, #000 62%, rgba(0, 0, 0, 0.55) 80%, transparent 97%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 48%, #000 62%, rgba(0, 0, 0, 0.55) 80%, transparent 97%);
+}
 .bnb-tg__when {
   margin-top: 4px;
   font-family: var(--font-display);

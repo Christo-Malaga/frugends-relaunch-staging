@@ -8,9 +8,11 @@
       Menü-Knopf morpht zum X und schließt auch (aria-expanded). Rest der Seite
       inert, Fokusfalle über Kopf + Tafel, ESC, Zurück und Tipp auf den Dimmer
       schließen, Seite dahinter steht still. Haptik: kurz beim Öffnen und Tipp.
-   3  „App laden“ (Kopf und Menü-Tafel): iPhone/iPad → App Store, Android → Google Play (je mit
-      Kennung), sonst das App-Fenster #app-modal (main.js initAppModal,
-      window.FrugendsAppModal). Gerätelogik wie frontend/hero/Aufrufe.jsx.
+   3  „App laden“ (jedes [data-fg-app]: Kopf, Menü-Tafel, Über uns, Merch, Rewards …):
+      öffnet auf JEDEM Gerät das App-Fenster #app-modal, die Weiche App Store /
+      Google Play (Runde 3 „r3-app“, Chris 2026-10-22). Das Fenster übernimmt die
+      Kennung des Knopfs (data-store-ios / data-store-android) und hebt den Store
+      des Geräts hervor (main.js initAppModal, window.FrugendsAppModal).
    4  QR-Code im App-Fenster zeigt auf /?app=laden: Auf dem Handy geht es
       von dort sofort in den passenden Store (Kennung „qr“).
    5  Mini-Visuals der drei Wege (Kopf und Menü, fg-design.css §6): Zeiger
@@ -280,31 +282,22 @@
     });
   }
 
-  /* ─── 3 „App laden“ ─── */
+  /* ─── 3 „App laden“: immer die Weiche ─── */
   function initApp() {
-    var art = geraet();
     var knoepfe = document.querySelectorAll('[data-fg-app]');
     for (var i = 0; i < knoepfe.length; i++) {
       (function (el) {
         var platz = el.getAttribute('data-fg-app') || 'header';
-        if (art === 'ios' || art === 'android') {
-          var store = el.getAttribute(art === 'ios' ? 'data-store-ios' : 'data-store-android');
-          if (store) {
-            el.setAttribute('href', store);
-            el.removeAttribute('aria-haspopup');
-          }
-          el.addEventListener('click', function () { melden(platz, art); });
-          return;
-        }
+        el.setAttribute('aria-haspopup', 'dialog');
         el.addEventListener('click', function (e) {
           if (!window.FrugendsAppModal || !document.getElementById('app-modal')) return; // ohne Fenster: Link folgen
           e.preventDefault();
           melden(platz, 'auswahl');
-          // Menü offen (schmales Desktop-Fenster): erst die Tafel schließen. Kam der Tipp aus der Tafel, kehrt der
-          // Fokus danach zum Menü-Knopf zurück (der Knopf in der Tafel ist dann verborgen).
+          // Menü offen: erst die Tafel schließen. Kam der Tipp aus der Tafel, kehrt der Fokus danach zum Menü-Knopf
+          // zurück (der Knopf in der Tafel ist dann verborgen); die Kennung bleibt die des Knopfs in der Tafel.
           var tafel = el.closest ? el.closest('[data-fg-menue]') : null;
           if (menueZu && doc.classList.contains('fg-menue-offen')) menueZu();
-          window.FrugendsAppModal.open(tafel ? (document.querySelector('[data-fg-burger]') || el) : el);
+          window.FrugendsAppModal.open(tafel ? (document.querySelector('[data-fg-burger]') || el) : el, el);
         });
       })(knoepfe[i]);
     }

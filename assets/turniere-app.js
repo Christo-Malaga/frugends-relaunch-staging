@@ -2,11 +2,12 @@
    FRUGENDS — Games & Turniere · Seitenkopf #app (sections/fg-game.liquid,
    Modus „app_kopf“). Relaunch 2026-10, H1 E8 + VX1 §5.2.
 
-     1. Gold-Pille „App herunterladen“: iPhone/iPad → App Store,
-        Android → Google Play (Links mit Kennung aus data-apple /
-        data-google), sonst Store-Auswahl #app-modal über
-        window.FrugendsAppModal (Atlas, main.js). Fehlt das Modal, folgt
-        der Link dem App Store. Jeder Klick schreibt ein Ereignis in den
+     1. Gold-Pille „App herunterladen“: öffnet auf JEDEM Gerät die Weiche
+        #app-modal über window.FrugendsAppModal (main.js; Runde 3 „r3-app“).
+        Das Fenster übernimmt die Kennung der Pille (data-store-ios /
+        data-store-android) und hebt den Store des Geräts hervor. Fehlt das
+        Fenster, folgt der Link dem App Store. Die Store-Badges daneben
+        bleiben direkte Links. Jeder Klick schreibt ein Ereignis in den
         dataLayer (wie hero/Aufrufe.jsx).
      2. Gameplay-Video: stumm, startet erst im Bild, läuft zwei Mal und
         bleibt dann als Standbild stehen (data-still in Sekunden). Pause-
@@ -26,26 +27,15 @@
   if (window.__fgTurniereApp) return;
   window.__fgTurniereApp = true;
 
-  function geraet() {
-    var ua = navigator.userAgent || '';
-    if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'ios';
-    if (/Android/i.test(ua)) return 'android';
-    return 'desktop';
-  }
-
   function melden(ziel) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: 'fgi_cta', fgi_anlass: 'app-turniere', fgi_ziel: ziel });
   }
 
   function initCta(root) {
-    var art = geraet();
     Array.prototype.forEach.call(root.querySelectorAll('[data-tg-app-cta]'), function (a) {
-      if (art === 'ios') a.href = a.getAttribute('data-apple');
-      else if (art === 'android') a.href = a.getAttribute('data-google');
-      else a.setAttribute('aria-haspopup', 'dialog');
+      a.setAttribute('aria-haspopup', 'dialog');
       a.addEventListener('click', function (e) {
-        if (art !== 'desktop') { melden(art === 'ios' ? 'apple' : 'google'); return; }
         if (window.FrugendsAppModal && document.getElementById('app-modal')) {
           e.preventDefault();
           melden('auswahl');

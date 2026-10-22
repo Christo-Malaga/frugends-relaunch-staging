@@ -112,13 +112,62 @@
     Array.prototype.forEach.call(spans, function (s) { s.textContent = y; });
   }
 
-  /* ─── 6a. App-download modal ────────────────────────────────────
-     Any [data-app-modal] button opens #app-modal (the store chooser).
-     Focus-trapped, ESC + backdrop close, restores focus to the opener. */
+  /* ─── 6a. App-Weiche (App-Fenster #app-modal) ─────────────────
+     Runde 3 „r3-app“ (Chris 2026-10-22): JEDER App-Knopf auf JEDEM Gerät
+     öffnet dieses Fenster (fg-nav.js initApp, Hero-Insel, turniere-app.js,
+     [data-app-modal]). open(ausloeser, quelle):
+       · Kennung: Store-Links bekommen die des Knopfs (quelle, sonst
+         ausloeser): data-store-ios / data-store-android, sonst gebaut aus
+         data-app-ort bzw. data-fg-app (ct=hp-<ort>, utm_content=<ort>),
+         ohne Angabe „modal“.
+       · Gerät: iPhone/iPad → App Store oben + .ist-empfohlen, Android →
+         Google Play; beide bleiben wählbar. data-geraet am Fenster blendet
+         den QR-Code am Handy aus (fg-app-modal.css).
+     Fokusfalle, ESC, Klick daneben, Rückfokus auf den Auslöser.
+     Ausblenden 180 ms (.ist-zu), reduzierte Bewegung sofort. */
   function initAppModal() {
     var modal = document.getElementById('app-modal');
     if (!modal) return;
     var opener = null;
+    var ort = 'modal';
+    var zuUhr = 0;
+    var AUS_MS = 180;
+    var apple = modal.querySelector('[data-app-store="apple"]');
+    var google = modal.querySelector('[data-app-store="google"]');
+    var PLAY_REF = 'utm_source=frugends.com&utm_medium=referral&utm_campaign=website&utm_content=';
+
+    function geraet() {
+      var ua = navigator.userAgent || '';
+      if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'ios';
+      if (/Android/i.test(ua)) return 'android';
+      return 'desktop';
+    }
+
+    function mitKennung(basis, teil) {
+      return basis + (basis.indexOf('?') === -1 ? '?' : '&') + teil;
+    }
+
+    // Store-Links mit der Kennung des Auslösers
+    function kennung(q) {
+      var hat = q && q.getAttribute;
+      var ios = hat ? q.getAttribute('data-store-ios') : null;
+      var play = hat ? q.getAttribute('data-store-android') : null;
+      ort = (hat && (q.getAttribute('data-app-ort') || q.getAttribute('data-fg-app'))) || 'modal';
+      if (apple) apple.href = ios || mitKennung(apple.getAttribute('data-app-basis'), 'ct=hp-' + encodeURIComponent(ort));
+      if (google) google.href = play || mitKennung(google.getAttribute('data-app-basis'), 'referrer=' + encodeURIComponent(PLAY_REF + ort));
+    }
+
+    // Store des Geräts zuerst und hervorgehoben (DOM-Reihenfolge = Fokus-Reihenfolge)
+    function weiche() {
+      var art = geraet();
+      modal.setAttribute('data-geraet', art);
+      if (!apple || !google) return;
+      var vorn = art === 'android' ? google : apple;
+      var hinten = vorn === apple ? google : apple;
+      if (vorn.nextElementSibling !== hinten) vorn.parentNode.insertBefore(vorn, hinten);
+      apple.classList.toggle('ist-empfohlen', art === 'ios');
+      google.classList.toggle('ist-empfohlen', art === 'android');
+    }
 
     function focusable() {
       return Array.prototype.slice.call(
@@ -127,17 +176,22 @@
     }
 
     function onKeydown(e) {
-      if (e.key === 'Escape' || e.key === 'Esc') { close(); return; }
+      if (e.key === 'Escape' || e.key === 'Esc') { e.preventDefault(); close(); return; }
       if (e.key !== 'Tab') return;
       var f = focusable();
       if (!f.length) return;
       var first = f[0], last = f[f.length - 1];
+      if (f.indexOf(document.activeElement) === -1) { e.preventDefault(); (e.shiftKey ? last : first).focus(); return; }
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
 
-    function open(trigger) {
+    function open(trigger, quelle) {
       opener = trigger || document.activeElement;
+      kennung(quelle || trigger);
+      weiche();
+      window.clearTimeout(zuUhr);
+      modal.classList.remove('ist-zu');
       modal.hidden = false;
       document.body.style.overflow = 'hidden';
       document.addEventListener('keydown', onKeydown, true);
@@ -146,10 +200,19 @@
     }
 
     function close() {
-      if (modal.hidden) return;
-      modal.hidden = true;
+      if (modal.hidden || modal.classList.contains('ist-zu')) return;
       document.body.style.overflow = '';
       document.removeEventListener('keydown', onKeydown, true);
+      var ruhig = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (ruhig) {
+        modal.hidden = true;
+      } else {
+        modal.classList.add('ist-zu');
+        zuUhr = window.setTimeout(function () {
+          modal.hidden = true;
+          modal.classList.remove('ist-zu');
+        }, AUS_MS);
+      }
       if (opener && typeof opener.focus === 'function') opener.focus();
       opener = null;
     }
@@ -160,8 +223,16 @@
     Array.prototype.forEach.call(modal.querySelectorAll('[data-app-close]'), function (el) {
       el.addEventListener('click', function (e) { e.preventDefault(); close(); });
     });
+    // Wahl getroffen: Ereignis mit Herkunft und Store, dann geht das Fenster zu (der Store lädt im neuen Tab bzw. in der Store-App)
+    Array.prototype.forEach.call([apple, google], function (a) {
+      if (!a) return;
+      a.addEventListener('click', function () {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'fg_app_store', fg_platz: ort, fg_ziel: a.getAttribute('data-app-store') });
+        window.setTimeout(close, 0);
+      });
+    });
 
-    // expose for other pages/triggers if needed
     window.FrugendsAppModal = { open: open, close: close };
   }
 

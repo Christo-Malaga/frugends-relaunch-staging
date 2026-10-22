@@ -1,10 +1,13 @@
-/* App-Fenster „Hol dir Frugends“ (snippets/fg-app-modal.liquid). Ursprung: assets/page-home.css (Zeilen 250–369).
-   Relaunch 2026-10 (Atlas): lädt global im <head> (layout/theme.liquid), ein Fenster je Seite. Geändert: kein
-   Versal-Mono-Kicker, Store-Zeilen in Outfit, QR-Code neben den Stores (nur wo ein Zeiger ist, nicht am Handy). */
+/* App-Fenster „Hol dir die Frugends App“ (snippets/fg-app-modal.liquid). Ursprung: assets/page-home.css (Zeilen 250–369).
+   Relaunch 2026-10 (Atlas): lädt global im <head> (layout/theme.liquid), ein Fenster je Seite.
+   Runde 3 „r3-app“ (Atlas 11, Chris 2026-10-22): das Fenster ist die Weiche App Store / Google Play für JEDEN App-Knopf.
+   Teil 1 (Klassen .app-modal*) teilt es sich mit den Sponsor-Fenstern (fg-turniere-sponsor-modal, fg-helden-showcase-
+   modal) und bleibt dafür wie es war (nur Schließen-X 44 px). Teil 2 hängt an #app-modal: page-home.css lädt auf
+   manchen Seiten NACH dieser Datei mit denselben Klassen, die ID gewinnt und lässt die Sponsor-Fenster in Ruhe.
+   Teil 2: Navy-Fläche der Designschicht (fg-design.css), Gold nur am empfohlenen Store, Titel Protest Strike, Text Outfit,
+   Ein-/Ausblenden 240/180 ms (reduzierte Bewegung: ohne), am Handy Bottom-Sheet über der Safe Area. */
 
-/* ════════════════════════════════════════════════════════════════
-   APP-DOWNLOAD MODAL  ·  store chooser (opened by [data-app-modal])
-   ════════════════════════════════════════════════════════════════ */
+/* ═══ 1 GETEILTES GERÜST (auch Sponsor-Fenster) ══════════════════════════════ */
 .app-modal {
   position: fixed;
   inset: 0;
@@ -36,9 +39,9 @@
 }
 .app-modal__close {
   position: absolute;
-  top: var(--space-3);
-  right: var(--space-3);
-  width: 40px; height: 40px;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 44px; height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -52,84 +55,6 @@
 .app-modal__close:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .app-modal__close svg { width: 20px; height: 20px; }
 
-.app-modal__title { font-size: clamp(1.6rem, 5vw, 2.2rem); margin: var(--space-2) 0 var(--space-2); }
-.app-modal__desc {
-  color: var(--text-secondary);
-  line-height: 1.6;
-  max-width: 34ch;
-  margin: 0 auto var(--space-6);
-}
-
-.app-modal__wege {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-6);
-  text-align: left;
-}
-.app-modal__qr { flex: none; display: flex; flex-direction: column; align-items: center; gap: var(--space-2); width: 160px; margin: 0; }
-.app-modal__qr-feld {
-  display: block;
-  width: 152px;
-  height: 152px;
-  padding: 12px;
-  border-radius: var(--radius-md);
-  background: #fff;
-  box-shadow: 0 0 0 1px var(--border), 0 0 30px var(--gold-12);
-}
-.app-modal__qr-feld svg { display: block; width: 100%; height: 100%; }
-.app-modal__qr-text {
-  font-size: 13px;
-  line-height: 1.4;
-  text-align: center;
-  color: var(--text-secondary);
-}
-/* Am Handy (kein Zeiger) hilft der Code nicht: nur die Stores */
-@media (hover: none) and (pointer: coarse), (max-width: 520px) {
-  .app-modal__qr { display: none; }
-}
-
-.app-modal__stores {
-  flex: 1;
-  min-width: 0;
-  max-width: 280px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-/* large store buttons — pure CSS/SVG, ≥44px targets */
-.store-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  min-height: 64px;
-  padding: 12px 22px;
-  text-decoration: none;
-  border-radius: var(--radius-md);
-  background: #05060c;
-  border: 1px solid var(--border);
-  color: #fff;
-  transition: transform var(--dur) var(--ease-out),
-              border-color var(--dur) var(--ease-out),
-              box-shadow var(--dur) var(--ease-out);
-}
-.store-btn:hover {
-  transform: translateY(-3px);
-  border-color: var(--gold-40);
-  box-shadow: 0 0 30px var(--gold-12), var(--shadow);
-}
-.store-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
-.store-btn__logo { width: 30px; height: 30px; flex: none; }
-.store-btn__text { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
-.store-btn__small {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.72);
-}
-.store-btn__big { font-family: var(--font-display); font-size: 1.3rem; }
-
 @keyframes modalFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes modalPop {
   from { opacity: 0; transform: translateY(14px) scale(0.96); }
@@ -137,4 +62,177 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .app-modal__backdrop, .app-modal__card { animation: none; }
+}
+
+
+/* ═══ 2 DIE APP-WEICHE #app-modal ═══════════════════════════════════════════ */
+#app-modal {
+  --am-ein: 240ms;
+  --am-aus: 180ms;
+  z-index: var(--z-modal, 300);
+}
+#app-modal.ist-zu { pointer-events: none; }
+
+#app-modal .app-modal__backdrop {
+  background: color-mix(in srgb, var(--bg-deep) 78%, transparent);
+  animation: am-ein-blende var(--am-ein) var(--motion-ease-out) both;
+}
+#app-modal.ist-zu .app-modal__backdrop { animation: am-aus-blende var(--am-aus) var(--motion-ease-in) both; }
+
+#app-modal .app-modal__card {
+  box-sizing: border-box;
+  width: min(540px, 100%);
+  max-height: calc(100dvh - 2 * var(--space-5));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-8) var(--space-8) var(--space-8);
+  text-align: center;
+  color: var(--text-primary);
+  /* Navy-Fläche mit einem ruhigen warmen Licht von oben (Muster .welt-senke, fg-design.css §2) */
+  background:
+    radial-gradient(110% 60% at 50% 0, color-mix(in srgb, var(--gold) 8%, transparent), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface) 78%, var(--bg-deep)) 0%, var(--bg-deep) 100%);
+  border: 1px solid var(--kopf-haar);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  animation: am-ein-karte var(--am-ein) var(--motion-ease-out) both;
+}
+#app-modal.ist-zu .app-modal__card { animation: am-aus-karte var(--am-aus) var(--motion-ease-in) both; }
+
+#app-modal .app-modal__close { top: var(--space-2); right: var(--space-2); width: 44px; height: 44px; color: var(--kopf-dim); }
+#app-modal .app-modal__close:hover { color: var(--text-primary); background: color-mix(in srgb, var(--text-primary) 8%, transparent); }
+
+#app-modal .app-modal__griff { display: none; }
+#app-modal .app-modal__logo { display: block; width: auto; height: 34px; margin: 0 auto var(--space-3); }
+#app-modal .app-modal__title {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.65rem, 1.35rem + 1.3vw, 2.15rem);
+  line-height: 1.05;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+#app-modal .app-modal__desc {
+  max-width: 32ch;
+  margin: 0 auto var(--space-6);
+  font: 500 1.0625rem/1.5 var(--font-body);
+  color: var(--kopf-dim);
+}
+
+#app-modal .app-modal__wege {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  text-align: left;
+}
+#app-modal .app-modal__qr { flex: none; display: flex; flex-direction: column; align-items: center; gap: var(--space-2); width: 152px; margin: 0; }
+#app-modal .app-modal__qr-feld {
+  display: block;
+  box-sizing: border-box;
+  width: 144px;
+  height: 144px;
+  padding: 11px;
+  border-radius: var(--radius-md);
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--kopf-haar);
+}
+#app-modal .app-modal__qr-feld svg { display: block; width: 100%; height: 100%; }
+#app-modal .app-modal__qr-text { font: 500 13px/1.4 var(--font-body); text-align: center; color: var(--kopf-dim); }
+/* QR nur am Desktop: am Handy (Gerät per JS, Touch ohne Zeiger, schmal) hilft der Code nicht */
+#app-modal[data-geraet="ios"] .app-modal__qr,
+#app-modal[data-geraet="android"] .app-modal__qr { display: none; }
+@media (hover: none) and (pointer: coarse), (max-width: 520px) {
+  #app-modal .app-modal__qr { display: none; }
+}
+
+#app-modal .app-modal__stores {
+  flex: 1;
+  min-width: 0;
+  max-width: 272px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Store-Knöpfe: schwarz wie die offiziellen Badges, ≥ 48 px (hier 60). Der Store des Geräts steht oben und trägt den
+   Gold-Rand (main.js setzt .ist-empfohlen und die Reihenfolge); der andere bleibt voll wählbar. */
+#app-modal .store-btn {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  background: #05060c;
+  border: 1.5px solid color-mix(in srgb, var(--text-primary) 18%, transparent);
+  color: #fff;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--motion-dur-fast) var(--motion-ease-out),
+              border-color var(--motion-dur-base) var(--motion-ease-out),
+              box-shadow var(--motion-dur-base) var(--motion-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  #app-modal .store-btn:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--text-primary) 42%, transparent);
+    box-shadow: var(--shadow);
+  }
+}
+#app-modal .store-btn:active { transform: scale(0.98); }
+#app-modal .store-btn:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; }
+#app-modal .store-btn.ist-empfohlen { border-color: var(--gold); box-shadow: 0 0 24px var(--gold-24); }
+@media (hover: hover) and (pointer: fine) {
+  #app-modal .store-btn.ist-empfohlen:hover { border-color: var(--gold); box-shadow: 0 0 30px var(--gold-40); }
+}
+#app-modal .store-btn__logo { width: 28px; height: 28px; flex: none; }
+#app-modal .store-btn__text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; line-height: 1.1; }
+#app-modal .store-btn__small { font: 500 12px/1.1 var(--font-body); letter-spacing: 0; text-transform: none; color: rgba(255, 255, 255, 0.72); }
+#app-modal .store-btn__big { font: 700 1.25rem/1.05 var(--font-body); letter-spacing: -0.01em; }
+
+/* Handy: Bottom-Sheet über der Safe Area, Griff oben, Stores volle Breite */
+@media (max-width: 599px) {
+  #app-modal { place-items: end stretch; padding: 0; }
+  #app-modal .app-modal__card {
+    width: 100%;
+    max-height: calc(100dvh - var(--space-6));
+    padding: var(--space-6) var(--space-5) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+    border-bottom: 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    animation: am-ein-sheet var(--am-ein) var(--motion-ease-sheet) both;
+  }
+  #app-modal.ist-zu .app-modal__card { animation: am-aus-sheet var(--am-aus) var(--motion-ease-in) both; }
+  #app-modal .app-modal__griff {
+    display: block;
+    width: 40px;
+    height: 4px;
+    margin: calc(-1 * var(--space-3)) auto var(--space-4);
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--text-primary) 22%, transparent);
+  }
+  #app-modal .app-modal__logo { height: 30px; }
+  #app-modal .app-modal__desc { margin-bottom: var(--space-5); }
+  #app-modal .app-modal__wege { display: block; }
+  #app-modal .app-modal__stores { max-width: 400px; margin: 0 auto; }
+  #app-modal .store-btn { justify-content: center; min-height: 58px; }
+}
+
+@keyframes am-ein-blende { from { opacity: 0; } }
+@keyframes am-aus-blende { to { opacity: 0; } }
+@keyframes am-ein-karte { from { opacity: 0; transform: translateY(12px) scale(0.97); } }
+@keyframes am-aus-karte { to { opacity: 0; transform: translateY(8px) scale(0.98); } }
+@keyframes am-ein-sheet { from { transform: translateY(100%); } }
+@keyframes am-aus-sheet { to { transform: translateY(100%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  #app-modal .app-modal__backdrop,
+  #app-modal .app-modal__card,
+  #app-modal.ist-zu .app-modal__backdrop,
+  #app-modal.ist-zu .app-modal__card { animation: none; }
+  #app-modal .store-btn { transition: none; }
+  #app-modal .store-btn:hover, #app-modal .store-btn:active { transform: none; }
 }

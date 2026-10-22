@@ -670,19 +670,24 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
   gap: 6px;
   margin-left: auto;
 }
-.fg-kopf__app { padding: 0 18px; }
-
-/* Bolt 6 (Chris 2026-10-22 über Fury): ab 600 px ist „Tester Club beitreten“ der Haupt-Aufruf im Kopf, „App laden“
-   steht als Linie daneben (weniger laut). Unter 600 px bleibt der Kopf wie bisher (nur App laden in Gold, beide
-   Aufrufe im Menü). */
-.fg-kopf__app--linie,
-.fg-kopf__tc { display: none; }
-.fg-kopf__app--linie { padding: 0 16px; }
+/* Atlas 10 „nav4“ (Chris 2026-10-22: „einen klaren, konstant mitscrollenden CTA … in der Navigation. Immer.“):
+   „Tester Club beitreten“ steht auf jeder Breite im Kopf, der Kopf klebt. Handy (< 600 px): Logo · Tester Club ·
+   App-Symbol · Menü. Das Symbol ist die App-Linie von ab 600 px, zu einem runden 44-px-Knopf verdichtet (Handy mit
+   Pfeil, aria-label „App laden“); erst ab 384 px, darunter passt es nicht neben Tester Club und Menü (gemessen
+   360 px: 32 px Luft ohne Symbol, mit Symbol 18 px zu breit). Ab 600 px: App laden als Linie + Tester Club (Bolt 6). */
+.fg-kopf__app--linie { display: none; padding: 0 16px; }
+.fg-kopf__tc { padding: 0 14px; font-size: 14px; letter-spacing: 0.005em; }
+.fg-kopf__app--symbol { display: none; width: 44px; margin-left: 4px; padding: 0; }
+.fg-kopf__app--symbol .fg-pille__ico { width: 20px; height: 20px; }
+.fg-kopf__app--symbol:active { transform: scale(0.9); }
+@media (min-width: 384px) {
+  .fg-kopf__app--symbol { display: inline-flex; }
+}
 @media (min-width: 600px) {
   .fg-kopf__rechts { gap: 10px; }
-  .fg-kopf__app--handy { display: none; }
-  .fg-kopf__app--linie,
-  .fg-kopf__tc { display: inline-flex; }
+  .fg-kopf__tc { padding: 0 18px; font-size: 15px; letter-spacing: 0; }
+  .fg-kopf__app--symbol { display: none; }
+  .fg-kopf__app--linie { display: inline-flex; }
 }
 
 /* Haupt-Aufruf mit Tiefe (.fg-pille--glanz; Kopf ab 600 px und Handy-Menü): Glanzkante oben, weicher Schatten
@@ -690,7 +695,6 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
    Pseudo hinter der Schrift); im Menü kommt der erste Wisch kurz nach dem Öffnen. Zeigen hebt leicht an, Drücken gibt
    nach. Reduzierte Bewegung: kein Glanz-Wisch. Basis .fg-pille bleibt unverändert (Bolt 6 als --kopf, Atlas 9:
    umbenannt, weil das Menü denselben Haupt-Aufruf trägt). */
-.fg-kopf__tc { padding: 0 18px; }
 .fg-pille--glanz {
   position: relative;
   isolation: isolate;
@@ -735,6 +739,52 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
   .fg-pille--glanz:hover { transform: translateY(-2px); }
 }
 .fg-pille--glanz:active { transform: translateY(0) scale(0.97); transition-duration: 90ms; }
+
+/* Kopf-Aufrufe auf der Startseite (Atlas 10, Chris 2026-10-22: „erst dann erscheinen, wenn der ‚Tester Club
+   beitreten‘-Button aus dem Hero wegscrollt. Aber dann muss er überall sticky da sein.“). Eine Logik für alle Breiten,
+   ersetzt die Regel aus frontend/hero/hero.css (Coulson #10, nur App laden < 1000 px).
+   Signal <html>.fgi-startbild-an = das Startbild steht, und mit ihm seine großen Aufrufe (App laden, Tester Club);
+   gesetzt vor dem ersten Bild von sections/fg-island-hero.liquid, danach von frontend/hero/Hero.jsx useStartbild.
+   Die Pillen gehen MIT dem Startbild (Überblendung in die klebende 3D-Bühne), nicht durch Wegscrollen; ein
+   IntersectionObserver sähe sie weiter „im Bild“. Solange: der Kopf zeigt nur Logo · Menü, die Aufrufe halten
+   unsichtbar ihren Platz, nichts verschiebt sich. Geht das Startbild: Auftritt ≤ 300 ms (aus leicht oben in den Kopf,
+   Feder, Tester Club zuerst, App 60 ms danach), dann wischt der Glanz einmal (fg-nav.js §6 .ist-auftritt). Zurück nach oben: leise weg
+   in 160 ms. Reduzierte Bewegung: Wechsel ohne Bewegung. Nur opacity, translate, scale. */
+.fg-kopf .fg-kopf__aufruf {
+  transition:
+    transform 260ms var(--motion-feder-objekt),
+    background-color var(--motion-dur-base) var(--motion-ease-out),
+    opacity 200ms var(--motion-ease-out),
+    translate 300ms var(--motion-feder-objekt),
+    scale 300ms var(--motion-feder-objekt),
+    visibility 0s;
+}
+.fg-kopf .fg-kopf__aufruf:active { transition-duration: 90ms; }
+html.fgi-startbild-an .fg-kopf .fg-kopf__aufruf {
+  opacity: 0;
+  visibility: hidden;
+  translate: 0 -8px;
+  scale: 0.9;
+  transition:
+    opacity 140ms var(--motion-ease-in),
+    translate 160ms var(--motion-ease-in),
+    scale 160ms var(--motion-ease-in),
+    visibility 0s linear 160ms;
+}
+.fg-kopf.ist-auftritt .fg-kopf__app { transition-delay: 60ms; }
+@media (prefers-reduced-motion: no-preference) {
+  .fg-kopf.ist-auftritt .fg-kopf__tc::after { animation: fg-pille-glanz-einmal 640ms var(--motion-ease-move) 180ms both; }
+}
+@keyframes fg-pille-glanz-einmal {
+  0%   { opacity: 0; transform: translateX(-130%) skewX(-18deg); }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(300%) skewX(-18deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html .fg-kopf .fg-kopf__aufruf,
+  html.fgi-startbild-an .fg-kopf .fg-kopf__aufruf { transition: none; translate: none; scale: none; }
+}
 
 /* Menü-Knopf (48 × 48): ein Knopf für Öffnen und Schließen, bleibt an seinem Platz. Die zwei Linien morphen in zwei
    Takten zum X (erst zusammen, dann drehen) und zurück; offen liegt ein leises Feld dahinter. Drücken gibt nach.
@@ -783,7 +833,7 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
 @media (max-width: 359px) {
   .fg-kopf__bar { gap: var(--space-2); }
   .fg-kopf__logo img { height: 30px; }
-  .fg-kopf__app { padding: 0 14px; font-size: 14px; }
+  .fg-kopf__tc { padding: 0 12px; font-size: 13px; }
 }
 
 @media (min-width: 1000px) {

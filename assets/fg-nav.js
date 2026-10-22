@@ -18,6 +18,12 @@
       .spielt für Tipp (Touch) und beim Öffnen des Menüs (die drei kurz
       nacheinander, als Antwort auf den Tipp); danach wieder Standbild. In Ruhe
       läuft nichts, kein Autostart. Reduzierte Bewegung: nur Standbilder.
+   6  Kopf-Aufrufe (Atlas 10 „nav4“): Tester Club beitreten + App laden stehen
+      auf jeder Seite im klebenden Kopf. Auf der Startseite halten sie still,
+      solange das Startbild mit seinen eigenen Aufrufen steht (<html>.fgi-
+      startbild-an, Signal des Hero; Regel in fg-design.css „Kopf-Aufrufe“).
+      Hier nur: Geht das Startbild, bekommt der Kopf kurz .ist-auftritt (Glanz
+      wischt einmal über Tester Club), und Haptik beim Tipp auf einen Aufruf.
    Ohne Abhängigkeiten, ES5-sicher wie main.js.
    ═══════════════════════════════════════════════════════════════════════════ */
 (function () {
@@ -304,12 +310,40 @@
     }
   }
 
+  /* ─── 6 Kopf-Aufrufe: Auftritt nach dem Startbild, Haptik ─── */
+  var AUFTRITT_MS = 1000; // 300 ms Auftritt + Glanz (180 ms Versatz, 640 ms), dann wieder der ruhige 7,2-s-Impuls
+  function initAufrufe() {
+    var kopf = document.querySelector('[data-fg-kopf]');
+    if (!kopf) return;
+    var aufrufe = kopf.querySelectorAll('.fg-kopf__aufruf');
+    for (var i = 0; i < aufrufe.length; i++) {
+      aufrufe[i].addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse') haptik(8);
+      });
+    }
+    if (reduziert || !window.MutationObserver) return;
+    var an = doc.classList.contains('fgi-startbild-an');
+    var uhr = 0;
+    new MutationObserver(function () {
+      var jetzt = doc.classList.contains('fgi-startbild-an');
+      if (jetzt === an) return;
+      an = jetzt;
+      window.clearTimeout(uhr);
+      kopf.classList.remove('ist-auftritt');
+      if (jetzt) return;
+      void kopf.offsetWidth; // Glanz startet neu, auch wenn der letzte Auftritt eben erst war
+      kopf.classList.add('ist-auftritt');
+      uhr = window.setTimeout(function () { kopf.classList.remove('ist-auftritt'); }, AUFTRITT_MS);
+    }).observe(doc, { attributes: true, attributeFilter: ['class'] });
+  }
+
   function start() {
     var kopf = document.querySelector('[data-fg-kopf]');
     if (kopf && qrWeiche(kopf)) return;
     initMenue();
     initApp();
     initMini();
+    initAufrufe();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);

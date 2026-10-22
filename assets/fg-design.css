@@ -760,7 +760,10 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
     visibility 0s;
 }
 .fg-kopf .fg-kopf__aufruf:active { transition-duration: 90ms; }
-html.fgi-startbild-an .fg-kopf .fg-kopf__aufruf {
+html.fgi-startbild-an .fg-kopf .fg-kopf__aufruf,
+/* Menü offen: Die Tafel bringt Tester Club + App selbst mit, der Kopf zeigt dann nur Logo und X (Chris 2026-10-22:
+   „die CTAs sind dann redundant“). Beim Schließen kommen sie mit dem normalen Auftritt zurück. */
+html.fg-menue-offen .fg-kopf .fg-kopf__aufruf {
   opacity: 0;
   visibility: hidden;
   translate: 0 -8px;
@@ -783,7 +786,8 @@ html.fgi-startbild-an .fg-kopf .fg-kopf__aufruf {
 }
 @media (prefers-reduced-motion: reduce) {
   html .fg-kopf .fg-kopf__aufruf,
-  html.fgi-startbild-an .fg-kopf .fg-kopf__aufruf { transition: none; translate: none; scale: none; }
+  html.fgi-startbild-an .fg-kopf .fg-kopf__aufruf,
+  html.fg-menue-offen .fg-kopf .fg-kopf__aufruf { transition: none; translate: none; scale: none; }
 }
 
 /* Menü-Knopf (48 × 48): ein Knopf für Öffnen und Schließen, bleibt an seinem Platz. Die zwei Linien morphen in zwei

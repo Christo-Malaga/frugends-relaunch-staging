@@ -13,12 +13,19 @@
                   0.6, hud false; bullet aus den Settings, mobil/desktop).
                   surprise-box.js, frugends-burst.css, three.min.js werden
                   NUR benutzt, nie verändert.
-   2 · BLITZ      Runde 3 Fix (Coulson #7): kein Weiß mehr. Die Szene läuft per
-                  Scroll nur bis vor ihre Weiß-Phase (SZENE_MAX); an der Schwelle
-                  BLITZ_BEI zündet ein zeitgebundener Goldblitz (240 ms, ≤ 40 %).
-   3 · NACHT      Navy-Ebene blendet mit dem Blitz in 260 ms ein (CSS-Übergang,
-                  nicht scroll-gebunden). Bei voller Deckung ruht die Bühne nach
-                  600 ms (display:none => surprise-box zeichnet nicht mehr, QA J-04).
+   2 · LICHT      Bolt 7 (Chris 2026-10-22: „Das Timing war richtig gut am Anfang“):
+                  wieder wie live (origin/main). Die Szene läuft 1:1 auf dem rohen
+                  Fortschritt (Box 0–0.205, Auswurf/Gleiten bis 0.49, Explosion
+                  übernimmt bis 0.745, Licht 0.675–0.91), Titel wird über dem Licht
+                  zur Navy-Tinte (Live: 0.76–0.84). Einzige Abweichung: Steht der
+                  Scroll länger als 300 ms im vollen Licht, zieht die Nacht
+                  zeitgebunden in 350 ms auf (= nächster Zustand: Navy, Titel Gold)
+                  und bleibt, bis die Spur rückwärts unter 0.60 läuft => kein
+                  stehendes Weißbild. Beim Durchscrollen greift das nie.
+   3 · NACHT      Navy-Ebene 0.90–1.0 (smoothstep, roher Fortschritt wie live),
+                  Tinte wird Gold. visibility:hidden, solange unsichtbar. Bei
+                  voller Deckung ruht die Bühne nach 600 ms (display:none =>
+                  surprise-box zeichnet nicht mehr, QA J-04).
    4 · ANDOCKEN   Spur B ist bis zum Andocken (top ≤ 0) unsichtbar und liegt
                   dann pixelgleich über A (gleicher Grund, gleiche Headline).
    5 · BEATS B    data-fx-* für scroll-cinema.js: Headline gleitet aus der
@@ -54,7 +61,7 @@
                   blendet aus, bevor die Box erscheint (.ist-box).
   12 · MOBIL      Bolt 6 (Fury/Chris 2026-10-22): DPR-Deckel der Instanz 1,5 mobil / 1,75 Desktop,
                   Explosions-Shader beim Einhängen vorkompiliert (vorher 100-ms-Ruckler im
-                  ersten Burst-Bild). Spurlänge mobil: templates/page.turniere.json 260 svh.
+                  ersten Burst-Bild). Spurlänge (Bolt 7): wie live 200/160 vh, am Handy dieselben 200/160 svh (gleiche Phasenanteile).
    ═══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -63,16 +70,15 @@
   window.__fgRewardsStage = true;
 
   var MOBILE = window.matchMedia('(max-width: 767px)');
+  var NIGHT_FROM = 0.90;
+  var NIGHT_FULL = 0.999;
   var REST_AFTER_MS = 600;
-  /* Runde 3 Fix (Coulson #7, 2026-10-22): kein scroll-gebundenes Weiß mehr. Die Szene läuft per Scroll nur bis
-     vor ihre Übernahme-Phase (gemessen: ab Szene ≈ 0.53 deckt der Plasmakern > 30 % hell, whiteAt ab 0.675):
-     Spur-A-Fortschritt 0 … BLITZ_BEI bildet auf Szenen-Fortschritt 0 … SZENE_MAX ab. Bei BLITZ_BEI zündet ein
-     zeitgebundener Goldblitz (CSS, 240 ms, höchstens 40 % Deckkraft) und die Nacht blendet in 260 ms ein; danach
-     dockt Spur B an und die vier Winner Boxen steigen klar auf. Rückwärts (unter BLITZ_ZURUECK) blendet die Nacht
-     wieder aus, ohne Blitz. */
-  var SZENE_MAX = 0.48;
-  var BLITZ_BEI = 0.93;
-  var BLITZ_ZURUECK = 0.88;
+  /* Bolt 7: Zeitplan wie live (origin/main, von Chris am Desktop optimiert). Der Runde-3-Umbau (Szene nur bis 0.48
+     über 93 % der Spur, Goldblitz + Endbild zeitgebunden) hatte Box-Öffnen und Gleiten um 55 % gestreckt, die
+     Explosion gestrichen und die Enthüllung auf einen Schlag gelegt. */
+  /* Licht-Haltegrenze: volles Licht (> 0.6) steht höchstens LICHT_HALT_MS, dann zieht die Nacht in LICHT_AB_MS auf */
+  var LICHT_HALT_MS = 300;
+  var LICHT_AB_MS = 350;
 
   function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
   function ramp(p, a, b) { return clamp01((p - a) / (b - a)); }
@@ -265,9 +271,12 @@
     this.sticky = q('[data-rs-a-sticky]');
     this.night = q('[data-rs-night]');
     this.decke = q('[data-rs-decke]');
-    this.blitz = q('[data-rs-blitz]');
-    this.nacht = false;       // Nacht steht (nach dem Blitz)
-    this.lastP = null;
+    this.hAn = false;         // 2 · Licht-Haltegrenze: Nacht zeitgebunden angefordert
+    this.hv = 0;              // deren Stand 0..1 (linear, gezeichnet geglättet)
+    this.hNow = 0;            // letzter Zeitstempel (ms)
+    this.hLastP = null;       // letzter Fortschritt (Stillstand erkennen)
+    this.hMove = 0;           // letzte Bewegung (ms)
+    this.nachtSoll = -1;      // zuletzt geschriebene Nacht (Änderung => update)
     this.flash = q('[data-rs-flash]');
     this.flashTitle = q('[data-rs-flash-title]');
     this.ink = q('[data-rs-ink]');
@@ -335,9 +344,9 @@
       box.setAttribute('hud', 'false');
       box.setAttribute('logo', root.getAttribute('data-logo') || '');
       box.setAttribute('aria-hidden', 'true');
-      /* Szenen-Fortschritt kommt von hier (surprise-box.js bleibt unverändert, nur die Instanz-Methode wird
-         überdeckt): die Szene endet vor ihrer Weiß-Phase, siehe SZENE_MAX. */
-      box._progress = function () { return self.szene(); };
+      /* Szenen-Fortschritt = roher Fortschritt der Spur wie live (surprise-box._progress rechnet dasselbe); die
+         Instanz-Methode führt nebenbei je Bild die Licht-Haltegrenze nach (läuft auch, wenn der Scroll steht). */
+      box._progress = function () { return self.licht(); };
       /* 11 · Hinweis zuerst weg, dann die Box: kurz unsichtbar einhängen (.box-wartet), zwei Bilder später
          .ist-box (Hinweis blendet aus, Box blendet mit 200 ms Versatz ein). Ohne JS-Schritt bleibt sie sichtbar. */
       root.classList.add('box-wartet');
@@ -495,42 +504,39 @@
     this.update();
   };
 
-  /* Roher Fortschritt der Spur A (wie surprise-box._progress) und der daraus abgeleitete Szenen-Fortschritt */
+  /* Roher Fortschritt der Spur A (wie surprise-box._progress) */
   Stage.prototype.roh = function (ra, vh) {
     var travel = ra.height - vh;
     return travel > 1 ? clamp01(-ra.top / travel) : (ra.top < 0 ? 1 : 0);
   };
-  Stage.prototype.szene = function () {
-    var p = this.roh(this.a.getBoundingClientRect(), window.innerHeight || 1);
-    return Math.min(p / BLITZ_BEI, 1) * SZENE_MAX;
+
+  /* 2 · Licht der Szene über dem Fortschritt: Plasma übernimmt das Bild (ab ≈ 0.60, Explosion E ≈ 0.7) und
+     whiteAt (0.675–0.91, wie surprise-box.js), abzüglich der Nacht. */
+  function lichtBei(p) {
+    return Math.max(smooth(ramp(p, 0.60, 0.70)), smooth(ramp(p, 0.675, 0.91))) * (1 - smooth(ramp(p, NIGHT_FROM, 1)));
+  }
+
+  /* 2 · Licht-Haltegrenze. Steht der Scroll länger als LICHT_HALT_MS im vollen Licht (> 0.6), zieht die Nacht
+     zeitgebunden in LICHT_AB_MS auf (= der nächste Zustand der Spur: Navy, Titel Gold) und bleibt, bis die Spur
+     rückwärts aus dem Licht läuft (< 0.60). Beim Durchscrollen greift sie nicht: Ablauf exakt wie live. */
+  Stage.prototype.halten = function (p, now) {
+    if (this.hLastP === null || Math.abs(p - this.hLastP) > 0.0004) { this.hLastP = p; this.hMove = now; }
+    if (!this.hAn && this.ready && lichtBei(p) > 0.6 && now - this.hMove > LICHT_HALT_MS) this.hAn = true;
+    else if (this.hAn && p < 0.60) this.hAn = false;
+    var dt = this.hNow ? Math.min(now - this.hNow, 100) : 0;
+    this.hNow = now;
+    this.hv = clamp01(this.hv + (this.hAn ? 1 : -1) * dt / LICHT_AB_MS);
+    return smooth(this.hv);
   };
 
-  /* Nacht an/aus. Mit Blitz: Goldblitz (240 ms) + Nacht blendet über 260 ms ein (CSS). Ohne Blitz beim
-     Einschalten (Anker-Sprung, Laden mitten in der Spur): sofort, ohne Übergang. Ausschalten blendet aus. */
-  Stage.prototype.setNacht = function (an, mitBlitz) {
-    this.nacht = an;
-    var n = this.night, root = this.root;
-    if (an && !mitBlitz) {
-      root.classList.add('ist-sofort');
-      n.classList.add('ist-an');
-      root.classList.add('ist-enthuellt');
-      void n.offsetWidth;
-      window.requestAnimationFrame(function () {
-        window.requestAnimationFrame(function () { root.classList.remove('ist-sofort'); });
-      });
-    } else {
-      n.classList.toggle('ist-an', an);
-      /* Enthüllung (Spur B, Endbild) zeitgebunden: CSS staffelt Titel, Scheibe, Boxen, Legende, Caption */
-      root.classList.toggle('ist-enthuellt', an);
-    }
-    var b = this.blitz;
-    if (an && mitBlitz && b) {
-      b.classList.remove('ist-blitz');
-      void b.offsetWidth;   // Animation neu starten
-      b.classList.add('ist-blitz');
-    } else if (b && !an) {
-      b.classList.remove('ist-blitz');
-    }
+  /* Je Bild aus surprise-box (box._progress, läuft auch bei stehendem Scroll): roher Fortschritt wie live.
+     Ändert sich die Haltegrenze, zeichnet update() Nacht, Tinte und Ruhe nach. */
+  Stage.prototype.licht = function () {
+    var p = this.roh(this.a.getBoundingClientRect(), window.innerHeight || 1);
+    var now = window.performance && performance.now ? performance.now() : Date.now();
+    var h = this.halten(p, now);
+    if (h !== this.nachtSoll) this.update();
+    return p;
   };
 
   /* 2–4, 7 · pro Frame (rAF-gedrosselt) */
@@ -542,25 +548,37 @@
     var ra = this.a.getBoundingClientRect();
     var p = this.roh(ra, vh);
 
-    /* 8 · Titel steht von Anfang an über der Box, immer in Gold (kein Weiß mehr, also keine Tinte).
-       Aufladen mit dem Scroll, Schlag zum Blitz, vor dem Andocken exakt zurück (Übergabe an B pixelgleich). */
-    var aus = 1 - smooth(ramp(p, BLITZ_BEI, 0.99));
-    var lade = smooth(ramp(p, 0.03, 0.7)) * aus;           // aufladen: spreizen, kippen
-    var knall = smooth(ramp(p, 0.8, BLITZ_BEI)) * aus;     // Schlag zum Blitz
+    /* 8 · Titel steht von Anfang an über der Box (Gold, über dem Licht Navy-Tinte wie live). Aufladen mit dem
+       Box-Öffnen und Auswurf, Schlag mit Explosion und Licht, mit der Nacht exakt zurück (Übergabe an B pixelgleich). */
+    var aus = 1 - smooth(ramp(p, NIGHT_FROM, 0.99));
+    var lade = smooth(ramp(p, 0.03, 0.49)) * aus;          // aufladen: spreizen, kippen (Box auf, Auswurf, Gleiten)
+    var knall = smooth(ramp(p, 0.49, 0.80)) * aus;         // Schlag: Explosion übernimmt, Licht
     var sc = 1 + 0.06 * knall;
 
-    /* Mit der Nacht blendet die Headline von A im Takt des B-Covers aus (CSS-Übergang): keine Doppel-Headline */
-    setStyle(this.flash, c, 'fo', 'opacity', this.nacht ? '0' : '1');
-    if (this.decke) setStyle(this.decke, c, 'do', 'opacity', smooth(ramp(p, 0.36, 0.52)).toFixed(3));
+    /* Bis zum Andocken steht die Headline von A; ab dann deckt B (gleiche Stelle, gleicher Grund) */
+    setStyle(this.flash, c, 'fo', 'opacity', '1');
+    /* 11 · Decke (Querformat): mit dem Auswurf ein, vor der Übernahme wieder aus (das Licht füllt das Bild wie live) */
+    if (this.decke) setStyle(this.decke, c, 'do', 'opacity', (smooth(ramp(p, 0.17, 0.26)) * (1 - smooth(ramp(p, 0.50, 0.62)))).toFixed(3));
     if (this.box && (!this.box.__gold || !this.box.__dpr)) { vergolden(this.box); deckeln(this.box); }
     setStyle(this.flash, c, 'fv', 'visibility', 'visible');
     setStyle(this.flashTitle, c, 'fs', 'transform', sc < 1.0001 ? 'none' : 'scale(' + sc.toFixed(4) + ')');
     setVar(this.flashTitle, c, 'vl', '--rs-lade', lade.toFixed(3));
     setVar(this.flashTitle, c, 'vk', '--rs-knall', knall.toFixed(3));
-    if (this.ink) setStyle(this.ink, c, 'io', 'opacity', '0');
-    if (this.gold) setStyle(this.gold, c, 'go', 'opacity', '1');
+
+    /* 3 · Nacht: roher Fortschritt wie live (keine Lücke durch Glättung), dazu die Licht-Haltegrenze (2) */
+    var now = window.performance && performance.now ? performance.now() : Date.now();
+    var hold = this.halten(p, now);
+    this.nachtSoll = hold;
+    var o = Math.max(smooth(ramp(p, NIGHT_FROM, 1)), hold);
+    setStyle(this.night, c, 'no', 'opacity', o.toFixed(3));
+    setStyle(this.night, c, 'nv', 'visibility', o > 0 ? 'visible' : 'hidden');
+
+    /* Titel-Tinte: über dem Licht Navy (live: Tinte auf Weiß), mit der Nacht wieder Gold. Ohne Canvas Gold. */
+    var ink = this.ready ? smooth(ramp(lichtBei(p), 0.35, 0.8)) * (1 - hold) : 0;
+    if (this.ink) setStyle(this.ink, c, 'io', 'opacity', ink.toFixed(3));
+    if (this.gold) setStyle(this.gold, c, 'go', 'opacity', (1 - ink).toFixed(3));
     if (this.hint) {
-      var h = 1 - smooth(ramp(p, 0.1, 0.32));
+      var h = 1 - smooth(ramp(p, 0.04, 0.16));
       setStyle(this.hint, c, 'ho', 'opacity', h.toFixed(3));
       setStyle(this.hint, c, 'hv', 'visibility', h > 0.001 ? 'visible' : 'hidden');
       // Endlos-Hüpfer des Pfeils (CSS rs-hinweis) nur, solange der Hinweis zu sehen ist: Chrome animiert SVG-Elemente
@@ -569,14 +587,8 @@
     }
     this.arbiter(ra, vh);
 
-    /* Blitz + Nacht: zeitgebunden (CSS-Übergang), ausgelöst an einer Scroll-Schwelle */
-    var sprung = this.lastP === null || Math.abs(p - this.lastP) > 0.35;   // Anker-Sprung, Laden mitten in der Spur
-    if (!this.nacht && p >= BLITZ_BEI) this.setNacht(true, !sprung && this.ready);
-    else if (this.nacht && p < BLITZ_ZURUECK) this.setNacht(false, false);
-    this.lastP = p;
-
-    /* Ruhe unter voller Deckung */
-    this.nightFull = this.nacht;
+    /* Ruhe unter voller Deckung (bei der Haltegrenze erst, wenn sie steht und angefordert bleibt) */
+    this.nightFull = o >= NIGHT_FULL && (hold < NIGHT_FULL || this.hAn);
     if (this.box) {
       var self = this;
       if (this.nightFull) {
@@ -592,11 +604,11 @@
       }
     }
 
-    /* Spur B: sichtbar ab dem Blitz (CSS über .ist-enthuellt). Bis zum Andocken liegt ihre Bühne noch
-       (1 − BLITZ_BEI) × Spurlänge tiefer: um genau diesen Abstand hochschieben, damit das Endbild steht. */
+    /* 4 · Spur B: erst beim Andocken sichtbar (wie live); die Beats laufen per Scroll (scroll-cinema) */
     var rb = this.b.getBoundingClientRect();
-    var versatz = this.nacht && rb.top > 0.5 ? rb.top : 0;
-    setStyle(this.stage, c, 'sv', 'transform', versatz ? 'translate3d(0,' + (-versatz).toFixed(1) + 'px,0)' : '');
+    var docked = rb.top <= 0.5;
+    setStyle(this.cover, c, 'co', 'opacity', docked ? '1' : '0');
+    setStyle(this.cover, c, 'cv', 'visibility', docked ? 'visible' : 'hidden');
 
     /* Layout darüber verschoben (Bilder, Fonts)? scroll-cinema neu messen */
     var bTop = rb.top + (window.scrollY || window.pageYOffset || 0);

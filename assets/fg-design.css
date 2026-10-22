@@ -1,0 +1,1101 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   FRUGENDS — DESIGNSCHICHT (Relaunch 2026-10, Builder A „Atlas“)
+
+   Eine Datei für alle Seiten. Lädt in layout/theme.liquid NACH tokens/base/
+   components. Spezifikation: docs/relaunch-2026-10/H1-HARMONIE-SPEC.md §3,
+   VX1-VISUAL-MOTION.md §3 (Tokens, Bewegung, Prinzipien), §4 M1 + M3, §5.6, §6.
+
+   Regeln dieser Datei
+   · Kanon-Werte (B src/styles/tokens.css, Theme assets/tokens.css) werden NIE
+     überschrieben. Hier stehen nur NEUE Namen. Keine neuen Grundfarben: alles
+     Neue ist ein Name für einen Kanon-Wert oder eine Mischung daraus.
+   · Keine globalen Element-Selektoren. Alles hängt an eigenen Klassen
+     (.fg-*, .welt-*), damit keine bestehende Sektion bricht.
+   · Animiert werden nur transform und opacity.
+
+   Inhalt
+     1  Tokens (Namen, Welten, Banderolen, Münze, Bewegung)
+     2  Welten  .welt-produkt · .welt-arena · .welt-senke
+     3  Box-Familie  .fg-box · --winner · --test · --surprise (Fugenlicht)
+     4  Ring  .fg-ring (+ __station)
+     5  Seitenübergänge (Cross-Document View Transitions)
+     6  Schale: Sprunglink, Gold-Pille, Kopf, Mini-Visuals, Menü, Fuß
+     7  Kicker in Satzschreibung (Chips, Etiketten auf Wiki, Rechtsseiten, Merch)
+     8  Plattform-Kacheln (vorgerenderte 3D-App-Kacheln, Creator-Sektion und Socials)
+     9  Schriftskala als Klassen  .fg-h1 · .fg-h2 · .fg-h3 · .fg-lead
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ═══ 1 TOKENS ══════════════════════════════════════════════════════════════ */
+:root {
+  /* Kanon-Namen, die das Theme bisher nicht kannte (Werte = B tokens.css) */
+  --gold-gradient: linear-gradient(180deg, #FFEFA0 0%, #FFCD28 50%, #FF8A1A 100%);
+  --fs-h2: clamp(1.85rem, 4.2vw, 2.9rem);
+  /* Eine Schriftskala für alle Seiten (Kritik Coulson 2026-10-22: H2 lagen zwischen 24 und 74 px).
+     Seitenkopf-H1 · Kapitel-H2 · Karten-/Unter-H3 · Fließtext groß. Riesentypo des Heros bleibt eigen (satz.js). */
+  --fs-h1: clamp(2.25rem, 1.55rem + 3.1vw, 4rem);
+  --fs-h3: clamp(1.25rem, 1.08rem + 0.75vw, 1.6rem);
+  --fs-lead: clamp(1.05rem, 0.98rem + 0.35vw, 1.25rem);
+  --z-modal: 300;
+
+  /* Marke */
+  --logo-lila: #c893fd;
+
+  /* Welten (VX1 §3.1, Werte = business welten.css) */
+  --welt-arena:   #1b1638;                                             /* = --welt-kampagnen */
+  --welt-produkt: color-mix(in srgb, var(--bg-deep) 89%, var(--cyan)); /* = --welt-sampling  */
+  --welt-senke:   #0f1120;                                             /* = --welt-reichweite */
+
+  /* Akzent je Welt = Farbe ihres Stroms (VX1 M2): Cyan aus Spielen und Turnieren,
+     Lila aus Fragebogen-Games, warmes Licht aus der Fuge der Surprise Box.
+     --licht-warm ist Gold, zu Licht verdünnt (keine neue Grundfarbe). */
+  --licht-warm:          color-mix(in srgb, var(--gold) 58%, #fff);
+  --akzent-produkt:      var(--logo-lila);
+  --akzent-arena:        var(--cyan);
+  --akzent-senke:        var(--licht-warm);
+
+  /* Banderolen der Winner Boxen (T content/boxen.js), nur an Winner Boxen */
+  --band-lila: #9a78e8;
+  --band-cyan: #38c9f0;
+  --band-holo: linear-gradient(90deg, #f5a3ff, #8fd3ff, #b8ffb0, #ffe28a);
+  --band-gold: #ffcd28;
+
+  /* Frugends Points (QuestPointsArt) */
+  --muenze-rand:  var(--gold);
+  --muenze-mitte: var(--purple);
+
+  /* Ring (VX1 M3): Höhe : Breite der Ellipse = T showcase/buehne3d.js NEIGUNG */
+  --ring-neigung: 0.36;
+
+  /* ─── Bewegung: Bestand B src/styles/motion.css 1:1 ─── */
+  --motion-ease-out:   cubic-bezier(0.16, 1, 0.3, 1);   /* etwas kommt an */
+  --motion-ease-in:    cubic-bezier(0.4, 0, 1, 1);      /* etwas geht */
+  --motion-ease-move:  cubic-bezier(0.65, 0, 0.35, 1);  /* Platzwechsel im Bild */
+  --motion-ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);  /* große Fläche */
+  --motion-dur-fast: 150ms;
+  --motion-dur-base: 240ms;
+  --motion-dur-slow: 420ms;
+  --motion-dur-exit: 180ms;
+  --motion-dur-word: 520ms;
+  --motion-rise: 10px;
+
+  /* ─── Bewegung: neu für frugends.com (VX1 §3.3) ─── */
+  /* Spielobjekt landet (Box, Münze, Karte). Sprungantwort ζ 0,72, ω 15,9 rad/s. */
+  --motion-feder-objekt: linear(0, 0.179 10%, 0.494 20%, 0.761 30%, 0.93 40%, 1.011 50%, 1.037 60%, 1.035 70%, 1.024 80%, 1.012 90%, 1);
+  --motion-dur-objekt: 450ms;
+  --motion-dur-kamera: 600ms;   /* Kurve: --motion-ease-sheet */
+  --motion-tausch-blur: 12px;
+  --motion-dur-tausch: 150ms;
+
+  /* Schale */
+  --kopf-h: var(--chrome-height-mobile);
+  --kopf-linie: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  --kopf-dim: color-mix(in srgb, var(--text-primary) 72%, transparent);   /* ≥ 7:1 auf --bg-deep */
+  --kopf-haar: color-mix(in srgb, var(--text-primary) 16%, transparent);        /* Haarlinie zwischen Gruppen */
+  --kopf-haar-leise: color-mix(in srgb, var(--text-primary) 9%, transparent);   /* Haarlinie zwischen den drei Wegen */
+}
+@media (min-width: 1024px) {
+  :root { --kopf-h: var(--chrome-height-desktop); }
+}
+
+
+/* ═══ 2 WELTEN ══════════════════════════════════════════════════════════════
+   Klasse am <main> (theme.liquid leitet sie aus dem Template ab). Setzt den
+   Grund der Seite und --welt-akzent (Unterstrich, Türrand, Kartenrand). */
+.welt-produkt { --welt-grund: var(--welt-produkt); --welt-akzent: var(--akzent-produkt); background-color: var(--welt-grund); }
+.welt-arena   { --welt-grund: var(--welt-arena);   --welt-akzent: var(--akzent-arena);   background-color: var(--welt-grund); }
+.welt-senke   {
+  --welt-grund: var(--welt-senke);
+  --welt-akzent: var(--akzent-senke);
+  /* „+ warmes Licht“: ein ruhiger Lichtschein von oben, steht still */
+  background:
+    radial-gradient(90% 520px at 50% 0, color-mix(in srgb, var(--gold) 9%, transparent), transparent 70%),
+    var(--welt-grund);
+}
+
+
+/* ═══ 3 BOX-FAMILIE (VX1 M1) ════════════════════════════════════════════════
+   Ein Karton, drei Zustände. Die Klassen geben nur Rahmen, Akzent und das
+   Fugenlicht; Neigung und Antworten der Türen baut die Startseite.
+
+   <span class="fg-box fg-box--surprise">
+     <img src="…box-zu.webp" alt="…" width="900" height="675">
+     <span class="fg-box__fuge" aria-hidden="true"></span>
+   </span>
+
+   Fugenlicht: 2-px-Lichtlinie in der Deckelfuge, dazu ein Lichtschein nach
+   oben (Pseudo-Element, erbt die Deckkraft). Animiert wird NUR opacity.
+   Lage über --fuge-x/-y (Startpunkt), --fuge-l (Länge, % der Breite),
+   --fuge-w (Winkel). Vorgabe = T public/hero/box-zu.webp (900 × 675):
+   Fuge zwischen den Deckelklappen von (353,112) nach (527,58). */
+.fg-box {
+  --box-akzent: var(--text-primary);
+  position: relative;
+  display: block;
+  isolation: isolate;
+}
+.fg-box > img { display: block; width: 100%; height: auto; }
+
+.fg-box--winner   { --box-akzent: var(--akzent-arena); }
+.fg-box--test     { --box-akzent: var(--akzent-produkt); }
+.fg-box--surprise {
+  --box-akzent: var(--akzent-senke);
+  --fuge-x: 39.2%;
+  --fuge-y: 16.6%;
+  --fuge-l: 20.2%;
+  --fuge-w: -17.2deg;
+  --fuge-glow: 14px;
+  --fuge-ruhe: 0.72;
+}
+
+/* Bodenlicht: weicher Schatten plus Akzentschein unter der Box (statisch) */
+.fg-box--boden::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 8%;
+  right: 8%;
+  bottom: -4%;
+  height: 14%;
+  border-radius: 50%;
+  background:
+    radial-gradient(closest-side, rgba(0, 0, 0, 0.55), transparent),
+    radial-gradient(closest-side, color-mix(in srgb, var(--box-akzent) 30%, transparent), transparent);
+  pointer-events: none;
+}
+
+.fg-box__fuge {
+  position: absolute;
+  left: var(--fuge-x);
+  top: var(--fuge-y);
+  width: var(--fuge-l);
+  height: 2px;
+  margin-top: -1px;
+  border-radius: 2px;
+  transform: rotate(var(--fuge-w));
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, transparent 0%, var(--licht-warm) 16%, #fff 50%, var(--licht-warm) 84%, transparent 100%);
+  box-shadow:
+    0 0 calc(var(--fuge-glow) * 0.4) calc(var(--fuge-glow) * 0.08) var(--licht-warm),
+    0 0 var(--fuge-glow) calc(var(--fuge-glow) * 0.15) color-mix(in srgb, var(--gold) 55%, transparent);
+  mix-blend-mode: screen;
+  opacity: var(--fuge-ruhe);
+  pointer-events: none;
+}
+/* Lichtschein, der aus der Fuge nach oben steigt */
+.fg-box__fuge::before {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 0;
+  height: calc(var(--fuge-glow) * 3);
+  border-radius: 50% 50% 0 0;
+  background: radial-gradient(60% 100% at 50% 100%, color-mix(in srgb, var(--licht-warm) 55%, transparent), transparent 75%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fg-box--surprise .fg-box__fuge { animation: fg-fuge-atmen 3600ms ease-in-out infinite; }
+}
+@keyframes fg-fuge-atmen {
+  0%, 100% { opacity: var(--fuge-ruhe); }
+  50%      { opacity: 1; }
+}
+/* Aufflammen als Antwort (Tür, Navigation): Elternelement bekommt .ist-hell */
+.ist-hell .fg-box__fuge,
+.fg-box.ist-hell .fg-box__fuge { opacity: 1; }
+
+
+/* ═══ 4 RING (VX1 M3) ═══════════════════════════════════════════════════════
+   Flache Ellipse als Bühne unter dem Hero-Objekt, Gold 1,5 px, 35 %. Eine
+   Proportion für alle Seiten (--ring-neigung), statisch. Die Station der Seite
+   ist ein heller Punkt mit Lichthof; --station = Winkel auf der Ellipse
+   (90deg = vorn, 0deg = rechts, 180deg = links, 270deg = hinten).
+
+   <div class="fg-ring" aria-hidden="true" style="--station: 90deg">
+     <span class="fg-ring__station"></span>
+   </div> */
+.fg-ring {
+  --station: 90deg;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / var(--ring-neigung);
+  border: 1.5px solid color-mix(in srgb, var(--gold) 35%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.fg-ring__station {
+  position: absolute;
+  left: calc(50% + 50% * cos(var(--station)));
+  top: calc(50% + 50% * sin(var(--station)));
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--gold) 22%, transparent),
+    0 0 18px 6px color-mix(in srgb, var(--gold) 40%, transparent);
+}
+
+
+/* ═══ 5 SEITENÜBERGÄNGE (VX1 §6) ════════════════════════════════════════════
+   Mehrseiten-Theme, kein SPA: Chromium und Safari ab 18.2 tauschen den Inhalt
+   weich, Firefox wechselt ohne Übergang. Der Kopf bleibt stehen (fg-kopf).
+   Tür-Box ↔ Hero-Objekt: die Startseite setzt beim Klick (pageswap) an genau
+   dieser Box view-transition-name: fg-box, die Zielseite am Hero-Objekt;
+   Klasse .fg-vt-box ist die statische Variante für das Ziel. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+
+  .fg-kopf { view-transition-name: fg-kopf; }
+  .fg-vt-box { view-transition-name: fg-box; }
+
+  ::view-transition-old(root) { animation: var(--motion-dur-exit) var(--motion-ease-in) both fg-vt-aus; }
+  ::view-transition-new(root) { animation: var(--motion-dur-base) var(--motion-ease-out) both fg-vt-ein; }
+  ::view-transition-group(fg-box) {
+    animation-duration: var(--motion-dur-slow);
+    animation-timing-function: var(--motion-ease-sheet);
+  }
+}
+@keyframes fg-vt-aus { to   { opacity: 0; } }
+@keyframes fg-vt-ein { from { opacity: 0; } }
+
+
+/* ═══ 6 SCHALE ══════════════════════════════════════════════════════════════
+   Kopf (sections/fg-shell-header.liquid), Menü-Tafel, Fuß (fg-shell-footer).
+   Verhalten: assets/fg-nav.js. Gleich auf jeder Seite. */
+
+.fg-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── Sprunglink ─── */
+.fg-skip {
+  position: fixed;
+  left: var(--container-pad);
+  top: 8px;
+  z-index: calc(var(--z-overlay) + 20);
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--gold);
+  color: var(--on-gold);
+  font: 600 15px/1 var(--font-body);
+  text-decoration: none;
+  transform: translateY(calc(-100% - 16px));
+}
+.fg-skip:hover { color: var(--on-gold); }
+.fg-skip:focus-visible { transform: none; outline: 2px solid var(--text-primary); outline-offset: 2px; }
+
+/* ─── Gold-Pille: der eine Aufruf („App laden“) ─── */
+.fg-pille {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid color-mix(in srgb, var(--text-primary) 35%, transparent);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 140%);
+  color: var(--on-gold);
+  font: 700 15px/1 var(--font-body);
+  white-space: nowrap;
+  text-decoration: none;
+  box-shadow: 0 0 22px var(--gold-24);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--motion-dur-fast) var(--motion-ease-out);
+}
+.fg-pille:link, .fg-pille:visited, .fg-pille:hover, .fg-pille:active { color: var(--on-gold); }
+.fg-pille:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .fg-pille:hover { transform: translateY(-1px); }
+}
+.fg-pille:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; border-radius: var(--radius-pill); }
+.fg-pille__ico { width: 18px; height: 18px; flex: none; }
+/* Größe groß (Seitenköpfe, Hero) und Linie (zweiter Aufruf daneben, z. B. Tester Club). Ein Bauteil für alle
+   Seiten: keine seiteneigenen Knopfklassen mehr (Fehler .tg-pill 2026-10-22). */
+.fg-pille--gross { min-height: 56px; padding: 0 28px; font-size: 17px; gap: 12px; }
+/* Linie: eine Farbe (--pille-farbe, Standard Gold) für Rand, Schrift und Tönung. Andere Welten setzen nur die
+   Variable, z. B. style="--pille-farbe: var(--cyan)" oder .meine-welt .fg-pille--linie { --pille-farbe: … }.
+   Als Schalter (aria-pressed) bekommt sie die gefüllte Tönung + Schein; kein eigener Knopf je Seite (Coulson #19). */
+.fg-pille--linie {
+  --pille-farbe: var(--gold);
+  background: transparent;
+  border: 1.5px solid var(--pille-farbe);
+  color: var(--pille-farbe);
+  box-shadow: none;
+  transition: transform var(--motion-dur-fast) var(--motion-ease-out), background-color var(--motion-dur-base) var(--motion-ease-out), box-shadow var(--motion-dur-base) var(--motion-ease-out);
+}
+.fg-pille--linie:link, .fg-pille--linie:visited, .fg-pille--linie:hover, .fg-pille--linie:active { color: var(--pille-farbe); }
+@media (hover: hover) and (pointer: fine) {
+  .fg-pille--linie:hover { background: color-mix(in srgb, var(--pille-farbe) 12%, transparent); }
+}
+.fg-pille--linie[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--pille-farbe) 16%, transparent);
+  box-shadow: 0 0 28px color-mix(in srgb, var(--pille-farbe) 35%, transparent);
+}
+/* Zielfläche: Aufrufe im Inhalt mindestens 48 px hoch (H2 Qualität 1, Coulson #14); die Kopf-Pille bleibt kompakt */
+main .fg-pille { min-height: 48px; }
+main .fg-pille--gross { min-height: 56px; }
+
+/* ─── KOPF ─────────────────────────────────────────────────────────────────
+   .site-header bleibt als Haken für main.js/wiki.js (messen die Kopfhöhe);
+   die Gestalt kommt allein aus .fg-kopf. Runde 3 „nav2“ (N1-NAV-SOTA.md, Atlas 7): dunkel und deckend, die drei
+   Wege als ruhige Gruppe ohne eigene Fläche, Trennung durch Luft und Haarlinien, Kontrast nur bei „App laden“. */
+.site-header.fg-kopf {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-chrome);
+  display: block;
+  height: var(--kopf-h);
+  background: var(--bg-deep);
+  border-bottom: 0;
+  box-shadow: inset 0 -1px 0 var(--kopf-linie), 0 8px 24px rgba(0, 0, 0, 0.28);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  font-family: var(--font-body);
+}
+.fg-kopf__bar {
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-4);
+  max-width: 1360px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 var(--container-pad);
+}
+
+.fg-kopf__logo {
+  flex: none;
+  align-self: center;
+  display: flex;
+  border-radius: var(--radius-sm);
+}
+.fg-kopf__logo img { display: block; width: auto; height: 34px; }
+@media (min-width: 1024px) {
+  .fg-kopf__logo img { height: 40px; }
+}
+
+/* Weltfarbe je Weg (Aktiv-Strich, Lichtschein unter dem Mini-Visual) */
+.fg-weg--produkt { --akzent: var(--akzent-produkt); }
+.fg-weg--arena   { --akzent: var(--akzent-arena); }
+.fg-weg--senke   { --akzent: var(--akzent-senke); }
+
+/* Navigation: erst ab 1000 px. Logo · drei Wege │ Über uns. Haarlinien kurz, senkrecht, mittig: leise zwischen den
+   drei Wegen, deutlicher vor „Über uns“ (Gruppengrenze). */
+.fg-kopf__nav { display: none; }
+.fg-kopf__wege,
+.fg-kopf__liste {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fg-kopf__punkt { position: relative; display: flex; }
+.fg-kopf__liste::before,
+.fg-kopf__wege > .fg-kopf__punkt + .fg-kopf__punkt::before {
+  content: '';
+  flex: none;
+  align-self: center;
+  width: 1px;
+  height: 22px;
+  background: var(--kopf-haar);
+}
+.fg-kopf__wege > .fg-kopf__punkt + .fg-kopf__punkt::before { height: 16px; background: var(--kopf-haar-leise); }
+
+.fg-kopf__weg {
+  --akzent: var(--text-primary);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 48px;
+  padding: 0 var(--weg-luft, 16px);
+  color: var(--kopf-dim);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--motion-dur-fast) var(--motion-ease-out);
+}
+.fg-kopf__weg.fg-weg--produkt { --akzent: var(--akzent-produkt); }
+.fg-kopf__weg.fg-weg--arena   { --akzent: var(--akzent-arena); }
+.fg-kopf__weg.fg-weg--senke   { --akzent: var(--akzent-senke); }
+.fg-kopf__weg:link, .fg-kopf__weg:visited, .fg-kopf__weg:active { color: var(--kopf-dim); }
+.fg-kopf__weg--text { justify-content: center; }
+/* Blasses Feld beim Zeigen (Linear-Muster), sitzt innen, berührt die Haarlinien nicht */
+.fg-kopf__weg::before {
+  content: '';
+  position: absolute;
+  inset: 12px 4px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--text-primary) 6%, transparent);
+  opacity: 0;
+  transition: opacity var(--motion-dur-fast) var(--motion-ease-out);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .fg-kopf__weg:hover { color: var(--text-primary); }
+  .fg-kopf__weg:hover::before { opacity: 1; }
+}
+/* Aktiv: weiße Schrift + kurzer, ruhender Strich in der Weltfarbe unter dem Wort. Kein Fortschritt. */
+.fg-kopf__weg[aria-current="page"],
+.fg-kopf__weg[aria-current="page"]:link,
+.fg-kopf__weg[aria-current="page"]:visited { color: var(--text-primary); }
+.fg-kopf__wort { position: relative; display: block; padding: 2px 0; }
+.fg-kopf__weg[aria-current="page"] .fg-kopf__wort::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 18px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--akzent);
+}
+.fg-kopf .fg-kopf__weg:focus-visible { outline: 2px solid var(--text-primary); outline-offset: -10px; border-radius: 14px; }
+
+.fg-kopf a:focus-visible,
+.fg-kopf button:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+
+/* ─── Mini-Visuals der drei Wege (Kopf und Menü) ───────────────────────────
+   Echte Objekte auf ~30 px, ohne Fenster und ohne Fläche. Maße in --m (Kopf 1 px, Menü größer), damit Kopf und
+   Menü dieselbe Komposition zeigen. In Ruhe Standbild. „An“ = Zeiger drauf, Tastaturfokus oder .spielt (fg-nav.js:
+   Tipp, Menü öffnen): die Teile laufen gestaffelt in ihren zweiten Zustand (≤ 600 ms) und beim Verlassen ohne
+   Verzögerung zurück. Nur transform und opacity; reduzierte Bewegung = Standbild (Regeln unten nur bei no-preference). */
+.fg-mini {
+  --m: 1px;
+  position: relative;
+  flex: none;
+  display: block;
+  width: calc(var(--mini-b) * var(--m));
+  height: calc(32 * var(--m));
+  pointer-events: none;
+}
+/* Lichtschein in der Weltfarbe unter dem Objekt: ordnet den Weg seiner Welt zu */
+.fg-mini::before {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: calc(-1 * var(--m));
+  height: calc(10 * var(--m));
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--akzent) 55%, transparent), transparent);
+  opacity: 0.55;
+  transition: opacity var(--motion-dur-base) var(--motion-ease-out);
+}
+.fg-kopf .fg-mini { --m: 1.1px; }
+.fg-mini__teil {
+  position: absolute;
+  display: block;
+  max-width: none;
+  height: auto;
+  transform-origin: 50% 85%;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) rgba(0, 0, 0, 0.45)); }
+
+/* Fragebogen-Games: Fragebogen → Frugends Points → Testbox */
+.fg-mini--fragebogen { --mini-b: 46; }
+.fg-mini__bogen { left: calc(13 * var(--m)); top: calc(3 * var(--m)); width: calc(20 * var(--m)); height: calc(26 * var(--m)); transform: rotate(-6deg); filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) rgba(0, 0, 0, 0.45)); }
+.fg-mini__blatt { fill: #fff; }
+.fg-mini__produkt { fill: #e8505b; }
+.fg-mini__zeile { fill: color-mix(in srgb, var(--logo-lila) 45%, #fff); }
+.fg-mini__zeile--hell { fill: color-mix(in srgb, var(--logo-lila) 22%, #fff); }
+.fg-mini__antwort { fill: var(--purple); }
+.fg-mini__haken { fill: none; stroke: #fff; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.fg-mini__punkte { fill: var(--gold); }
+.fg-mini__muenze { left: calc(25 * var(--m)); top: calc(1 * var(--m)); width: calc(13 * var(--m)); height: calc(13 * var(--m)); opacity: 0; transform: translateY(calc(6 * var(--m))) scale(0.4); transform-origin: 50% 50%; }
+.fg-mini__muenze-rand { fill: var(--muenze-rand); }
+.fg-mini__muenze-mitte { fill: var(--muenze-mitte); }
+.fg-mini__muenze-p { fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.fg-mini__box { left: calc(19 * var(--m)); top: calc(4 * var(--m)); width: calc(26 * var(--m)); opacity: 0; transform: translateY(calc(7 * var(--m))) scale(0.55); }
+
+/* Games & Turniere: Kartenspiel + Game Nr. 2 (Handy unter dem Cape) → Winner Box */
+.fg-mini--turniere { --mini-b: 48; }
+.fg-mini__karte { left: calc(5 * var(--m)); top: calc(3 * var(--m)); width: calc(19 * var(--m)); border-radius: calc(2 * var(--m)); transform: rotate(-10deg); }
+.fg-mini__cape { left: calc(19 * var(--m)); top: calc(6 * var(--m)); width: calc(29 * var(--m)); }
+.fg-mini__winner { left: calc(12 * var(--m)); top: calc(10 * var(--m)); width: calc(27 * var(--m)); opacity: 0; transform: translateY(calc(8 * var(--m))) scale(0.5); }
+
+/* Surprise Box: shaket, warmes Licht aus der Fuge */
+.fg-mini--surprise { --mini-b: 40; }
+.fg-mini__surprise { left: calc(3 * var(--m)); top: calc(5 * var(--m)); width: calc(34 * var(--m)); }
+.fg-mini__licht {
+  left: calc(2 * var(--m));
+  top: calc(1 * var(--m));
+  width: calc(36 * var(--m));
+  height: calc(20 * var(--m));
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--licht-warm) 85%, transparent), transparent);
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Zurück: schnell und ohne Staffel */
+  .fg-mini__teil { transition: transform 200ms var(--motion-ease-in), opacity 160ms var(--motion-ease-in); }
+  /* An: gestaffelt, Objekte landen federnd (--motion-feder-objekt) */
+  [data-fg-mini].spielt .fg-mini__teil,
+  [data-fg-mini]:focus-visible .fg-mini__teil { transition: transform 300ms var(--motion-feder-objekt) var(--v, 0ms), opacity 160ms var(--motion-ease-out) var(--v, 0ms); }
+  [data-fg-mini].spielt .fg-mini::before,
+  [data-fg-mini]:focus-visible .fg-mini::before { opacity: 1; }
+
+  [data-fg-mini].spielt .fg-mini__bogen,
+  [data-fg-mini]:focus-visible .fg-mini__bogen { --v: 0ms; transform: translate(calc(-11 * var(--m)), calc(1 * var(--m))) rotate(-14deg) scale(0.86); }
+  [data-fg-mini].spielt .fg-mini__muenze,
+  [data-fg-mini]:focus-visible .fg-mini__muenze { --v: 90ms; opacity: 1; transform: translate(calc(-7 * var(--m)), calc(-4 * var(--m))) scale(1); }
+  [data-fg-mini].spielt .fg-mini__box,
+  [data-fg-mini]:focus-visible .fg-mini__box { --v: 260ms; opacity: 1; transform: none; }
+
+  [data-fg-mini].spielt .fg-mini__karte,
+  [data-fg-mini]:focus-visible .fg-mini__karte { --v: 0ms; transform: translate(calc(-7 * var(--m)), calc(-2 * var(--m))) rotate(-20deg); }
+  [data-fg-mini].spielt .fg-mini__cape,
+  [data-fg-mini]:focus-visible .fg-mini__cape { --v: 60ms; transform: translate(calc(7 * var(--m)), calc(-2 * var(--m))) rotate(8deg); }
+  [data-fg-mini].spielt .fg-mini__winner,
+  [data-fg-mini]:focus-visible .fg-mini__winner { --v: 240ms; opacity: 1; transform: none; }
+
+  [data-fg-mini].spielt .fg-mini__licht,
+  [data-fg-mini]:focus-visible .fg-mini__licht { --v: 0ms; opacity: 1; transform: none; }
+  [data-fg-mini].spielt .fg-mini__surprise,
+  [data-fg-mini]:focus-visible .fg-mini__surprise { animation: fg-mini-shake 540ms var(--motion-ease-move) both; }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-fg-mini]:hover .fg-mini__teil { transition: transform 300ms var(--motion-feder-objekt) var(--v, 0ms), opacity 160ms var(--motion-ease-out) var(--v, 0ms); }
+    [data-fg-mini]:hover .fg-mini::before { opacity: 1; }
+    [data-fg-mini]:hover .fg-mini__bogen { --v: 0ms; transform: translate(calc(-11 * var(--m)), calc(1 * var(--m))) rotate(-14deg) scale(0.86); }
+    [data-fg-mini]:hover .fg-mini__muenze { --v: 90ms; opacity: 1; transform: translate(calc(-7 * var(--m)), calc(-4 * var(--m))) scale(1); }
+    [data-fg-mini]:hover .fg-mini__box { --v: 260ms; opacity: 1; transform: none; }
+    [data-fg-mini]:hover .fg-mini__karte { --v: 0ms; transform: translate(calc(-7 * var(--m)), calc(-2 * var(--m))) rotate(-20deg); }
+    [data-fg-mini]:hover .fg-mini__cape { --v: 60ms; transform: translate(calc(7 * var(--m)), calc(-2 * var(--m))) rotate(8deg); }
+    [data-fg-mini]:hover .fg-mini__winner { --v: 240ms; opacity: 1; transform: none; }
+    [data-fg-mini]:hover .fg-mini__licht { --v: 0ms; opacity: 1; transform: none; }
+    [data-fg-mini]:hover .fg-mini__surprise { animation: fg-mini-shake 540ms var(--motion-ease-move) both; }
+  }
+}
+/* Rückmeldung beim Zeigen und Drücken (Chris 2026-10-22: „gar keine optische und haptische Rückmeldung mehr bei
+   Mouseover oder Klick“). Das ganze Visual hebt sich und leuchtet in seiner Weltfarbe, beim Drücken gibt es nach;
+   auf Touch zusätzlich eine kurze Vibration (fg-nav.js, nur wo der Browser sie kann). */
+.fg-mini { transition: transform 260ms var(--motion-feder-objekt); }
+.fg-mini::before { transition: opacity var(--motion-dur-base) var(--motion-ease-out), transform 260ms var(--motion-ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .fg-kopf__weg:hover::before { background: color-mix(in srgb, var(--akzent) 14%, transparent); }
+}
+.fg-kopf__weg:active::before { opacity: 1; background: color-mix(in srgb, var(--akzent) 22%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  @media (hover: hover) and (pointer: fine) {
+    [data-fg-mini]:hover .fg-mini { transform: translateY(-3px) scale(1.2); }
+    [data-fg-mini]:hover .fg-mini::before { opacity: 1; transform: scaleX(1.3); }
+  }
+  [data-fg-mini].spielt .fg-mini { transform: translateY(-3px) scale(1.2); }
+  [data-fg-mini].spielt .fg-mini::before { opacity: 1; transform: scaleX(1.3); }
+  [data-fg-mini]:active .fg-mini { transform: scale(0.9); transition-duration: 90ms; }
+}
+@keyframes fg-mini-shake {
+  0%, 100% { transform: none; }
+  14% { transform: rotate(-9deg) translateY(-1px); }
+  30% { transform: rotate(8deg) translateY(-2px); }
+  46% { transform: rotate(-6deg) translateY(-1px); }
+  62% { transform: rotate(4deg); }
+  80% { transform: rotate(-2deg); }
+}
+
+/* Szenenfenster mit Bildfolge (.fg-szene): nur noch die Leiste „Du bist hier“ der Sektion „Drei Wege“
+   (frontend/tueren/Tueren.jsx, tueren.css setzt --szene-n und --szene-h). Fenster 3:2, dunkel; .spielt lässt die
+   Folge einmal laufen (600 ms, steps), danach Bild 1. Ohne JS oder bei reduzierter Bewegung steht das Ruhebild. */
+.fg-szene {
+  position: relative;
+  flex: none;
+  display: block;
+  height: var(--szene-h, 44px);
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #1b1544;   /* Grund, solange die Folge lädt (= Szenenfenster tueren.css) */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  isolation: isolate;
+}
+.fg-szene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 -10px 14px -12px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+.fg-szene__folge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: calc(100% * var(--szene-n, 16));
+  max-width: none;
+  height: 100%;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .spielt .fg-szene__folge { animation: fg-szene-spiel 600ms steps(15, jump-start); }
+}
+@keyframes fg-szene-spiel {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-100% * 15 / 16)); }
+}
+
+/* Rechts: Pille + Menü-Knopf */
+.fg-kopf__rechts {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.fg-kopf__app { padding: 0 18px; }
+
+/* Menü-Knopf und Schließen-Knopf der Tafel: gleiche Form, gleiche Stelle (48 × 48) */
+.fg-kopf__burger,
+.fg-menue__zu {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-right: -4px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.fg-kopf__burger-linie {
+  grid-area: 1 / 1;
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform var(--motion-dur-base) var(--motion-ease-move);
+}
+.fg-kopf__burger-linie:first-child { transform: translateY(-4px); }
+.fg-kopf__burger-linie:last-child  { transform: translateY(4px); }
+.fg-kopf__burger[aria-expanded="true"] .fg-kopf__burger-linie:first-child,
+.fg-menue__zu .fg-kopf__burger-linie:first-child { transform: rotate(45deg); }
+.fg-kopf__burger[aria-expanded="true"] .fg-kopf__burger-linie:last-child,
+.fg-menue__zu .fg-kopf__burger-linie:last-child  { transform: rotate(-45deg); }
+/* Offen: Der Schließen-Knopf im Dialog steht an der Stelle des Menü-Knopfs */
+html.fg-menue-offen .fg-kopf__burger { visibility: hidden; }
+.fg-menue__zu:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+
+@media (max-width: 359px) {
+  .fg-kopf__bar { gap: var(--space-2); }
+  .fg-kopf__logo img { height: 30px; }
+  .fg-kopf__app { padding: 0 14px; font-size: 14px; }
+}
+
+@media (min-width: 1000px) {
+  .fg-kopf__nav { display: flex; align-items: stretch; flex: 1; min-width: 0; margin-left: var(--space-2); }
+  .fg-kopf__burger { display: none; }
+  .fg-menue { display: none !important; }
+}
+/* 1000–1179 px: weniger Luft und etwas kleinere Schrift, damit Logo, drei Wege, Über uns und App laden in eine Zeile
+   passen (kein Überlauf bis 1000 px, gemessen). */
+@media (min-width: 1000px) and (max-width: 1179px) {
+  .fg-kopf__bar { gap: var(--space-3); }
+  .fg-kopf__nav { margin-left: 0; }
+  .fg-kopf__weg { --weg-luft: 11px; gap: 8px; font-size: 14px; }
+  .fg-kopf .fg-mini { --m: 1px; }
+}
+
+/* ─── MENÜ (Handy, < 1000 px) ──────────────────────────────────────────────
+   Modaler Dialog über der ganzen Höhe: oben eine durchsichtige Leiste in Kopfhöhe mit dem Schließen-Knopf (Logo und
+   „App laden“ des Kopfs scheinen durch und bleiben klickbar), darunter eine kompakte Liste: die drei Wege als
+   Zeilen (Mini-Visual, Titel, „Du bist hier“), die Seiten als Textlinks in einer Reihe, unten die zwei Aufrufe.
+   fg-nav.js: Dialog, Fokusfalle, ESC, Zurück, Seite dahinter steht still. */
+.fg-menue {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: calc(var(--z-overlay) + 15);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  pointer-events: none;
+  font-family: var(--font-body);
+  /* Tafel fährt von oben herein */
+  transform: translateY(-100%);
+  transition: transform var(--motion-dur-exit) var(--motion-ease-in);
+}
+.fg-menue__leiste {
+  box-sizing: border-box;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 1360px;
+  height: var(--kopf-h);
+  margin: 0 auto;
+  padding: 0 var(--container-pad);
+}
+.fg-menue__zu { pointer-events: auto; }
+.fg-menue__flaeche {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg-deep);
+  box-shadow: inset 0 1px 0 var(--kopf-linie);
+  pointer-events: auto;
+}
+.fg-menue[hidden] { display: none; }
+.fg-menue.ist-offen {
+  transform: none;
+  transition: transform var(--motion-dur-slow) var(--motion-ease-sheet);
+}
+/* Wenn die Tafel offen ist, liegt der Kopf über allem (auch über Hero-Leisten) */
+html.fg-menue-offen,
+html.fg-menue-offen body { overflow: hidden; }
+html.fg-menue-offen .site-header.fg-kopf { z-index: calc(var(--z-overlay) + 10); }
+
+.fg-menue__innen {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-2) var(--container-pad) calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
+}
+
+/* Die drei Wege: eine Zeile je Weg, getrennt durch Haarlinien, keine Karten */
+.fg-menue__wege { margin: 0; padding: 0; list-style: none; }
+.fg-menue__wege > li + li { box-shadow: inset 0 1px 0 var(--kopf-linie); }
+.fg-menue__weg {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  padding: 0 4px;
+  color: color-mix(in srgb, var(--text-primary) 88%, transparent);
+  text-decoration: none;
+  border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+}
+.fg-menue__weg:link, .fg-menue__weg:visited, .fg-menue__weg:hover, .fg-menue__weg:active { color: color-mix(in srgb, var(--text-primary) 88%, transparent); }
+.fg-menue__weg:active { background: color-mix(in srgb, var(--text-primary) 6%, transparent); }
+.fg-menue__weg .fg-mini { --m: 1.3px; }
+/* Titel und „Du bist hier“ in einer Zeile; reicht die Breite nicht (Handy < 400 px), rutscht der Hinweis unter den
+   Titel, der Titel bricht nie um */
+.fg-menue__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+.fg-menue__titel {
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1.05;
+}
+/* Du bist hier: weiße Schrift, kurzer ruhender Strich in der Weltfarbe vor dem Hinweis (wie im Kopf) */
+.fg-menue__weg[aria-current="page"],
+.fg-menue__weg[aria-current="page"]:link,
+.fg-menue__weg[aria-current="page"]:visited { color: var(--text-primary); }
+.fg-menue__hier {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--text-primary) 78%, transparent);
+  white-space: nowrap;
+}
+.fg-menue__hier::before {
+  content: '';
+  width: 14px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--akzent);
+}
+.fg-menue__weg:focus-visible { outline: 2px solid var(--text-primary); outline-offset: -2px; }
+
+/* Seiten als Textlinks in einer Reihe */
+.fg-menue__links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: clamp(12px, 4vw, var(--space-5));
+  margin: var(--space-2) 0 0;
+  padding: var(--space-1) 0 0;
+  list-style: none;
+  border-top: 1px solid var(--kopf-linie);
+}
+.fg-menue__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 48px;
+  min-height: 48px;
+  color: var(--kopf-dim);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+.fg-menue__link:link, .fg-menue__link:visited { color: var(--kopf-dim); }
+.fg-menue__link:hover { color: var(--text-primary); }
+.fg-menue__link[aria-current="page"] { color: var(--text-primary); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.fg-menue__link:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+.fg-raus { width: 14px; height: 14px; flex: none; opacity: 0.7; }
+
+/* Die zwei Aufrufe unter den Links: App laden (Gold) und Tester Club beitreten (Linie, „ab 18“) */
+.fg-menue__aufrufe { display: grid; gap: var(--space-3); padding-top: var(--space-6); }
+.fg-menue__aufrufe .fg-pille { width: 100%; }
+.fg-menue__alter { font-weight: 500; font-size: 13px; opacity: 0.85; }
+.fg-menue__aufrufe .fg-pille--linie { gap: 10px; }
+
+/* Store-Badges (Fuß) */
+.fg-menue__stores a,
+.fg-fuss__badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  border-radius: var(--radius);
+}
+.fg-menue__stores a:focus-visible,
+.fg-fuss__badge:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; }
+.fg-badge-apple  { width: auto; height: 44px; }
+.fg-badge-google { width: auto; height: 64px; margin: -10px -9px; } /* Google-Badge trägt eigenen Rand */
+
+/* Auftritt der Zeilen: eine Antwort aufs Öffnen, kurz gestaffelt */
+@media (prefers-reduced-motion: no-preference) {
+  .fg-menue.ist-offen .fg-menue__wege > li { animation: fg-zeile-ein var(--motion-dur-slow) var(--motion-ease-out) both; }
+  .fg-menue.ist-offen .fg-menue__wege > li:nth-child(2) { animation-delay: 40ms; }
+  .fg-menue.ist-offen .fg-menue__wege > li:nth-child(3) { animation-delay: 80ms; }
+}
+@keyframes fg-zeile-ein {
+  from { opacity: 0; transform: translateY(calc(var(--motion-rise) * -1)); }
+}
+
+/* ─── FUSS ─────────────────────────────────────────────────────────────── */
+.fg-fuss {
+  background: color-mix(in srgb, var(--bg-deep) 78%, #000);
+  box-shadow: inset 0 1px 0 var(--kopf-linie);
+  color: color-mix(in srgb, var(--text-primary) 72%, transparent);
+  font-family: var(--font-body);
+}
+.fg-fuss__innen {
+  box-sizing: border-box;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: var(--space-12) var(--container-pad) var(--space-6);
+}
+.fg-fuss__raster {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8) var(--space-6);
+}
+@media (min-width: 360px) {
+  .fg-fuss__raster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1000px) {
+  .fg-fuss__innen { padding-top: var(--space-16); }
+  .fg-fuss__raster { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-10); }
+}
+
+.fg-fuss__kopf {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+.fg-fuss__liste {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fg-fuss__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;   /* Ziel ≥ 48 px (H2 Qualität 1, Coulson #14), auch kurze Wörter wie „AGB“ */
+  min-width: 48px;
+  padding: 0;
+  color: color-mix(in srgb, var(--text-primary) 72%, transparent);
+  font-size: 15px;
+  line-height: 1.3;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: color var(--motion-dur-fast) var(--motion-ease-out);
+}
+.fg-fuss__link:hover,
+.fg-fuss__link[aria-current="page"] { color: var(--text-primary); }
+.fg-fuss__link:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+.fg-fuss__link svg.fg-fuss__sozial { width: 18px; height: 18px; flex: none; }
+
+.fg-fuss .fg-fuss__badge { min-height: 48px; }
+.fg-fuss__stores {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fg-fuss__zeile {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-6);
+  margin-top: var(--space-12);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--kopf-linie);
+  font-size: 13px;
+  color: color-mix(in srgb, var(--text-primary) 60%, transparent);
+}
+
+/* Handy und Tablet (< 1000 px), Hawkeye 2026-10-22: kompakter Fuß. Frugendverse und Mehr nebeneinander,
+   Rechtliches und App & Social über die volle Breite mit Links im Fluss (statt sechs Zeilen untereinander),
+   Store-Badges und Social-Links je in einer Reihe. Zielfläche je Link 48 px hoch (Runde 3, Coulson #14). */
+@media (max-width: 999px) {
+  .fg-fuss__innen { padding-top: var(--space-8); padding-bottom: var(--space-5); }
+  .fg-fuss__raster { row-gap: var(--space-6); }
+  .fg-fuss__kopf { margin-bottom: var(--space-1); }
+  .fg-fuss__spalte--legal,
+  .fg-fuss__spalte--app { grid-column: 1 / -1; }
+  .fg-fuss__spalte--legal .fg-fuss__liste,
+  .fg-fuss__liste--sozial { flex-direction: row; flex-wrap: wrap; column-gap: var(--space-5); }
+  .fg-fuss__stores { flex-direction: row; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-5); margin: var(--space-1) 0 var(--space-1); }
+  .fg-fuss__zeile { margin-top: var(--space-6); padding-top: var(--space-4); }
+}
+
+/* ─── Reduzierte Bewegung: alles steht, Zustände wechseln sofort ─── */
+@media (prefers-reduced-motion: reduce) {
+  .fg-menue,
+  .fg-menue.ist-offen { transform: none; transition: none; }
+  .fg-menue.ist-offen .fg-menue__wege > li { animation: none; }
+  .fg-kopf__weg,
+  .fg-kopf__weg::before,
+  .fg-kopf__burger-linie,
+  .fg-pille,
+  .fg-mini::before { transition: none; }
+  .fg-mini__teil,
+  .fg-szene__folge { animation: none !important; transition: none !important; }
+}
+
+
+/* ═══ 7 KICKER IN SATZSCHREIBUNG (VX1 §3.4, Hawkeye 2026-10-22) ═════════════
+   „Keine Versal-Mono-Kicker“: Die geteilten Etiketten aus components.css und
+   den Seiten-Stylesheets (Wiki, Rechtsseiten, Merch) stehen in Outfit, in
+   Satzschreibung und mit normaler Laufweite. Nur Darstellung, kein Wortlaut.
+   Die Seiten-Stylesheets laden NACH dieser Datei; darum trägt jede Regel ein
+   führendes `html` (eine Stufe mehr Spezifität statt !important).
+   Bewusst Mono bleiben: <code>, <kbd>, der #-Anker an Rechtstext-Überschriften
+   und mark.ph (Platzhalter-Markierung, „hier befüllen“). */
+html .chip,
+html .wiki-card__meta,
+html .legal-address__label,
+html .legal-aside__title,
+html .legal-hero__stand,
+html .legal-content .legal-stand,
+html .mcard__soon,
+html .mcard__price-note,
+html .sizeswitch__label {
+  font-family: var(--font-body);
+  text-transform: none;
+  letter-spacing: normal;
+}
+html .chip { text-indent: 0; font-size: 0.8125rem; font-weight: 600; }
+html .wiki-card__meta,
+html .mcard__soon { font-size: 0.75rem; font-weight: 600; }
+html .legal-address__label,
+html .legal-hero__stand,
+html .legal-content .legal-stand { font-size: 0.8125rem; }
+html .legal-aside__title,
+html .sizeswitch__label { font-size: 0.875rem; font-weight: 600; }
+html .mcard__price-note { font-size: 0.75rem; font-weight: 600; }
+/* Zahlen und Größen: gleiche Schrift wie der Rest, Ziffern in gleicher Breite */
+html .wiki-nav__count,
+html .mcard__price-val,
+html .sizeswitch__seg {
+  font-family: var(--font-body);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: normal;
+}
+
+
+/* ═══ 8 PLATTFORM-KACHELN (Relaunch Runde 3, Builder B) ═════════════════════
+   Vorgerenderte 3D-App-Kacheln (business buildTile, frontend/socials/render/render.mjs): assets/fg-kachel-<id>.webp,
+   ein Streifen aus 24 Bildern einer Drehung. Das Fenster zeigt ein Bild; frontend/socials/Kachel.jsx drehen() schiebt
+   den Streifen einmal durch (nur transform, steps). Hier, weil Creator-Sektion und Socials sie beide nutzen.
+   <span class="fg-kachel"><img class="fg-kachel__streifen" src="…fg-kachel-tiktok.webp" alt=""></span> */
+.fg-kachel {
+  --kachel: 96px;
+  position: relative;
+  display: block;
+  width: var(--kachel);
+  aspect-ratio: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.fg-kachel > img.fg-kachel__streifen {
+  display: block;
+  width: 2400%;
+  max-width: none;
+  height: 100%;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+
+/* ═══ 9 SCHRIFTSKALA (Runde 3, Coulson #18) ═════════════════════════════════
+   Vier Stufen aus Abschnitt 1 (--fs-h1/-h2/-h3/-lead), als Klassen für Bausteine ohne eigene Typo-Regel.
+   Rolle statt Tag: Seitenkopf bzw. Kapitelwort · Abschnittstitel · Karten-/Aufklapper-Titel · Einleitungssatz.
+   Seiten mit eigener Regel setzen nur font-size: var(--fs-…) (Turniere page-game.css, Surprise fg-surprise.css,
+   Über uns page-about.css/about-story.css). Ausnahme: Riesentypo des Hero (satz.js). */
+.fg-h1, .fg-h2, .fg-h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+.fg-h1 { font-size: var(--fs-h1); line-height: 0.96; }
+.fg-h2 { font-size: var(--fs-h2); line-height: 1.02; }
+.fg-h3 { font-size: var(--fs-h3); line-height: 1.1; }
+.fg-lead { font-size: var(--fs-lead); line-height: 1.5; }

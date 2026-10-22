@@ -1,0 +1,455 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — Big News · Teil (b) „Neues Game!" (sections/fg-bignews-game)
+   Baut auf tokens.css / base.css / components.css auf. Präfix: .bnb
+
+   Ebenen:
+     .bnb-det       Scroll-Strecke der Detonation (nur .is-enhanced lang)
+       └ __sticky   Bühne, BG liegt IM Sticky-Element (Parkzonen-Regel)
+           └ __css  CSS-Detonation (Fallback ohne WebGL / bis GL bereit)
+           └ __gl   Shader-Canvas (deckend, IST der Hintergrund)
+           └ __head Headline „Neues Game!"
+     .bnb-scene     three.js-Canvas (transparent) über SVG-Fallback;
+                    zieht sich bei .is-enhanced unter die Headline hoch
+     .bnb-body      Lede + vier Teaser-Punkte (VS-Mode = Hauptpunkt)
+
+   Das eine laute Element ist das ungeduldige iPhone. Alles darum ist
+   ruhig: keine Einblend-Choreografien, keine Hover-Spielereien.
+   Perf: animiert werden nur transform/opacity (inline aus JS). Kein
+   statisches will-change. Endlos-CSS nur im SVG-Fallback, pausiert
+   außerhalb des Viewports (.is-off).
+   ═══════════════════════════════════════════════════════════════ */
+
+.bnb {
+  --bnb-chrome: var(--chrome-height-mobile);
+  --bnb-pin: 84vh;           /* Pin-Strecke der Detonation (R5: 120 → 84) */
+  --bnb-overlap: 62vh;       /* JS misst den echten Wert */
+  --bnb-flash: 0;            /* JS: Cyan-Blitz des Displays (0…1) */
+  --bnb-deep: #141729;       /* = --bg-deep, Shader-Endfarbe */
+  position: relative;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+@supports (height: 1svh) {
+  .bnb { --bnb-pin: 84svh; --bnb-overlap: 62svh; }
+}
+@media (min-width: 1024px) {
+  .bnb { --bnb-chrome: var(--chrome-height-desktop); }
+}
+
+/* ─── 1 · Detonation ─────────────────────────────────────────────
+   Grundzustand (ohne JS / reduced motion): statischer Übergang Weiß →
+   Glut → Indigo, die Headline steht unten im Band. */
+.bnb-det { position: relative; }
+
+.bnb-det__sticky {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  min-height: 72vh;
+  padding-bottom: var(--space-8);
+  background:
+    radial-gradient(ellipse 55% 30% at 50% 44%, rgba(255, 205, 40, 0.38), transparent 70%),
+    linear-gradient(180deg, #fff 0%, #fff 14%, #ece6fa 30%, #8a70d6 48%, #3a2b78 62%, var(--bnb-deep) 80%);
+}
+@supports (height: 1svh) {
+  .bnb-det__sticky { min-height: 72svh; }
+}
+
+.bnb-det__css,
+.bnb-det__gl { display: none; }
+
+.bnb-det__head {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+}
+
+/* Headline — vom Display der Szene von unten angeleuchtet:
+   Verlauf Weiß → Eis-Cyan; der Blitz (--bnb-flash) steuert nur die
+   Deckkraft einer vorgerenderten Glow-Ebene (::after). */
+.bnb-title {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3.4rem, min(13.5vw, 15vh), 9.5rem);
+  line-height: 0.92;
+  letter-spacing: 0.005em;
+  color: #fff;
+  background: linear-gradient(180deg, #fff 0%, #fff 52%, #d4f3ff 78%, #8fe9ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-wrap: balance;
+}
+@supports (height: 1svh) {
+  .bnb-title { font-size: clamp(3.4rem, min(13.5vw, 15svh), 9.5rem); }
+}
+.bnb-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: var(--cyan);
+  -webkit-text-fill-color: var(--cyan);
+  filter: blur(22px);
+  opacity: calc(0.28 + var(--bnb-flash) * 0.72);
+  pointer-events: none;
+}
+
+/* ─── Aktivierter Zustand (JS, keine reduzierte Bewegung) ─────────── */
+.bnb.is-enhanced .bnb-det {
+  height: calc(100vh - var(--bnb-chrome) + var(--bnb-pin));
+}
+.bnb.is-enhanced .bnb-det__sticky {
+  position: sticky;
+  top: var(--bnb-chrome);
+  height: calc(100vh - var(--bnb-chrome));
+  min-height: 0;
+  padding: 0;
+  align-items: flex-start;
+  background: #fff;          /* nahtloser Anschluss an die weiße Sektion */
+}
+@supports (height: 1svh) {
+  .bnb.is-enhanced .bnb-det { height: calc(100svh - var(--bnb-chrome) + var(--bnb-pin)); }
+  .bnb.is-enhanced .bnb-det__sticky { height: calc(100svh - var(--bnb-chrome)); }
+}
+.bnb.is-enhanced .bnb-det__head {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 4.5vh;
+  opacity: 0;
+}
+@supports (height: 1svh) {
+  .bnb.is-enhanced .bnb-det__head { top: 4.5svh; }
+}
+
+/* CSS-Detonation: Kern, dunkle Scheibe, Druckring — JS skaliert */
+.bnb.is-enhanced .bnb-det__css {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.bnb.is-det-gl .bnb-det__css { display: none; }
+.bnb-det__core,
+.bnb-det__disc,
+.bnb-det__ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+}
+.bnb-det__core {
+  width: 60vmin;
+  height: 60vmin;
+  background: radial-gradient(circle,
+    #fff6d8 0%, #ffcd28 16%, rgba(185, 163, 245, 0.55) 34%, rgba(185, 163, 245, 0) 68%);
+}
+.bnb-det__disc {
+  width: 190vmax;
+  height: 190vmax;
+  background: radial-gradient(circle,
+    #3b2f6e 0%, #2a2352 22%, var(--bnb-deep) 48%);
+}
+.bnb-det__ring {
+  width: 196vmax;
+  height: 196vmax;
+  background: radial-gradient(circle,
+    rgba(255, 205, 40, 0) 0%, rgba(255, 205, 40, 0) 62%,
+    rgba(255, 150, 40, 0.55) 66.5%, #ffcd28 68.6%, #fff8e0 69.4%,
+    rgba(68, 217, 255, 0.7) 70.6%, rgba(68, 217, 255, 0) 73%);
+}
+
+/* Shader-Canvas: deckend, liegt über der CSS-Variante */
+.bnb.is-det-gl .bnb-det__gl {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── 2 · Szene ──────────────────────────────────────────────────── */
+.bnb-scene {
+  overflow-x: clip; /* canvas glow must not widen the page (iOS) */
+  position: relative;
+  z-index: 2;
+  margin-top: calc(var(--space-6) * -1);
+}
+.bnb.is-enhanced .bnb-scene {
+  margin-top: calc(var(--bnb-overlap) * -1);
+}
+
+/* Bühnenlicht hinter dem iPhone — wandert mit der Szene */
+.bnb-scene::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8%;
+  width: min(1100px, 150vw);
+  height: 90%;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse 34% 46% at 50% 52%, rgba(124, 92, 191, 0.34), transparent 72%),
+    radial-gradient(ellipse 22% 16% at 50% 88%, rgba(255, 205, 40, 0.14), transparent 70%);
+  pointer-events: none;
+}
+
+.bnb-scene__frame {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  height: clamp(440px, 66vh, 760px);
+  margin-inline: auto;
+}
+@supports (height: 1svh) {
+  .bnb-scene__frame { height: clamp(440px, 66svh, 760px); }
+}
+
+.bnb-scene__gl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 700ms var(--ease-out);
+}
+.bnb-scene.is-gl .bnb-scene__gl { opacity: 1; }
+.bnb-scene.is-gl .bnb-scene__fallback { visibility: hidden; }
+
+/* SVG-Fallback (ohne JS, ohne WebGL, bis GL bereit) */
+.bnb-scene__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  transition: visibility 0s linear 700ms;
+}
+.bnb-fb {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  overflow: visible;
+}
+.bnb-fb__body,
+.bnb-fb__blanket {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+.bnb-fb__spark {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--sz);
+  height: var(--sz);
+  margin: calc(var(--sz) / -2) 0 0 calc(var(--sz) / -2);
+  background: radial-gradient(circle, #fff 0 12%, #fff7d6 13% 24%, transparent 25%),
+              linear-gradient(#fff7d6, #ffcd28);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  opacity: 0;
+  transform: scale(0.2);
+  pointer-events: none;
+}
+
+/* ─── 3 · Lede + Teaser-Punkte ─────────────────────────────────── */
+.bnb-body {
+  position: relative;
+  z-index: 3;
+  padding-block: var(--space-6) var(--space-24);
+}
+.bnb-lede {
+  max-width: 34rem;
+  margin-inline: auto;
+  text-align: center;
+  font-size: clamp(1.08rem, 1.6vw, 1.3rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.bnb-points {
+  list-style: none;
+  display: grid;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+}
+@media (min-width: 900px) {
+  .bnb-points {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    grid-template-rows: repeat(3, auto);
+    column-gap: var(--space-16);
+    row-gap: var(--space-10);
+    align-items: center;
+    margin-top: var(--space-20);
+  }
+}
+
+.bnb-pt {
+  --pt: var(--cyan);
+  --pt-glow: rgba(68, 217, 255, 0.22);
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  column-gap: var(--space-5);
+  align-items: center;
+}
+.bnb-pt--gold  { --pt: var(--gold); --pt-glow: rgba(255, 205, 40, 0.2); }
+.bnb-pt--lilac { --pt: #b9a3f5;     --pt-glow: rgba(124, 92, 191, 0.34); }
+
+.bnb-pt__glyph {
+  width: 64px;
+  height: 64px;
+  padding: 9px;
+  color: var(--pt);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--pt-glow) 0%, transparent 70%);
+}
+.bnb-pt__text {
+  max-width: 34ch;
+  font-size: clamp(1.05rem, 1.35vw, 1.2rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+/* Hauptpunkt: Versus-Screen — diagonal geteilt Gold gegen Cyan,
+   abgeschrägte Ecken wie ein Fighting-Game-Panel. */
+.bnb-pt--vs {
+  --cut: 22px;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  padding: clamp(28px, 4vw, 52px) clamp(22px, 3.4vw, 48px) clamp(32px, 4vw, 52px);
+  text-align: center;
+}
+.bnb-pt--vs::before,
+.bnb-pt--vs::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  clip-path: polygon(0 var(--cut), var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%);
+}
+.bnb-pt--vs::before {       /* Rahmen */
+  inset: 0;
+  background: linear-gradient(115deg, var(--gold) 0%, rgba(255, 205, 40, 0.25) 38%, rgba(68, 217, 255, 0.25) 62%, var(--cyan) 100%);
+}
+.bnb-pt--vs::after {        /* Fläche */
+  inset: 1.5px;
+  --cut: 21px;
+  background:
+    radial-gradient(ellipse 55% 60% at 22% 34%, rgba(255, 205, 40, 0.24), transparent 72%),
+    radial-gradient(ellipse 55% 60% at 80% 66%, rgba(68, 217, 255, 0.24), transparent 72%),
+    linear-gradient(115deg, #2b2244 0%, #221c3d 49.7%, #132a4c 50.3%, #102039 100%);
+}
+@media (min-width: 900px) {
+  .bnb-pt--vs { grid-column: 2; grid-row: 1 / span 3; }
+}
+
+.bnb-vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 12vw, 10.5rem);
+  line-height: 0.8;
+  user-select: none;
+}
+.bnb-vs__v,
+.bnb-vs__s {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.bnb-vs__v {
+  background-image: linear-gradient(170deg, #fff7d6 0%, var(--gold) 45%, var(--orange) 100%);
+  transform: translateY(-0.07em);
+}
+.bnb-vs__s {
+  background-image: linear-gradient(170deg, #e6fbff 0%, var(--cyan) 45%, #2a8fd6 100%);
+  transform: translateY(0.07em);
+}
+.bnb-vs__bolt {
+  width: auto;
+  height: 0.86em;
+  margin-inline: -0.02em;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.75)) drop-shadow(0 0 22px rgba(124, 92, 191, 0.9));
+}
+.bnb-pt__text--vs {
+  max-width: 22ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  line-height: 1.12;
+  color: #fff;
+}
+
+/* ─── Mobile ─────────────────────────────────────────────────── */
+@media (max-width: 599px) {
+  .bnb-scene__frame { height: clamp(380px, 58vh, 540px); }
+  .bnb-pt { grid-template-columns: 52px minmax(0, 1fr); column-gap: var(--space-4); }
+  .bnb-pt__glyph { width: 52px; height: 52px; padding: 9px; }
+  .bnb-pt--vs { margin-top: var(--space-4); --cut: 16px; }
+  .bnb-pt--vs::after { --cut: 15px; }
+}
+@supports (height: 1svh) {
+  @media (max-width: 599px) {
+    .bnb-scene__frame { height: clamp(380px, 58svh, 540px); }
+  }
+}
+
+/* ═══ MOTION — nur SVG-Fallback (die GL-Szene animiert JS) ═════════ */
+@media (prefers-reduced-motion: no-preference) {
+  .bnb-scene:not(.is-gl) .bnb-fb__body    { animation: bnbHop 5.2s linear infinite; }
+  .bnb-scene:not(.is-gl) .bnb-fb__blanket { animation: bnbQuake 5.2s linear infinite; }
+  .bnb-scene:not(.is-gl) .bnb-fb__through,
+  .bnb-scene:not(.is-gl) .bnb-fb__spill   { animation: bnbGlow 5.2s ease-out infinite; }
+  .bnb-scene:not(.is-gl) .bnb-fb__spark   { animation: bnbSpark 5.2s var(--ease-out) var(--d, 0s) infinite; }
+  .bnb-scene.is-off .bnb-fb__body,
+  .bnb-scene.is-off .bnb-fb__blanket,
+  .bnb-scene.is-off .bnb-fb__through,
+  .bnb-scene.is-off .bnb-fb__spill,
+  .bnb-scene.is-off .bnb-fb__spark { animation-play-state: paused; }
+}
+
+@keyframes bnbHop {
+  0%, 44%   { transform: none; }
+  47%       { transform: translateY(-5%) rotate(-1.2deg); }
+  50.5%     { transform: none; }
+  52%       { transform: translateY(-0.6%) rotate(0.5deg); }
+  54%, 100% { transform: none; }
+}
+@keyframes bnbQuake {
+  0%, 30%   { transform: none; }
+  31.4%     { transform: translate(-1.5px, -1px) rotate(-0.6deg) scale(1.006, 1.016); }
+  32.8%     { transform: translate(1.8px, 0) rotate(0.5deg) scale(1.003, 1.01); }
+  34.2%     { transform: translate(-1.2px, -1px) rotate(-0.4deg) scale(1.004, 1.012); }
+  35.6%     { transform: none; }
+  46%       { transform: translateY(-2.5%) scale(1.01, 1.03); }
+  50%       { transform: translateY(0.6%) scale(1.004, 0.99); }
+  54%, 100% { transform: none; }
+}
+@keyframes bnbGlow {
+  0%, 30%, 100% { opacity: 0.55; }
+  47%           { opacity: 1; }
+  64%           { opacity: 0.6; }
+}
+@keyframes bnbSpark {
+  0%, 46% { opacity: 0; transform: scale(0.2) rotate(0deg); }
+  50%     { opacity: 1; transform: scale(1) rotate(45deg); }
+  58%     { opacity: 0; transform: scale(0.3) rotate(90deg); }
+  100%    { opacity: 0; transform: scale(0.2) rotate(90deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bnb-fb__body,
+  .bnb-fb__blanket,
+  .bnb-fb__through,
+  .bnb-fb__spill { animation: none; }
+  .bnb-fb__spark { animation: none; opacity: 0.8; transform: scale(0.75); }
+  .bnb-scene__gl { transition: none; }
+}

@@ -1,0 +1,61 @@
+{
+  "_comment": "Sponsor-Showcase 'Demnächst dabei'. Modell E19: pro Monat genau 4 Brand-Campaign-Slots = Marken, die das Arena-Turnier sponsern; die Teilnahme bleibt für Spieler kostenlos (Stand 10/2026). prizes[] = Bezug der Marke zu den Arena-Rewards als neutraler Text (Rewards = Winner Boxen lt. Reward-Tabelle; ob Partner Boxen stiften, ist offen, daher keine Stifter-Aussage), NIEMALS € / Preis-Wert. click_out_url = Affiliate/Click-Out (rendered rel='sponsored nofollow noopener' target=_blank). promote_from/until = ISO Sichtbarkeits-Fenster (vom CMS gepflegt; aktuell rein informativ). rotation_weight = höher = häufiger oben. tournament_id referenziert tournaments.json[].id. ALLES PLATZHALTER.",
+  "sponsors": [
+    {
+      "id": "up-pixelpress",
+      "brand": "PixelPress Studio",
+      "logo": "assets/img/sponsors/placeholder-02.svg",
+      "tournament_id": "arena-01",
+      "prizes": [
+        "Arena-Rewards für die Plätze 11–20"
+      ],
+      "click_out_url": "https://example.com/pixelpress?ref=frugends",
+      "promote_from": "2026-10-01",
+      "promote_until": "2026-10-31",
+      "rotation_weight": 6,
+      "campaign_month": "2026-10"
+    },
+    {
+      "id": "up-loomwear",
+      "brand": "Loomwear Apparel",
+      "logo": "assets/img/sponsors/placeholder-03.svg",
+      "tournament_id": "arena-02",
+      "prizes": [
+        "Arena-Rewards für die Plätze 11–30"
+      ],
+      "click_out_url": "https://example.com/loomwear?ref=frugends",
+      "promote_from": "2026-10-01",
+      "promote_until": "2026-10-31",
+      "rotation_weight": 7,
+      "campaign_month": "2026-10"
+    },
+    {
+      "id": "up-novacraft",
+      "brand": "NovaCraft Peripherals",
+      "logo": "assets/img/sponsors/placeholder-04.svg",
+      "tournament_id": "arena-03",
+      "prizes": [
+        "Arena-Rewards für die Plätze 1–10"
+      ],
+      "click_out_url": "https://example.com/novacraft?ref=frugends",
+      "promote_from": "2026-10-01",
+      "promote_until": "2026-10-31",
+      "rotation_weight": 9,
+      "campaign_month": "2026-10"
+    },
+    {
+      "id": "up-tonecan",
+      "brand": "ToneCan Audio",
+      "logo": "assets/img/sponsors/placeholder-06.svg",
+      "tournament_id": "arena-03",
+      "prizes": [
+        "Arena-Rewards für die Plätze 11–20"
+      ],
+      "click_out_url": "https://example.com/tonecan?ref=frugends",
+      "promote_from": "2026-10-01",
+      "promote_until": "2026-10-31",
+      "rotation_weight": 6,
+      "campaign_month": "2026-10"
+    }
+  ]
+}

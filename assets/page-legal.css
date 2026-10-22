@@ -1,0 +1,664 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — PAGE: LEGAL  (Impressum · Datenschutz · AGB ·
+   Widerruf · Barrierefreiheit)
+   ───────────────────────────────────────────────────────────────
+   Load order (page-specific, LAST):
+     tokens.css → base.css → components.css → scroll-cinema.css
+     → page-legal.css
+   Shared by all 5 footer legal pages. Styles the design "shell" only.
+   The rechtsverbindliche TEXT stays in the existing Shopify pages
+   ({{ page.content }} in the Liquid theme) — here we only give those
+   pages the new reading skin: a comfortable ~68ch measure, generous
+   line-height, a gold left-rail heading rhythm and WCAG-AA contrast.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Page lede / masthead ─────────────────────────────────────
+   A quiet, editorial header strip: chip + display headline + a thin
+   gold underline, sitting on a faint mesh so it doesn't read flat. */
+.legal-hero {
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--space-16) var(--space-10);
+  border-bottom: 1px solid var(--border);
+  background:
+    radial-gradient(120% 140% at 85% -10%, var(--gold-12) 0%, transparent 55%),
+    radial-gradient(120% 120% at 0% 0%, var(--purple-12) 0%, transparent 50%),
+    var(--bg-deep);
+}
+@media (min-width: 768px) {
+  .legal-hero { padding-block: var(--space-20) var(--space-12); }
+}
+/* faint diagonal scanline texture — broadcast/arcade DNA */
+.legal-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.018) 0,
+    rgba(255, 255, 255, 0.018) 1px,
+    transparent 1px,
+    transparent 7px
+  );
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 90%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 90%);
+}
+.legal-hero__inner { position: relative; z-index: 1; }
+
+.legal-hero__eyebrow { margin-bottom: var(--space-4); }
+
+.legal-hero__title {
+  font-size: var(--fs-display);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  max-width: 18ch;
+}
+
+.legal-hero__tagline {
+  margin-top: var(--space-4);
+  max-width: 60ch;
+  color: var(--text-secondary);
+  font-size: var(--fs-subheading);
+  line-height: 1.55;
+}
+
+/* ─── Reading column layout ────────────────────────────────────
+   Mobile: single column. ≥1024px: content + a slim sticky meta
+   aside (last-updated / "verbindlicher Text in Shopify"). */
+.legal-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-12);
+  padding-block: var(--space-16);
+}
+@media (min-width: 1024px) {
+  .legal-layout {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: var(--space-20);
+    align-items: start;
+    padding-block: var(--space-20);
+  }
+}
+
+/* ═══ LEGAL CONTENT — the readable document body ════════════════
+   This is the container the brief calls for. In Liquid the inner
+   markup is replaced by {{ page.content }}; these element styles
+   then format whatever Shopify renders (h2/h3/p/ul/ol/a/table). */
+.legal-content {
+  max-width: 68ch;          /* comfortable measure */
+  color: var(--text-primary);
+  font-size: 1.0625rem;     /* ~17px — above the 16px floor for prose */
+  line-height: 1.75;
+}
+
+/* Document title (only one per page) */
+.legal-content > h1 {
+  font-size: var(--fs-display);
+  line-height: 1.05;
+  margin-bottom: var(--space-5);
+}
+
+/* The "design shell only" disclaimer note under the H1 */
+.legal-note {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-10);
+  padding: var(--space-4) var(--space-5);
+  border-left: 3px solid var(--gold-40);
+  border-radius: var(--radius);
+  background: var(--gold-12);
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+  line-height: 1.65;
+}
+.legal-note::before {
+  content: "✱";
+  flex: none;
+  color: var(--gold);
+  font-size: 1.1em;
+  line-height: 1.4;
+}
+.legal-note code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--gold);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+}
+
+/* Headings inside the legal body — gold left-rail rhythm */
+.legal-content h2 {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--text-primary);
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-4);
+  padding-left: var(--space-4);
+  scroll-margin-top: calc(var(--chrome-height-desktop) + var(--space-6));
+}
+.legal-content h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.12em;
+  bottom: 0.12em;
+  width: 4px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(var(--gold), var(--orange));
+}
+.legal-content h2:first-of-type { margin-top: var(--space-4); }
+
+.legal-content h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  color: var(--cyan);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+  scroll-margin-top: calc(var(--chrome-height-desktop) + var(--space-6));
+}
+
+.legal-content p { margin-bottom: var(--space-4); }
+
+.legal-content a {
+  color: var(--cyan);
+  text-decoration: underline;
+  text-decoration-color: var(--cyan-24);
+  text-underline-offset: 3px;
+  transition: color var(--dur-fast) var(--ease-out),
+              text-decoration-color var(--dur-fast) var(--ease-out);
+}
+.legal-content a:hover {
+  color: var(--gold);
+  text-decoration-color: var(--gold-40);
+}
+
+.legal-content strong { color: var(--text-primary); font-weight: 700; }
+
+/* Lists */
+.legal-content ul,
+.legal-content ol {
+  margin: 0 0 var(--space-5);
+  padding-left: var(--space-6);
+  color: var(--text-secondary);
+}
+.legal-content li {
+  margin-bottom: var(--space-2);
+  line-height: 1.7;
+}
+.legal-content ul li::marker { color: var(--gold); }
+.legal-content ol li::marker { color: var(--cyan); font-family: var(--font-mono); }
+
+/* Definition-style address blocks (Anbieter, Verantwortlicher …) */
+.legal-content address,
+.legal-address {
+  font-style: normal;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+.legal-address__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-1);
+}
+
+/* Horizontal rule between major blocks */
+.legal-content hr {
+  border: none;
+  height: 1px;
+  margin: var(--space-10) 0;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* Tables inside legal text (e.g. data-processing overview) */
+.legal-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-6);
+  font-size: var(--fs-body);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.legal-content th,
+.legal-content td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.legal-content th {
+  background: var(--card);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+.legal-content tr:last-child td { border-bottom: none; }
+
+/* Sub-caption for image / model attributions (Sketchfab CC-BY-4.0) */
+.legal-attribution {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px dashed var(--border);
+  font-size: var(--fs-caption);
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+.legal-attribution h3 {
+  color: var(--text-secondary);
+  margin-top: 0;
+}
+.legal-attribution ul { color: var(--text-muted); }
+
+/* ─── Meta aside ───────────────────────────────────────────────
+   Slim glass card: last-updated + reminder that the binding text
+   lives in Shopify. Sticks alongside the reading column on desktop. */
+.legal-aside { display: none; }
+@media (min-width: 1024px) {
+  .legal-aside {
+    display: block;
+    position: sticky;
+    top: calc(var(--chrome-height-desktop) + var(--space-6));
+  }
+}
+.legal-aside__card {
+  padding: var(--space-5);
+  box-shadow: var(--shadow);
+}
+.legal-aside__title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  margin-bottom: var(--space-4);
+}
+.legal-aside__row { margin-bottom: var(--space-4); }
+.legal-aside__row:last-child { margin-bottom: 0; }
+.legal-aside__key {
+  display: block;
+  font-size: var(--fs-caption);
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.legal-aside__val {
+  display: block;
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+}
+.legal-aside__val code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--cyan);
+}
+
+/* Cross-links to the other legal pages */
+.legal-aside__links {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.legal-aside__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+}
+.legal-aside__links a:hover { color: var(--cyan); }
+.legal-aside__links a[aria-current="page"] {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LEGAL DOCUMENT UX — final-text upgrade (Stand-Chip · Doc-Nav ·
+   Auto-TOC + Scrollspy · Anchors · Back-to-top · Placeholders ·
+   Mobile-TOC · Print). Extends the shell above; nothing rebuilt.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── “Stand: …” chip under the hero tagline ───────────────────*/
+.legal-hero__stand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.25);
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.legal-hero__stand::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan-24);
+}
+
+/* “Stand” line that ships inside the legal text itself */
+.legal-content .legal-stand {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ─── Cross-nav pills for the legal documents (aside) ──────────*/
+.legal-doc-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+.legal-doc-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 2px var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-size: var(--fs-caption);
+  line-height: 1.2;
+  transition: color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out);
+}
+.legal-doc-nav a:hover {
+  color: var(--gold);
+  border-color: var(--gold-40);
+  background: var(--gold-12);
+}
+.legal-doc-nav a[aria-current="page"] {
+  color: var(--bg-deep);
+  font-weight: 700;
+  border-color: var(--gold);
+  background: var(--gold);
+}
+
+.legal-aside__title--toc {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+}
+
+/* ─── Auto-TOC (aside + mobile) — compact, indent-free ─────────*/
+.legal-toc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.legal-toc__item { margin: 0; }
+.legal-toc__link {
+  position: relative;
+  display: block;
+  padding: var(--space-1) var(--space-3);
+  border-left: 2px solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--fs-caption);
+  line-height: 1.45;
+  transition: color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.legal-toc__link:hover { color: var(--gold); border-left-color: var(--gold-40); }
+.legal-toc__link.is-active {
+  color: var(--cyan);
+  border-left-color: var(--cyan);
+  text-shadow: 0 0 14px var(--cyan-24);
+}
+
+/* the aside TOC scrolls on its own when a document has many sections */
+.legal-aside .legal-toc {
+  max-height: calc(100vh - var(--chrome-height-desktop) - 300px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* ─── Mobile TOC: <details> between hero and content ───────────*/
+.legal-toc-mobile-wrap { padding-top: var(--space-6); }
+@media (min-width: 1024px) {
+  .legal-toc-mobile-wrap { display: none; }
+}
+.legal-toc-mobile {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  overflow: hidden;
+}
+.legal-toc-mobile > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 48px;
+  padding: var(--space-3) var(--space-5);
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  -webkit-user-select: none;
+  user-select: none;
+}
+.legal-toc-mobile > summary::-webkit-details-marker { display: none; }
+.legal-toc-mobile > summary::after {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  transform: rotate(45deg);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.legal-toc-mobile[open] > summary::after { transform: rotate(-135deg); }
+.legal-toc-mobile .legal-toc {
+  padding: var(--space-2) var(--space-5) var(--space-5);
+}
+
+/* ─── Heading copy-link anchor button (JS-injected) ────────────*/
+.legal-anchor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: baseline;
+  width: 1.5em;
+  height: 1.5em;
+  margin-left: var(--space-2);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out);
+}
+.legal-content h2:hover .legal-anchor,
+.legal-anchor:focus-visible {
+  opacity: 1;
+}
+.legal-anchor:hover { background: var(--gold-12); }
+.legal-anchor.is-copied { color: var(--cyan); opacity: 1; }
+/* touch devices have no hover — keep the anchor faintly visible */
+@media (hover: none) {
+  .legal-anchor { opacity: 0.45; }
+}
+
+/* ─── Back-to-top floating button (JS-injected) ────────────────*/
+.legal-top-btn {
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--cyan-24);
+  border-radius: 50%;
+  background: rgba(8, 12, 30, 0.72);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--cyan);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.legal-top-btn.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.legal-top-btn:hover { color: var(--gold); border-color: var(--gold-40); }
+
+/* ─── Unfilled placeholders: <mark class="ph">[…]</mark> ───────
+   Visibly flagged — “hier befüllen”, must never ship unnoticed. */
+.legal-content mark.ph {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  border: 1px dashed var(--gold-40);
+  border-radius: var(--radius-sm);
+  background: var(--gold-12);
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+/* ─── Blockquote: quiet indented legal block (address, checkbox
+   wording, Muster-Widerrufsformular) — NOT a decorative quote. */
+.legal-content blockquote {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-left: 3px solid var(--cyan-24);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+  line-height: 1.7;
+}
+.legal-content blockquote p { margin-bottom: var(--space-3); }
+.legal-content blockquote p:last-child { margin-bottom: 0; }
+
+/* ─── Wide tables scroll inside their own wrapper ──────────────*/
+.legal-content .legal-table-wrap {
+  overflow-x: auto;
+  margin-bottom: var(--space-6);
+  -webkit-overflow-scrolling: touch;
+}
+.legal-content .legal-table-wrap table { margin-bottom: 0; min-width: 560px; }
+
+/* ─── Print: a clean, black-on-white contract ──────────────────*/
+@media print {
+  [data-include],                /* shell header + footer */
+  .legal-aside,
+  .legal-toc-mobile-wrap,
+  .legal-anchor,
+  .legal-top-btn,
+  .legal-hero::after {
+    display: none !important;
+  }
+
+  body { background: #fff !important; color: #000 !important; }
+
+  .legal-hero {
+    background: #fff;
+    border-bottom: 2px solid #000;
+    padding-block: 0 12pt;
+  }
+  .legal-hero__title,
+  .legal-hero__tagline { color: #000 !important; text-shadow: none !important; }
+  .legal-hero__eyebrow,
+  .legal-hero__stand { border-color: #000; background: none; color: #000; }
+  .legal-hero__stand::before { display: none; }
+
+  .legal-layout {
+    display: block;
+    padding-block: 12pt;
+  }
+  .legal-content {
+    max-width: none;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.55;
+  }
+  .legal-content h2,
+  .legal-content h3 { color: #000; page-break-after: avoid; }
+  .legal-content h2 { padding-left: 0; }
+  .legal-content h2::before { display: none; }
+  .legal-content p,
+  .legal-content li { color: #000; orphans: 3; widows: 3; }
+  .legal-content ul,
+  .legal-content ol { color: #000; }
+  .legal-content li::marker { color: #000 !important; }
+  .legal-content strong { color: #000; }
+
+  .legal-content a { color: #000; text-decoration: underline; }
+  /* show the destination after external links */
+  .legal-content a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+
+  .legal-content blockquote {
+    border: 1px solid #000;
+    border-left-width: 3px;
+    background: none;
+    color: #000;
+    page-break-inside: avoid;
+  }
+  .legal-content mark.ph {
+    background: none;
+    border: 1px dashed #000;
+    color: #000;
+  }
+  .legal-content table,
+  .legal-content th,
+  .legal-content td { border-color: #000; background: none; color: #000; }
+  .legal-content hr { background: #000; }
+  .legal-content .legal-stand { color: #000; }
+  .legal-content address,
+  .legal-address { border-color: #000; background: none; color: #000; }
+}

@@ -1,0 +1,921 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — Games & Turniere (/pages/turniere) · Relaunch 2026-10, Runde 3
+   Builder C. Neu aufgebaut nach Chris 2026-10-22 („drastisch ran“):
+     Kopf #app → Unternavigation (Spiele · Turniere · Rewards) →
+     #spiele (Kartenspiel-Bühne + Game Nr. 2) → #turniere (Arena, Socials) →
+     #rewards (Titel über dem Burst, zwei Aufklapper) → Abschluss (Infobox,
+     Points-Fluss) → Wiki-Zeile → Türen.
+
+   Welt: --welt-arena #1b1638. Gold nur, wo es etwas zu gewinnen gibt.
+   Aufruf-Knopf nur .fg-pille (fg-design.css). Keine Versal-Kicker.
+   Bewegung: nur transform/opacity; jede Endlos-Bewegung läuft nur im Bild
+   (Klasse .is-sicht) und steht bei prefers-reduced-motion.
+   ═══════════════════════════════════════════════════════════════ */
+
+.tg {
+  --tg-welt: var(--welt-arena, #1b1638);
+  --tg-flaeche: #241d4b;
+  --tg-flaeche-hell: #2c245a;
+  --tg-linie: rgba(200, 147, 253, 0.22);
+  --tg-lila: #c893fd;
+  --tg-sitz: #a996e6;
+  --tg-text-2: rgba(255, 255, 255, 0.76);
+  --tg-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --tg-feder: cubic-bezier(0.22, 1.25, 0.36, 1);
+  position: relative;
+  background: var(--tg-welt);
+  color: var(--text-primary);
+}
+:root { --tg-sub-h: 48px; }
+.tg p { margin: 0; }
+.tg-vh {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.tg-anchor { position: absolute; top: 0; left: 0; }
+
+/* Sprungziele: unter Kopf + Unternavigation landen */
+#spiele, #games, #game-nr-2, #turniere, #termine, #announcements, #rewards, #preise, #fair {
+  scroll-margin-top: calc(var(--kopf-h, var(--chrome-height-mobile)) + var(--tg-sub-h));
+}
+
+/* Schriftskala (Coulson #18, Tokens in fg-design.css): eine Stufe je Rolle, keine Sondergrößen.
+     Seitenkopf-H1 und Kapitelwort der Unternavigation (Spiele, Turniere, Rewards)  --fs-h1
+     Abschnittstitel (die zwei Games, „Am … ist Arena.“)                              --fs-h2
+     Karten- und Aufklapper-Titel, Untertitel                                        --fs-h3
+     Einleitungssätze                                                                --fs-lead */
+/* Kapitel-Überschrift: das Wort der Unternavigation */
+.tg-kapitel {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h1);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.tg-h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h2);
+  line-height: 1.04;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+/* Karten-Titel (Infobox, Points) */
+.tg-h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h3);
+  line-height: 1.1;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+.tg-lede {
+  margin-top: 12px;
+  max-width: 52ch;
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+  color: var(--tg-text-2);
+}
+.tg a:not([class]) {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: rgba(68, 217, 255, 0.7);
+  text-underline-offset: 3px;
+}
+.tg a:not([class]):hover { color: var(--text-primary); text-decoration-color: var(--cyan); text-decoration-thickness: 2px; }
+/* Textlinks im Satz (Teilnahmebedingungen, Wiki): Trefferfläche 48 px hoch, Zeilenbild unverändert (Coulson #14) */
+.tg a:not([class]),
+.tn-rewards .rwf-label__legal a { display: inline-block; padding-block: 14px; margin-block: -14px; }
+.tg a:focus-visible,
+.tg button:focus-visible,
+.tg summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
+.tg .fg-pille:focus-visible { outline-color: #fff; border-radius: var(--radius-pill); }
+
+/* Pause-Knopf für Videos (WCAG 2.2.2) */
+.tg-pause {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  background: rgba(20, 16, 44, 0.8);
+  color: #fff;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: transform 200ms var(--tg-ease), background-color 200ms var(--tg-ease);
+}
+.tg-pause:hover { background: rgba(44, 36, 90, 0.92); color: #fff; transform: scale(1.06); }
+.tg-pause__ico { width: 20px; height: 20px; }
+.tg-pause__ico--play { display: none; }
+.tg-pause.is-paused .tg-pause__ico--pause { display: none; }
+.tg-pause.is-paused .tg-pause__ico--play { display: block; }
+
+/* ═══ 1 · #app — Kopf ═══════════════════════════════════════════
+   Handy: Text, Pille, Badges, darunter die Bühne, darunter die Schritte.
+   Ab 900 px: links Text + Schritte, rechts die Bühne. */
+.tg-app {
+  padding-block: 22px 28px;
+  overflow-x: clip;
+  background:
+    radial-gradient(ellipse 80% 42% at 50% 62%, rgba(124, 92, 191, 0.3), transparent 72%),
+    var(--tg-welt);
+}
+.tg-app__grid {
+  display: grid;
+  grid-template-areas: "copy" "stage" "weg";
+  row-gap: 18px;
+}
+.tg-app__copy { grid-area: copy; }
+.tg-app__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h1);
+  line-height: 0.96;
+  letter-spacing: -0.005em;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+.tg-app__lede {
+  margin-top: 14px;
+  max-width: 44ch;
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--tg-text-2);
+}
+.tg-app__modes { margin-top: 8px; font-weight: 700; }
+.tg-app__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 16px;
+  margin-top: 22px;
+}
+.tg-stores { display: flex; flex-wrap: wrap; gap: 10px; }
+.tg-stores a { display: inline-flex; border-radius: 8px; }
+.tg-stores img { display: block; width: auto; height: 44px; }
+/* Offizielles Play-Badge hat 41/250 transparenten Rand: auf gleiche sichtbare Höhe wie das App-Store-Badge */
+.tg-stores img.tg-badge--google { height: 65.5px; margin: -10.75px; }
+/* Coulson #17: am Handy nur die Pille (sie führt je System in den passenden Store, turniere-app.js) */
+@media (max-width: 899px) {
+  .tg-stores { display: none; }
+}
+
+/* Bühne: Ring, Cape-Handy hinten, Gameplay-Handy, Winner Box vorn */
+.tg-stage {
+  grid-area: stage;
+  position: relative;
+  width: min(100%, 380px);
+  aspect-ratio: 1 / 1.04;
+  margin-inline: auto;
+}
+.tg-stage__glow {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 92%;
+  height: 74%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(124, 92, 191, 0.5), rgba(124, 92, 191, 0.12) 60%, transparent);
+  pointer-events: none;
+}
+.tg-ring {
+  position: absolute;
+  left: 3%;
+  bottom: 4%;
+  width: 94%;
+  aspect-ratio: 1 / var(--ring-neigung, 0.36);
+  border: 1.5px solid rgba(255, 205, 40, 0.35);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 205, 40, 0.07), transparent);
+}
+.tg-stage__cape {
+  position: absolute;
+  left: 58%;
+  bottom: 22%;
+  width: 46%;
+  height: auto;
+  filter: saturate(0.92) brightness(0.9);
+}
+.tg-stage__phone {
+  position: absolute;
+  left: 47%;
+  bottom: 15%;
+  width: 41%;
+  transform: translateX(-50%);
+}
+.tg-stage .tg-phone {
+  width: 100%;
+  aspect-ratio: 9 / 18.6;
+  border-radius: clamp(26px, 2.6vw, 40px);
+  padding: clamp(6px, 0.7vw, 10px);
+}
+.tg-stage .tg-phone .iphone__screen { border-radius: clamp(20px, 2vw, 31px); object-fit: cover; }
+.tg-stage .tg-phone .iphone__island { top: clamp(12px, 1.3vw, 18px); height: clamp(11px, 1.1vw, 16px); }
+.tg-stage__box {
+  position: absolute;
+  left: 2%;
+  bottom: 3%;
+  width: 36%;
+  height: auto;
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.45));
+}
+.tg-stage .tg-pause { right: -54px; top: 0; }
+
+/* Vier Schritte: kurze nummerierte Zeilen */
+.tg-app__weg { grid-area: weg; }
+.tg-steps {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+.tg-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 36px;
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.25;
+}
+.tg-step__num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid rgba(68, 217, 255, 0.75);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--cyan);
+}
+.tg-tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+}
+.tg-tags li {
+  padding: 7px 13px;
+  border: 1px solid var(--tg-linie);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--tg-text-2);
+}
+@media (min-width: 900px) {
+  .tg-app { padding-block: clamp(20px, 4vh, 44px) clamp(24px, 4vh, 44px); }
+  .tg-app__grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-areas: "copy stage" "weg stage";
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(28px, 4vw, 72px);
+    row-gap: 28px;
+    align-items: start;
+  }
+  .tg-stage { width: min(100%, 50vh + 60px, 500px); align-self: center; }
+  .tg-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 24px; max-width: 560px; }
+}
+
+/* ═══ Unternavigation ════════════════════════════════════════════ */
+/* Chris 2026-10-22: vor dem Kleben nie sichtbar, beim Kleben weich einblenden.
+   Negativer unterer Rand = kein Platz im Fluss (die Folgesektion rückt nach oben);
+   turniere-fx.js setzt .is-stuck mit Hysterese, Tastaturfokus zeigt sie immer. */
+.tg-sub {
+  position: sticky;
+  top: var(--kopf-h, var(--chrome-height-mobile));
+  z-index: 40;
+  margin-bottom: calc(-1 * (var(--tg-sub-h) + 2px));
+  background: rgba(27, 22, 56, 0.9);
+  border-block: 1px solid var(--tg-linie, rgba(200, 147, 253, 0.22));
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  backdrop-filter: blur(12px) saturate(1.2);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition:
+    opacity var(--motion-dur-exit, 180ms) var(--motion-ease-in, ease-in),
+    transform var(--motion-dur-exit, 180ms) var(--motion-ease-in, ease-in);
+}
+.tg-sub.is-stuck, .tg-sub:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+  transition:
+    opacity var(--motion-dur-base, 240ms) var(--motion-ease-out, ease-out),
+    transform var(--motion-dur-base, 240ms) var(--motion-ease-out, ease-out);
+}
+.tg-sub__inner {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  height: var(--tg-sub-h);
+}
+.tg-sub__link {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 48px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.9688rem;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+.tg-sub__link::after {
+  content: "";
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  bottom: -1px;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--cyan);
+  transform: scaleX(0);
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tg-sub__link:link, .tg-sub__link:visited { color: rgba(255, 255, 255, 0.72); }
+.tg-sub__link:hover, .tg-sub__link:focus-visible, .tg-sub__link.is-active { color: #fff; }
+.tg-sub__link.is-active::after { transform: scaleX(1); }
+.tg-sub__link:focus-visible { outline: 2px solid var(--cyan); outline-offset: -4px; border-radius: 8px; }
+@media (min-width: 900px) {
+  .tg-sub__inner { display: flex; justify-content: center; gap: 8px; }
+  .tg-sub__link { padding-inline: 28px; }
+  .tg-sub__link::after { left: 20px; right: 20px; }
+}
+
+/* ═══ 2 · #spiele ═══════════════════════════════════════════════ */
+/* overflow-x: clip (Coulson 2): Die rechte Fächerkarte (.tg-tcg__seite--r, 13° gedreht) ragte am Handy 10–13 px über den
+   Rand; ohne Querschutz am Abschnitt weitete sich das Layout-Fenster auf 400 px (seitliches Wischen). clip statt hidden:
+   kein Scroll-Container, Sticky und Schatten nach unten bleiben. */
+.tg-spiele { padding-block: clamp(40px, 7vh, 72px) 8px; overflow-x: clip; }
+.tg-tcg {
+  display: grid;
+  grid-template-areas: "copy" "show" "hand";
+  row-gap: 18px;
+  margin-top: 26px;
+}
+.tg-tcg__copy { grid-area: copy; display: grid; gap: 10px; }
+.tg-tcg__text { max-width: 60ch; font-size: 1.0625rem; line-height: 1.55; color: var(--tg-text-2); }
+
+/* Bühne: das Spiel als große Karte (In-Game-Video im Holo-Rahmen), links und rechts zwei
+   echte Karten, die sich beim ersten Sichtkontakt auffächern (ein Moment, nicht endlos). */
+.tg-tcg__show {
+  grid-area: show;
+  position: relative;
+  width: min(100%, 460px);
+  aspect-ratio: 1 / 0.96;
+  margin-inline: auto;
+  isolation: isolate;
+}
+.tg-tcg__boden {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 0;
+  height: 26%;
+  border-radius: 50%;
+  background:
+    radial-gradient(closest-side, rgba(68, 217, 255, 0.28), rgba(124, 92, 191, 0.18) 55%, transparent);
+  z-index: -1;
+}
+.tg-tcg__seite,
+.tg-tcg__karte {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  aspect-ratio: 217 / 300;
+  transform-origin: 50% 110%;
+  transition: transform 900ms var(--tg-feder), opacity 500ms ease;
+}
+.tg-tcg__seite {
+  width: 38%;
+  height: auto;
+  border-radius: 10px;
+  filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.5)) brightness(0.92);
+}
+.tg-tcg__seite--l { transform: translateX(-118%) translateY(10%) rotate(-13deg); z-index: 1; }
+.tg-tcg__seite--r { transform: translateX(18%) translateY(10%) rotate(13deg); z-index: 1; }
+.tg-tcg__karte {
+  z-index: 2;
+  width: 52%;
+  top: 0;
+  transform: translateX(-50%);
+  padding: 4px;
+  border-radius: 16px;
+  background: linear-gradient(140deg, #ffe58a 0%, var(--gold) 18%, #c893fd 46%, #44d9ff 72%, #fff3c4 100%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 24px 48px -16px rgba(0, 0, 0, 0.7), 0 0 44px rgba(124, 92, 191, 0.45);
+  overflow: hidden;
+}
+.tg-tcg__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #120d2b;
+}
+/* Glanz: ein Lichtstreifen fährt einmal über die Karte (beim Auffächern und beim Zeigen) */
+.tg-tcg__glanz {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.38) 48%, rgba(255, 255, 255, 0.08) 54%, transparent 64%);
+  transform: translateX(-120%);
+  mix-blend-mode: screen;
+}
+.tg-tcg__show.is-da .tg-tcg__glanz { animation: tg-glanz 1100ms 380ms ease-out 1 both; }
+.tg-tcg__karte:hover .tg-tcg__glanz { animation: tg-glanz 900ms ease-out 1 both; }
+@keyframes tg-glanz { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
+.tg-tcg__show .tg-pause { right: 4%; bottom: 4%; z-index: 3; }
+
+/* Startlage nur mit JS (.is-bereit), bis die Bühne ins Bild kommt (.is-da) */
+.tg-tcg__show.is-bereit:not(.is-da) .tg-tcg__seite--l { transform: translateX(-50%) translateY(14%) rotate(0deg) scale(0.9); opacity: 0; }
+.tg-tcg__show.is-bereit:not(.is-da) .tg-tcg__seite--r { transform: translateX(-50%) translateY(14%) rotate(0deg) scale(0.9); opacity: 0; }
+.tg-tcg__show.is-bereit:not(.is-da) .tg-tcg__karte { transform: translateX(-50%) translateY(8%) scale(0.94); }
+.tg-tcg__show.is-da .tg-tcg__seite--r { transition-delay: 90ms; }
+
+/* Kleine Kartenreihe (alle acht Charaktere, Wende per tcg-tilt.js) */
+.tg-hand {
+  grid-area: hand;
+  --cw: 92px;
+  list-style: none;
+  display: flex;
+  gap: 10px;
+  margin: 0 calc(var(--container-pad) * -1);
+  padding: 10px var(--container-pad) 6px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--container-pad);
+  scrollbar-width: none;
+}
+.tg-hand::-webkit-scrollbar { display: none; }
+.tg-hand__card { flex: none; width: var(--cw); scroll-snap-align: start; }
+.tg-hand .tcg-card { gap: 6px; }
+.tg-hand .tcg-card__name { font-size: 0.875rem; }
+.tg-hand .tcg-card__tagline { font-size: 0.75rem; }
+.tg-hand__editions { display: none; }
+
+@media (min-width: 1024px) {
+  .tg-tcg {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    grid-template-areas: "copy show" "hand show" "ed show";
+    grid-template-rows: auto auto 1fr;
+    column-gap: clamp(48px, 6vw, 96px);
+    row-gap: 22px;
+    align-items: start;
+  }
+  .tg-tcg__show { width: min(100%, 520px); justify-self: end; }
+  .tg-hand {
+    --cw: clamp(68px, 5.4vw, 84px);
+    justify-content: flex-start;
+    gap: 0;
+    height: calc(var(--cw) * 1.383 + 30px);
+    margin: 8px 0 0;
+    padding: 10px 0 0 calc(var(--cw) * 0.2);
+    overflow: visible;
+  }
+  .tg-hand__card {
+    --d: calc(var(--i) - 3.5);
+    position: relative;
+    margin-inline: calc(var(--cw) * -0.12);
+    transform: translateY(calc(var(--d) * var(--d) * 1.6px)) rotate(calc(var(--d) * 2.6deg));
+    transform-origin: 50% 130%;
+    transition: transform 320ms var(--tg-ease);
+  }
+  .tg-hand__card:hover,
+  .tg-hand__card:focus-within { z-index: 20; transform: translateY(-14px) rotate(0deg); }
+  .tg-hand .tcg-card__meta {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 4px);
+    width: max-content;
+    max-width: 200px;
+    transform: translateX(-50%);
+    text-align: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms var(--tg-ease);
+  }
+  .tg-hand__card:hover .tcg-card__meta,
+  .tg-hand__card:focus-within .tcg-card__meta { opacity: 1; }
+  .tg-hand__editions {
+    grid-area: ed;
+    display: flex;
+    gap: 28px;
+    margin-top: 18px;
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+  .tg-ed { display: inline-flex; align-items: center; gap: 8px; color: var(--tg-text-2); }
+  .tg-ed::before { content: ""; width: 18px; height: 3px; border-radius: 2px; background: var(--gold); }
+  .tg-ed--villains::before { background: var(--purple); }
+}
+
+/* Game Nr. 2 (fg-bignews-game, Modus „turniere“): Szene groß, keine Detonation */
+.bnb.bnb--tg { background: var(--tg-welt); padding-block: clamp(28px, 5vh, 56px) clamp(40px, 7vh, 72px); }
+.bnb--tg .bnb-det { display: none !important; }
+.bnb.bnb--tg .bnb-scene,
+.bnb.bnb--tg.is-enhanced .bnb-scene { margin-top: 0; }
+.bnb-tg__grid { display: grid; grid-template-areas: "copy" "scene"; row-gap: 4px; }
+.bnb-tg__copy { grid-area: copy; position: relative; z-index: 3; }
+.bnb--tg .bnb-scene { grid-area: scene; }
+.bnb--tg .bnb-scene::before { width: 140%; }
+.bnb--tg .bnb-scene__frame { height: clamp(340px, 48svh, 460px); }
+.bnb-tg__when {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  line-height: 1.1;
+  color: var(--tg-lila);
+}
+.bnb-tg__facts {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  font-size: 1.0625rem;
+  line-height: 1.45;
+  color: var(--tg-text-2);
+}
+.bnb-tg__facts li { position: relative; padding-left: 20px; }
+.bnb-tg__facts li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(68, 217, 255, 0.7);
+}
+@media (min-width: 1024px) {
+  .bnb-tg__grid { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); grid-template-areas: "copy scene"; column-gap: 40px; align-items: center; }
+  .bnb--tg .bnb-scene__frame { height: clamp(460px, 64vh, 600px); }
+}
+
+/* ═══ 3 · #turniere — Arena ═════════════════════════════════════ */
+.tg-turniere { padding-block: clamp(40px, 7vh, 72px) clamp(36px, 6vh, 64px); overflow-x: clip; }
+.tg-arena__kopf { margin-top: 26px; }
+.tg-room { margin: 22px 0 0; }
+.tg-room__flaeche {
+  position: relative;
+  width: min(100% + 24px, 980px);
+  margin-inline: -12px;
+}
+/* Handy: hineinzoomen statt einer winzigen flachen Ellipse — die äußeren Ränge laufen links und rechts aus dem Bild */
+@media (max-width: 719px) {
+  .tg-room__flaeche { width: 158%; margin-inline: -29% 0; }
+}
+.tg-room__svg { display: block; width: 100%; height: auto; overflow: visible; }
+/* Ebenen über dem Grundbild: eigene Compositing-Schichten, animiert wird nur opacity/transform */
+.tg-room__ebene { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.tg-room__fans circle { fill: var(--tg-sitz); opacity: 0.8; }
+.tg-room__fans--hinten circle { opacity: 0.48; }
+.tg-room__ring { stroke: var(--gold); stroke-width: 1.5; stroke-opacity: 0.35; vector-effect: non-scaling-stroke; }
+.tg-room__funkeln circle { fill: #e9e1ff; }
+.tg-room__funkeln { opacity: 0; will-change: opacity; }
+.tg-room__puls circle,
+.tg-room__strahl circle { fill: #ffd94f; }
+.tg-room__puls { opacity: 0.35; will-change: opacity; }
+.tg-room__strahl { opacity: 0; will-change: opacity, transform; transform-origin: 50% 50%; transition: opacity 360ms var(--tg-ease), transform 520ms var(--tg-ease); }
+.tg-room__sieger circle { fill: var(--gold); }
+.tg-room__sieger { transform-origin: 50% 50%; transition: transform 420ms var(--tg-feder); }
+.tg-room__grund { transition: opacity 360ms var(--tg-ease); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .tg-room.is-sicht .tg-room__puls { animation: tg-puls 2.6s cubic-bezier(0.2, 0.7, 0.3, 1) infinite; }
+  .tg-room.is-sicht .tg-room__funkeln--a { animation: tg-funkeln 5.2s ease-in-out infinite; }
+  .tg-room.is-sicht .tg-room__funkeln--b { animation: tg-funkeln 6.6s ease-in-out 2.1s infinite; }
+}
+@keyframes tg-puls { 0% { opacity: 0.25; } 14% { opacity: 0.95; } 48% { opacity: 0.38; } 100% { opacity: 0.25; } }
+@keyframes tg-funkeln { 0%, 100% { opacity: 0; } 45%, 55% { opacity: 0.85; } }
+
+/* „Plätze 1 bis 30 gewinnen“: Hover, Fokus, Tipp → die Gewinnerreihe leuchtet richtig */
+.tg-room.is-win .tg-room__puls { animation: none; opacity: 1; }
+.tg-room.is-win .tg-room__strahl { opacity: 1; transform: scale(1.02); }
+.tg-room.is-win .tg-room__sieger { transform: scale(1.015); }
+.tg-room.is-win .tg-room__grund { opacity: 0.55; }
+
+.tg-room__key ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 22px;
+  margin: 14px 0 0;
+  padding: 0;
+  font-weight: 600;
+  font-size: 0.9688rem;
+  color: var(--tg-text-2);
+}
+.tg-room__key li { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; }
+.tg-room__key li.tg-room__key-win { flex-basis: 100%; justify-content: center; order: -1; }
+.tg-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--tg-sitz); }
+.tg-dot--gold { background: var(--gold); box-shadow: 0 0 10px rgba(255, 205, 40, 0.7); }
+/* „Plätze 1–30 gewinnen“ = Schalter aus dem einen Knopf-Bauteil: .fg-pille.fg-pille--linie[aria-pressed] (fg-design.css, Coulson #19) */
+
+/* Socials: klein und leise unter der Arena */
+.tg-socials {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  margin: clamp(32px, 6vh, 56px) auto 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--tg-linie);
+  max-width: 720px;
+  text-align: center;
+}
+.tg-socials__text { max-width: 46ch; font-size: 1rem; line-height: 1.55; color: var(--tg-text-2); }
+.tg-socials__liste { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 10px; margin: 0; padding: 0; }
+.tg-social {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-width: 72px;
+  min-height: 48px;
+  padding: 4px 4px 2px;
+  border-radius: 12px;
+  color: var(--tg-text-2);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.tg-social:link, .tg-social:visited { color: var(--tg-text-2); }
+.tg-social:hover { color: #fff; }
+.tg-social__ico {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--tg-linie);
+  color: #fff;
+  transition: transform 200ms var(--tg-ease), border-color 200ms var(--tg-ease), background-color 200ms var(--tg-ease);
+}
+.tg-social:hover .tg-social__ico { transform: translateY(-2px); border-color: var(--nc); background: color-mix(in srgb, var(--nc) 18%, transparent); }
+.tg-social__glyph { width: 22px; height: 22px; }
+
+/* ═══ 4 · #rewards — Fluss unter der Bühne ═════════════════════ */
+.tn-rewards { background: var(--welt-arena, #1b1638); }
+.tn-rewards .rs { --rs-chrome: calc(var(--chrome-height-mobile) + var(--tg-sub-h)); }
+@media (min-width: 1024px) { .tn-rewards .rs { --rs-chrome: calc(var(--chrome-height-desktop) + var(--tg-sub-h)); } }
+.tn-rewards .tn-rewards__flow { padding-block: 24px clamp(40px, 7vh, 72px); }
+.tn-rewards .rwf { max-width: 820px; }
+.tn-rewards .rwf-intro { max-width: 56ch; margin-inline: auto; text-align: center; font-size: 1.0625rem; line-height: 1.6; color: var(--tg-text-2, rgba(255, 255, 255, 0.76)); }
+
+/* Zwei Aufklapper: Top 3, Plätze 4 bis 30 */
+.tg-auf {
+  margin-top: 16px;
+  border: 1px solid rgba(200, 147, 253, 0.26);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(44, 36, 90, 0.72), rgba(36, 29, 75, 0.72));
+  overflow: clip;
+}
+.tg-auf:first-of-type { margin-top: 28px; }
+.tg-auf__kopf {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  min-height: 72px;
+  padding: 14px 16px 14px 14px;
+  cursor: pointer;
+  list-style: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.tg-auf__kopf::-webkit-details-marker { display: none; }
+.tg-auf__kopf::marker { content: ""; }
+.tg-auf__marke {
+  display: grid;
+  place-items: center;
+  min-width: 64px;
+  height: 48px;
+  padding-inline: 10px;
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--on-gold, #141729);
+  background: linear-gradient(135deg, #ffe58a, var(--gold) 55%, #f4b400);
+}
+.tg-auf--raenge .tg-auf__marke { color: #fff; background: linear-gradient(135deg, #3b2f7a, #2a2160); border: 1px solid rgba(200, 147, 253, 0.45); }
+.tg-auf__titel {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h3);
+  line-height: 1.15;
+  color: #fff;
+  text-align: left;
+}
+.tg-auf__pfeil {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  transition: transform 260ms var(--tg-ease), background-color 200ms ease;
+}
+.tg-auf__pfeil svg { width: 18px; height: 18px; }
+.tg-auf[open] .tg-auf__pfeil { transform: rotate(180deg); background: rgba(255, 255, 255, 0.08); }
+.tg-auf__kopf:hover .tg-auf__pfeil { background: rgba(255, 255, 255, 0.1); }
+.tg-auf__inhalt { padding: 8px 16px 22px; }
+.tg-auf[open] .tg-auf__inhalt { animation: tg-auf 320ms var(--tg-ease) both; }
+@keyframes tg-auf { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.tn-rewards .tg-auf .rwf-h3 { display: none; }
+.tn-rewards .tg-auf .rwf-block { margin-top: 0; }
+.tn-rewards .tg-auf .rwf-podium__list { gap: 18px; margin-top: 22px; }
+.tn-rewards .tg-auf .rwf-podium__sentence { font-size: 0.9688rem; line-height: 1.5; }
+.tn-rewards .tg-auf .rwf-board { margin: 0; padding: 0; border: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.tn-rewards .tg-auf .rwf-row { grid-template-columns: 76px minmax(0, 1fr); column-gap: 14px; padding-block: 14px; }
+.tn-rewards .tg-auf .rwf-row__value { font-size: 0.9375rem; line-height: 1.45; }
+
+.tn-rewards .rwf-label-wrap { margin-top: 36px; }
+.tn-rewards .rwf-label__title { font-size: var(--fs-h3); }
+.tn-rewards .rwf-label__cta.fg-pille { margin-top: 18px; }
+.tn-rewards .rwf-bridge { margin-top: 22px; text-align: center; font-weight: 700; font-size: 1.0625rem; }
+.tn-rewards .rwf-bridge a { color: var(--text-primary); text-decoration: underline; text-decoration-color: rgba(68, 217, 255, 0.7); text-underline-offset: 3px; }
+.tn-rewards .rwf-bridge a:hover { color: var(--text-primary); text-decoration-color: var(--cyan); text-decoration-thickness: 2px; }
+@media (max-width: 719px) {
+  .tn-rewards .rwf-stands { --box-w: clamp(84px, 25vw, 112px); grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "two one three"; column-gap: 8px; row-gap: 0; }
+  .tn-rewards .rwf-stand--1 { border-bottom: 0; --riser-h: 50px; --rank-fs: 1.9rem; }
+  .tn-rewards .rwf-stand--2 { --riser-h: 38px; --rank-fs: 1.5rem; }
+  .tn-rewards .rwf-stand--3 { --riser-h: 30px; --rank-fs: 1.25rem; }
+  .tn-rewards .rwf-stand--1::before { width: calc(var(--box-w) * 1.6); }
+  .tn-rewards .rwf-label__body { padding: 20px 18px; }
+}
+/* Luft unter der Rewards-Bühne (Endbild Spur B) nutzt der Fluss: turniere-rewards-stage.js misst sie am Handy. */
+@media (max-width: 767px) {
+  .tn-rewards .rs.is-live + .tn-rewards__flow { z-index: 2; margin-top: calc(var(--rs-luft, 0px) * -1); }
+}
+
+/* ═══ 5 · Abschluss: Infobox + Points-Fluss ═════════════════════ */
+.tg-abschluss { padding-block: clamp(24px, 5vh, 48px) clamp(24px, 4vh, 40px); }
+.tg-abschluss__grid { display: grid; gap: 18px; }
+.tg-infobox {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  column-gap: 16px;
+  row-gap: 8px;
+  align-content: start;
+  padding: 22px 20px;
+  border: 1px solid rgba(68, 217, 255, 0.32);
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse 60% 80% at 0% 0%, rgba(68, 217, 255, 0.12), transparent 70%),
+    var(--tg-flaeche);
+}
+.tg-infobox__ico {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(68, 217, 255, 0.14);
+  color: var(--cyan);
+}
+.tg-infobox__ico svg { width: 28px; height: 28px; }
+.tg-infobox__text { font-size: 1rem; line-height: 1.6; color: var(--tg-text-2); }
+
+.tg-punkte {
+  padding: 22px 16px 18px;
+  border: 1px solid rgba(255, 205, 40, 0.28);
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse 60% 70% at 55% 60%, rgba(255, 205, 40, 0.1), transparent 70%),
+    var(--tg-flaeche);
+}
+.tg-punkte__satz { margin-top: 8px; font-size: 1rem; line-height: 1.55; color: var(--tg-text-2); }
+.tg-punkte__fluss {
+  position: relative;
+  container-type: size;
+  width: 100%;
+  max-width: 460px;
+  aspect-ratio: 360 / 230;
+  margin: 18px auto 0;
+}
+.tg-punkte__linien { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.tg-punkte__linien path { fill: none; stroke: rgba(255, 205, 40, 0.42); stroke-width: 2; stroke-dasharray: 4 6; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.tg-pk-quelle {
+  position: absolute;
+  left: 0;
+  width: 36cqw;
+  display: grid;
+  gap: 2px;
+  padding: 2.6cqw 3cqw;
+  border-radius: 3.4cqw;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--tg-linie);
+  transform: translateY(-50%);
+}
+.tg-pk-quelle--a { top: 22%; }
+.tg-pk-quelle--b { top: 78%; }
+.tg-pk-quelle__name { font-weight: 700; font-size: clamp(0.875rem, 4.6cqw, 1.0625rem); line-height: 1.2; color: #fff; }
+.tg-pk-quelle__wert { font-family: var(--font-display); font-size: clamp(0.9375rem, 5cqw, 1.25rem); line-height: 1.1; color: var(--gold); }
+.tg-pk-muenze {
+  position: absolute;
+  left: 58%;
+  top: 44%;
+  width: 21cqw;
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+}
+.tg-pk-muenze svg { width: 21cqw; height: 21cqw; filter: drop-shadow(0 0 14px rgba(255, 205, 40, 0.4)); }
+.tg-pk-label {
+  position: absolute;
+  top: calc(100% + 1.5cqw);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  font-weight: 700;
+  font-size: clamp(0.8125rem, 4.2cqw, 1rem);
+  line-height: 1.2;
+  text-align: center;
+  color: #fff;
+}
+.tg-pk-ziel {
+  position: absolute;
+  left: 88%;
+  top: 44%;
+  width: 22cqw;
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+}
+.tg-pk-ziel img { width: 22cqw; height: auto; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.45)); }
+.tg-pk-ziel .tg-pk-label { color: var(--gold); }
+.tg-pk-flug {
+  position: absolute;
+  width: 6cqw;
+  height: 6cqw;
+  margin: -3cqw 0 0 -3cqw;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff6c9, var(--gold) 55%, #e09a00);
+  box-shadow: 0 0 10px rgba(255, 205, 40, 0.75);
+  opacity: 0;
+}
+.tg-pk-flug--a { left: 37%; top: 22%; }
+.tg-pk-flug--b { left: 37%; top: 78%; }
+.tg-pk-flug--c { left: 58%; top: 44%; }
+@media (prefers-reduced-motion: no-preference) {
+  .tg-punkte.is-an .tg-pk-flug--a { animation: tg-flug-a 3.4s cubic-bezier(0.45, 0, 0.3, 1) 3 both; }
+  .tg-punkte.is-an .tg-pk-flug--b { animation: tg-flug-b 3.4s cubic-bezier(0.45, 0, 0.3, 1) 3 both; }
+  .tg-punkte.is-an .tg-pk-flug--c { animation: tg-flug-c 3.4s cubic-bezier(0.45, 0, 0.3, 1) 3 both; }
+  .tg-punkte.is-an .tg-pk-muenze svg { animation: tg-muenze 3.4s ease-out 3 both; }
+  .tg-punkte.is-an .tg-pk-ziel img { animation: tg-ziel 3.4s ease-out 3 both; }
+}
+@keyframes tg-flug-a { 0% { opacity: 0; transform: none; } 6% { opacity: 1; } 30% { opacity: 1; transform: translate(21cqw, 22cqh) scale(0.7); } 34%, 100% { opacity: 0; transform: translate(21cqw, 22cqh) scale(0.7); } }
+@keyframes tg-flug-b { 0%, 14% { opacity: 0; transform: none; } 20% { opacity: 1; } 44% { opacity: 1; transform: translate(21cqw, -34cqh) scale(0.7); } 48%, 100% { opacity: 0; transform: translate(21cqw, -34cqh) scale(0.7); } }
+@keyframes tg-flug-c { 0%, 52% { opacity: 0; transform: none; } 58% { opacity: 1; } 82% { opacity: 1; transform: translate(30cqw, 0) scale(1.1); } 86%, 100% { opacity: 0; transform: translate(30cqw, 0) scale(1.1); } }
+@keyframes tg-muenze { 0%, 28% { transform: none; } 34% { transform: scale(1.12); } 42% { transform: none; } 46% { transform: scale(1.12); } 54%, 100% { transform: none; } }
+@keyframes tg-ziel { 0%, 80% { transform: none; } 86% { transform: scale(1.1) rotate(-3deg); } 94%, 100% { transform: none; } }
+@media (min-width: 900px) {
+  .tg-abschluss__grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 24px; align-items: stretch; }
+  .tg-infobox { padding: 28px 26px; }
+  .tg-punkte { padding: 28px 26px 22px; }
+}
+
+/* ═══ 6 · Wiki-Zeile ═══════════════════════════════════════════ */
+.tg-weiter { padding-block: 6px 18px; }
+.tg-weiter__inner { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 6px 24px; text-align: center; }
+.tg-weiter__bridge { font-family: var(--font-display); font-size: var(--fs-h3); line-height: 1.15; }
+.tg-weiter__faq { font-size: 1rem; color: var(--tg-text-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tg-tcg__seite, .tg-tcg__karte, .tg-hand__card, .tg-room__strahl, .tg-room__sieger, .tg-room__grund, .tg-sub__link::after, .tg-sub, .tg-sub.is-stuck, .tg-sub:focus-within { transition: none; }
+  .tg-sub { transform: none; }
+  .tg-tcg__show .tg-tcg__glanz { animation: none; }
+  .tg-auf[open] .tg-auf__inhalt { animation: none; }
+}

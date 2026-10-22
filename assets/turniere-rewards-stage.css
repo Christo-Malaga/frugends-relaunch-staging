@@ -1,0 +1,642 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — Turniere · Rewards-Bühne (snippets/fg-rewards-stage)
+   Pietro, 2026-09-30 · Konzept: audit/10-winnerboxen/KONZEPT.md,
+   concept-wanda.md §3–§7, concept-widow.md §4.
+
+   Ebenen:
+     .rs                Wrapper (Spur A + Spur B), Navy-Grund
+     .rs-a              Spur A = Burst (frugends-burst.css, unverändert)
+       └ backdrop · <surprise-box> · .rs-a__night · .rs-a__flash
+     .rs-b              Spur B = scroll-cinema .scrub, -100svh Überlappung
+       └ .rs-b__cover (JS: sichtbar erst beim Andocken)
+           └ .rs-night · chip · H2 · visual (Scheibe + Boxen) · Legende · Caption
+
+   Default = Endbild. Alles, was sich bewegt, bekommt seine Startwerte
+   nur im Live-Modus (.rs.is-live, JS). Keine Endlos-Animation, kein
+   statisches will-change (scroll-cinema setzt es nur im aktiven Zustand),
+   kein overflow-x: clip an einem Vorfahren der Sticky-Bühnen.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Stufenfarben — auch von Spider genutzt (Fluss) */
+.tn-rewards {
+  --tier-gold: var(--gold);
+  --tier-cyan: var(--cyan);
+  --tier-lila: var(--purple);
+  --tier-lila-text: #b9a3e0;
+  --tier-holo: linear-gradient(90deg, #7c5cbf 0%, #44d9ff 50%, #ffcd28 100%);
+  /* Größenstaffel der Box-Stufen (Chris 2026-09-30: „skaliere sie
+     größentechnisch runter wie vorgeschlagen“). Spider nutzt sie für
+     Podest und Rangliste, die Bühne für die vier Boxen. */
+  --tier-scale-gold: 1;
+  --tier-scale-holo: .9;
+  --tier-scale-cyan: .8;
+  --tier-scale-lila: .65;
+}
+
+/* ─── Wrapper + gemeinsame Maße ─────────────────────────────────── */
+.rs {
+  /* Header (Relaunch 2026-10: ohne Kanal-Leiste, fg-turniere-hero ist aus der Seite) */
+  --rs-chrome: var(--chrome-height-mobile);
+  /* Grund = Welt der Seite (Atlas: .welt-arena, --welt-arena), Rückfall #1b1638 */
+  --rs-grund: var(--welt-arena, #1b1638);
+  --rs-title-size: clamp(2.75rem, 7.2vw, 6.5rem);
+
+  /* ── Szene v2 (Chris 2026-09-30): Haufen hinten, vier Boxen vorn ──────
+     Alle Maße in Einheiten der Szenenbreite W, damit die Proportion in
+     jeder Größe gleich bleibt. Ziel: Box-Körper ≈ 1,3 Pringles-Dosen des
+     Haufens (Vorderseite ≈ 1,1 Dosen, der Rest ist Nähe zur Kamera).
+     Dose im Haufen ≈ 0,44 × Haufenhöhe (Breite 7 % × Verhältnis 3,1:1).
+     Desktop: Box 28 % breit auf 25-%-Spalten (die Kartons stehen dicht an
+     dicht, der rechte verdeckt die Seitenwand des linken; bei 27 % blitzten
+     Produktfetzen durch die Lücken), Körper 0,187 W hoch => Dose 0,144 W =>
+     Haufen 0,327 W hoch, 0,654 W breit; Haufen-Boden 0,04 W über der
+     Szenenunterkante (hinter den Boxen) => Szene 0,367 W hoch. */
+  --rs-scene-ar: 2.725;
+  --rs-heap-w: 65.4%;
+  --rs-heap-ar: 2;
+  --rs-box-w: 28%;
+  --rs-disc-mt: -6.6%;              /* Mittellinie der Scheibe knapp über den Box-Unterkanten */
+  --rs-over: 0.04;                  /* Überstand der Scheibe unter der Szene (× W) */
+  --rs-vis-cap: min(100vw - 64px, 1280px);
+  --rs-img-h: 1000px;               /* statisch: Breite begrenzt, nicht Höhe */
+  position: relative;
+  background: var(--rs-grund);
+}
+@media (min-width: 1024px) {
+  .rs { --rs-chrome: var(--chrome-height-desktop); }
+}
+@media (max-width: 767px) {
+  /* Mobil 2 × 2: hintere Reihe Premium/Special, vordere Winner/Mini, um
+     0,28 W versetzt — Logo und Banderole der hinteren Boxen bleiben
+     sichtbar. Box 56 % (Körper 0,374 W; die Kartons überlappen minimal,
+     sonst blitzen Schriftfetzen des Haufens durch die Spalte). Telefone
+     sind in der Höhe knapp: Der Haufen steht mobil etwas weiter hinten, die
+     Box ist ≈ 1,45 Dosen hoch (Desktop 1,3). Haufen 0,55 W hoch (Dose füllt
+     im mittigen Ausschnitt 0,46 der Höhe => 0,253 W), 0,733 W breit, Boden
+     hinter der hinteren Reihe, 0,18 W sichtbar über ihr => Szene 0,88 W. */
+  .rs {
+    --rs-scene-ar: 1.136;
+    --rs-heap-w: 73.3%;
+    --rs-heap-ar: 1.3333;
+    --rs-box-w: 56%;
+    --rs-back-mb: 28%;              /* Szene 0,88 W − (0,18 + 0,42) W */
+    --rs-disc-mt: -7.6%;
+    --rs-over: 0.03;
+    --rs-vis-cap: min(100vw - 16px, 560px);
+  }
+}
+
+/* Innenraum: gleiche Breite in Blitz (A) und Endbild (B) => gleiche Umbrüche */
+.rs-inner {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* ─── Headline (Blitz-Tinte in A, Gold in A-Nacht und B) ───────── */
+.rs-title {
+  /* Luft für Unterlängen: background-clip:text malt nur in der Box, bei
+     Zeilenhöhe .95 fiele das „g“ sonst aus dem Gold. Netto-Layout 0. */
+  padding-block: 0.04em 0.2em;
+  margin: -0.04em 0 -0.2em;
+  max-width: 100%;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--rs-title-size);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-wrap: balance;
+}
+.rs-title--ink { color: #141729; }
+/* Statisches Pokalgold wie „Coming soon – Dezember 2026“ (kein Shimmer-Loop) */
+.rs-title--gold {
+  background: linear-gradient(180deg, #fff3c4 0%, var(--gold) 52%, #ff9a1f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold);
+  text-shadow: 0 2px 22px rgba(255, 205, 40, 0.22);
+}
+
+/* Nacht: Navy mit Goldschein oben (= Grund der alten #preise-Section).
+   Identisch in A (Nachtblende) und B (Bühnengrund) => nahtlose Übergabe. */
+.rs-night {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 0%, var(--gold-12), transparent 60%),
+    var(--rs-grund, var(--bg-deep));
+}
+
+.rs-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ═══ SPUR A — Burst ═════════════════════════════════════════════ */
+.rs-a { display: none; }
+.rs.is-live .rs-a.frugends-burst {
+  display: block;
+  height: calc(var(--rs-a-d, 200) * 1vh);
+}
+@media (max-width: 767px) {
+  .rs.is-live .rs-a.frugends-burst { height: calc(var(--rs-a-m, 170) * 1vh); }
+  @supports (height: 1svh) {
+    .rs.is-live .rs-a.frugends-burst { height: calc(var(--rs-a-m, 170) * 1svh); }
+  }
+}
+
+/* Bühne hinter dem transparenten Canvas (wie .bn-burst__backdrop) */
+.rs-a__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, var(--rs-grund, var(--bg-deep)) 0%, transparent 22%),
+    radial-gradient(ellipse 60% 45% at 50% 58%, rgba(124, 92, 191, 0.20), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(4, 5, 12, 0.6) 100%),
+    var(--rs-grund, var(--bg-deep));
+}
+
+/* Nachtblende über dem Canvas. Runde 3 Fix (Coulson #7): zeitgebunden statt scroll-gebunden.
+   JS schaltet .ist-an an der Blitz-Schwelle; .ist-sofort beim Anker-Sprung (ohne Übergang). */
+.rs-a__night {
+  z-index: 2;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 260ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)), visibility 0s linear 260ms;
+}
+.rs-a__night.ist-an {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 260ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)), visibility 0s;
+}
+.rs-a__night.ist-sofort { transition: none; }
+
+/* Goldblitz: 240 ms, Spitze 40 % Deckkraft, Licht aus der Mitte der Box (nie Vollweiß) */
+.rs-a__blitz {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse 75% 65% at 50% 58%, #ffe58a 0%, rgba(255, 205, 40, 0.85) 38%, rgba(255, 205, 40, 0) 78%);
+}
+.rs-a__blitz.ist-blitz { animation: rs-blitz 240ms cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+@keyframes rs-blitz {
+  0% { opacity: 0; }
+  25% { opacity: 0.4; }
+  100% { opacity: 0; }
+}
+
+/* Blitz-Headline: eigene Ebene über Canvas und Nacht, mittig unter der Chrome */
+.rs-a__flash {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: var(--rs-chrome);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+.rs-flash {
+  position: relative;
+  display: flow-root;   /* keine Margin-Kollabierung: Gold-Box = Tinten-Box = H2-Box */
+  transform-origin: 50% 50%;
+}
+.rs-flash__gold {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+/* ═══ SPUR B — Enthüllung ═══════════════════════════════════════ */
+.rs-b {
+  position: relative;
+  z-index: 1;
+}
+/* Statisch (auch gegen .scrub__stage aus scroll-cinema.css, egal in welcher Ladefolge) */
+.rs-b .rs-b__stage {
+  position: relative;
+  height: auto;
+  overflow: hidden;
+}
+.rs-b__cover { position: relative; }
+.rs-b__bg { z-index: 0; }
+
+/* Beats im Fluss (scroll-cinema legt .beat sonst absolut über die Bühne) */
+.rs-b .beat {
+  position: relative;
+  inset: auto;
+}
+/* H2 volle Breite wie die Blitz-Headline in A => identische Umbrüche */
+.rs-b .rs-b__inner > .rs-title { align-self: stretch; }
+
+.rs-b__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-block: var(--space-16) var(--space-12);
+}
+
+.rs-b__chip { margin-bottom: var(--space-4); }
+.rs-b__chip .chip { margin: 0; }
+
+/* Szene: Breite W = Legendenbreite, damit die Legende spaltengenau unter den
+   vier Boxen steht. Live setzt das JS die Breite gemessen (--rs-vis-w-js);
+   sonst Schätzung aus der Höhe bzw. die Obergrenze. Die Szene darf breiter
+   als der Container werden (bis 1280 px) — Flex-Zentrierung verteilt den
+   Überstand gleichmäßig, die Bühne schneidet mit overflow:hidden. */
+.rs-b__inner {
+  --rs-vis-w: min(var(--rs-vis-cap), var(--rs-vis-w-js, calc(var(--rs-img-h) * var(--rs-scene-ar))));
+}
+.rs-b__visual {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  width: var(--rs-vis-w);
+  aspect-ratio: var(--rs-scene-ar);
+  margin-top: calc(var(--rs-title-size) * 0.1);   /* der Haufen bleibt unter der Schrift */
+  margin-bottom: calc(var(--rs-vis-w) * var(--rs-over));
+}
+
+/* Haufen: hinten, mittig, steht mit dem Boden hinter den Boxen */
+.rs-b .beat.rs-b__heap {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: auto;
+  left: calc((100% - var(--rs-heap-w)) / 2);
+  width: var(--rs-heap-w);
+  aspect-ratio: var(--rs-heap-ar);
+  transform-origin: 50% 100%;
+}
+.rs-b__heap picture { display: contents; }
+.rs-b__heap .rs-b__heap-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  object-position: 50% 100%;
+}
+
+/* Boxen: vorn, eine Reihe in den vier Legendenspalten (12,5/37,5/62,5/87,5 %).
+   Größenstaffel über die Breite (nicht transform, das Layout geht mit):
+   --rs-ts aus --tier-scale-* (Premium 1, Special .9, Winner .8, Mini .65),
+   in der Spalte zentriert. Standlinie: Der Karton endet 5,2 % über der
+   Bildunterkante; kleinere Bilder rücken um 0,052 × (Höhe voll − Höhe
+   skaliert) nach unten, damit alle Kartons auf derselben Linie stehen. */
+.rs-b .beat.rs-b__boxes {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  transform-origin: 50% 100%;
+}
+.rs-b__boxes .rs-b__box {
+  --rs-ts: 1;
+  --rs-bw: calc(var(--rs-box-w) * var(--rs-ts));
+  position: absolute;
+  display: block;
+  bottom: 0;
+  width: var(--rs-bw);
+  height: auto;
+  max-width: none;
+  aspect-ratio: 900 / 675;
+  margin-bottom: calc(var(--rs-row-mb, 0%) - var(--rs-box-w) * 0.039 * (1 - var(--rs-ts)));
+}
+.rs-b__boxes .rs-b__box--gold { --rs-ts: var(--tier-scale-gold, 1); }
+.rs-b__boxes .rs-b__box--holo { --rs-ts: var(--tier-scale-holo, .9); }
+.rs-b__boxes .rs-b__box--cyan { --rs-ts: var(--tier-scale-cyan, .8); }
+.rs-b__boxes .rs-b__box--lila { --rs-ts: var(--tier-scale-lila, .65); }
+.rs-b__box--1 { left: calc(12.5% - var(--rs-bw) / 2); }
+.rs-b__box--2 { left: calc(37.5% - var(--rs-bw) / 2); }
+.rs-b__box--3 { left: calc(62.5% - var(--rs-bw) / 2); }
+.rs-b__box--4 { left: calc(87.5% - var(--rs-bw) / 2); }
+
+/* Bühnenscheibe unter den Boxen */
+.rs-b .beat.rs-b__floor {
+  position: absolute;
+  z-index: 0;
+  left: -5%;
+  right: -5%;
+  top: 100%;
+  bottom: auto;
+  margin-top: var(--rs-disc-mt);
+  transform-origin: 50% 45%;
+}
+.rs-b__floor svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  aspect-ratio: 1200 / 110;
+  overflow: visible;
+}
+
+@media (max-width: 767px) {
+  /* 2 × 2: Spalten 25/75 % wie die Legende; hintere Reihe steht 0,28 W
+     über der vorderen Standlinie (beide Reihen je unten bündig) */
+  .rs-b__boxes .rs-b__box--1,
+  .rs-b__boxes .rs-b__box--2 { --rs-row-mb: var(--rs-back-mb); }
+  .rs-b__box--1, .rs-b__box--3 { left: calc(25% - var(--rs-bw) / 2); }
+  .rs-b__box--2, .rs-b__box--4 { left: calc(75% - var(--rs-bw) / 2); }
+}
+
+/* Legende: Banderolen-Balken (= Banderole am Karton) + Name + Warenwert */
+.rs-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: var(--rs-vis-w);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.rs-legend__item {
+  --rs-band: var(--tier-gold);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.rs-tier--gold { --rs-band: var(--tier-gold); }
+.rs-tier--holo { --rs-band: var(--tier-holo); }
+.rs-tier--cyan { --rs-band: var(--tier-cyan); }
+.rs-tier--lila { --rs-band: var(--tier-lila); }
+.rs-legend__band {
+  display: block;
+  width: 28px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--rs-band);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+}
+.rs-legend__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.6vw, 1.375rem);
+  line-height: 1.1;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+.rs-legend__value {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: nowrap;   /* „ca. 30 € Warenwert“ bleibt eine Zeile */
+}
+
+.rs-b__caption {
+  margin-top: var(--space-5);
+  max-width: 80ch;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Sprungziel */
+.rs-anchor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+/* Blocker für App-Pille / Discord (main.js prüft offsetParent => nicht display:none) */
+.rs-cta-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ─── Mobil (statisch und live) ─────────────────────────────────── */
+@media (max-width: 767px) {
+  .rs-legend {
+    /* Spalten 25/75 % wie die 2 × 2-Boxen; mindestens 300 px, sonst brechen
+       die Namen um */
+    width: max(var(--rs-vis-w), min(100%, 300px));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-2);
+    row-gap: var(--space-3);
+  }
+  .rs-legend__item { gap: 4px; }
+  .rs-legend__name { font-size: 0.95rem; }
+  .rs-legend__value { font-size: 13.5px; line-height: 1.25; }
+  .rs-b__caption { font-size: 11.5px; line-height: 1.4; margin-top: var(--space-3); }
+}
+
+/* ═══ LIVE-MODUS (JS, kein reduced motion, WebGL) ═══════════════ */
+.rs.is-live .rs-b.scrub { height: calc(var(--rs-b-d, 160) * 1vh); }
+.rs.is-live .rs-b {
+  /* Überlappung = Bühnenhöhe: A endet genau, wenn B andockt */
+  margin-top: -100vh;
+}
+.rs.is-live .rs-b__stage.scrub__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+@supports (height: 1svh) {
+  .rs.is-live .rs-b { margin-top: -100svh; }
+  .rs.is-live .rs-b__stage.scrub__stage { height: 100svh; }
+}
+@media (max-width: 767px) {
+  .rs.is-live .rs-b.scrub { height: calc(var(--rs-b-m, 140) * 1vh); }
+  @supports (height: 1svh) {
+    .rs.is-live .rs-b.scrub { height: calc(var(--rs-b-m, 140) * 1svh); }
+  }
+}
+.rs.is-live .rs-b__cover { position: absolute; inset: 0; }
+
+/* Runde 3 Fix (Coulson #7): Nach dem Goldblitz steht das Endbild von B sofort, zeitgebunden gestaffelt
+   (Titel gleitet hoch, Scheibe, Boxen steigen auf, Legende, Caption) statt erst nach weiterem Scrollen.
+   JS schaltet .ist-enthuellt mit dem Blitz und .ist-sofort beim Anker-Sprung (keine Übergänge). */
+.rs.is-live .rs-b__cover {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 280ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) 70ms, visibility 0s linear 350ms;
+}
+.rs.is-live.ist-enthuellt .rs-b__cover {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 280ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) 70ms, visibility 0s;
+}
+.rs.is-live.ist-enthuellt .rs-b .beat {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 420ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) var(--rs-takt, 0ms),
+    transform 680ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) var(--rs-takt, 0ms);
+}
+.rs.is-live.ist-enthuellt .rs-b__floor { --rs-takt: 140ms; }
+.rs.is-live.ist-enthuellt .rs-b__boxes { --rs-takt: 200ms; }
+.rs.is-live.ist-enthuellt .rs-b__heap { --rs-takt: 280ms; }
+.rs.is-live.ist-enthuellt .rs-b__chip { --rs-takt: 380ms; }
+.rs.is-live.ist-enthuellt .rs-legend { --rs-takt: 440ms; }
+.rs.is-live.ist-enthuellt .rs-b__caption { --rs-takt: 520ms; }
+.rs.is-live.ist-sofort .rs-b__cover,
+.rs.is-live.ist-sofort .rs-b .beat,
+.rs.is-live.ist-sofort .rs-a__night { transition: none !important; }
+.rs.is-live .rs-b__inner {
+  height: 100%;
+  justify-content: center;
+  justify-content: safe center;   /* zu hoch => nach unten überlaufen, nie unter die Chrome */
+  padding-top: calc(var(--rs-chrome) + var(--space-4));
+  padding-bottom: var(--space-8);
+  /* Bildhöhe aus dem Platz, den Chip, H2, Legende und Caption lassen
+     (Schätzung; das JS passt sie nach dem Messen exakt an) */
+  --rs-img-h: clamp(140px, calc(100vh - var(--rs-chrome) - 470px), 560px);
+}
+@supports (height: 1svh) {
+  .rs.is-live .rs-b__inner {
+    --rs-img-h: clamp(140px, calc(100svh - var(--rs-chrome) - 470px), 560px);
+  }
+}
+@media (max-width: 767px) {
+  .rs.is-live .rs-b__inner {
+    padding-top: calc(var(--rs-chrome) + var(--space-3));
+    padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  }
+  .rs.is-live .rs-b__chip { margin-bottom: var(--space-3); }
+}
+/* Bis 760 px Höhe (iPhone 13 in Safari: 664, Laptops 1280 × 720): Die Boxen
+   brauchen den Platz. Der Chip „Rewards“ entfällt im Endbild — die
+   Kanal-Leiste direkt darüber zeigt „Rewards“ bereits aktiv. */
+@media (max-height: 760px) {
+  .rs.is-live .rs-b__chip { display: none; }
+}
+
+/* Sprung „Rewards“ landet bei Fortschritt 1 von Spur B (Endbild) */
+.rs.is-live #preise {
+  top: calc(100% - 100vh);
+  scroll-margin-top: 0;
+}
+@supports (height: 1svh) {
+  .rs.is-live #preise { top: calc(100% - 100svh); }
+}
+
+/* Kleine Höhen (Wanda §4): H2 kleiner, Legende nur Namen — die Werte
+   folgen im Fluss. Gilt für Blitz (A) und Endbild (B) gleichermaßen.
+   Schwelle 620 statt 740 px: Das iPhone 13 hat in Safari 664 px, und weil
+   das Bühnenbild den Restplatz gemessen bekommt, passen dort die Werte
+   noch (gemessen). Erst darunter wird es zu eng. */
+@media (max-height: 620px) {
+  .rs.is-live { --rs-title-size: clamp(2.375rem, 5.6vw, 4.75rem); }
+  .rs.is-live .rs-legend__value { display: none; }
+  /* Das Bild wird hier schmal; die Legende nicht daran koppeln */
+  .rs.is-live .rs-legend { width: min(100%, 640px); row-gap: var(--space-2); }
+  .rs.is-live .rs-b__chip { margin-bottom: var(--space-2); }
+  .rs.is-live .rs-b__caption { margin-top: var(--space-3); }
+  .rs.is-live .rs-b__inner { padding-bottom: var(--space-5); }
+}
+/* Querformat am Telefon: Header + Kanal-Leiste nehmen fast ein Drittel ein */
+@media (max-height: 480px) {
+  .rs.is-live { --rs-title-size: clamp(1.75rem, 4.6vw, 2.5rem); }
+  .rs.is-live .rs-b__chip { display: none; }
+  .rs.is-live .rs-b__inner { padding-top: calc(var(--rs-chrome) + var(--space-2)); padding-bottom: var(--space-3); }
+  .rs.is-live .rs-b__caption { margin-top: var(--space-2); }
+}
+
+/* Reduced motion: Absicherung in CSS (JS schaltet ohnehin nicht live) */
+@media (prefers-reduced-motion: reduce) {
+  .rs .rs-a { display: none !important; }
+  .rs .rs-b { margin-top: 0 !important; height: auto !important; }
+  .rs .rs-b__stage { position: relative !important; height: auto !important; }
+  .rs .rs-b__cover { position: relative !important; opacity: 1 !important; visibility: visible !important; }
+  .rs .rs-b .beat { opacity: 1 !important; transform: none !important; }
+}
+
+/* ═══ Runde 3 (Chris 2026-10-22): „Rewards“ groß ÜBER der Box ══════════
+   Titel steht ab dem Andocken oben über dem Burst (nicht erst danach),
+   darunter der Scroll-Hinweis. Buchstaben-Bewegung aus zwei Variablen,
+   die turniere-rewards-stage.js je Frame setzt (--rs-lade, --rs-knall);
+   bei Fortschritt ≥ 0.96 sind beide 0 => Übergabe an B pixelgleich. */
+/* Ausnahme von der Schriftskala (Fury 2026-10-22): „Rewards“ über dem Burst ist die Show-Typo der Seite.
+   Chris: „die Textanimation deutlich krasser über der eigentlichen Boxanimation“. Bleibt groß wie in Runde 3 (Bolt 2). */
+.rs,
+.rs.is-live { --rs-title-size: clamp(4.25rem, 19vw, 10rem); }
+.rs.is-live .rs-a__flash {
+  justify-content: flex-start;
+  padding-top: calc(var(--rs-chrome) + clamp(14px, 4svh, 44px));
+}
+.rs-flash .rs-bs {
+  display: inline-block;
+  --d: calc(var(--k) - (var(--n, 7) - 1) / 2);
+  transform:
+    translate(calc(var(--d) * var(--rs-lade, 0) * 0.06em),
+              calc((var(--rs-lade, 0) * -0.05em - var(--rs-knall, 0) * 0.16em) * var(--w, 0.5)))
+    rotate(calc(var(--rs-lade, 0) * var(--s, 1) * 6deg))
+    scale(calc(1 + var(--rs-knall, 0) * var(--w, 0.5) * 0.16));
+}
+/* Gold je Buchstabe (background-clip: text folgt sonst den Transforms der Kinder nicht) */
+.rs-flash .rs-title--gold[data-rs-letters] { background: none; text-shadow: none; }
+.rs-flash .rs-title--gold .rs-bs {
+  background: linear-gradient(180deg, #fff3c4 0%, var(--gold) 52%, #ff9a1f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* Glut hinter dem Titel: lädt mit auf, glüht beim Knall */
+.rs-flash__glut {
+  position: absolute;
+  inset: 0;
+  color: var(--gold);
+  -webkit-text-fill-color: var(--gold);
+  filter: blur(16px);
+  opacity: calc(var(--rs-lade, 0) * 0.5 + var(--rs-knall, 0) * 0.5);
+  pointer-events: none;
+}
+.rs-a__hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* direkt unter dem Titel: schon beim Hereinscrollen lesbar */
+  top: calc(var(--rs-chrome) + clamp(14px, 4svh, 44px) + var(--rs-title-size) * 1.12);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  opacity: 1;
+}
+.rs-a__hint svg { width: 28px; height: 28px; color: var(--gold); animation: rs-hinweis 1.4s ease-in-out infinite; }
+@keyframes rs-hinweis { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+@media (max-height: 480px) {
+  .rs.is-live { --rs-title-size: clamp(2rem, 6vw, 3rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rs-a__hint svg { animation: none; }
+}

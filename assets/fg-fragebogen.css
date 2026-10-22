@@ -1,0 +1,446 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — Fragebogen-Games (/pages/fragebogen-games) · Relaunch 2026-10
+   Builder D (H1 §4). Sections: fg-fragebogen-probespiel (Seitenkopf =
+   Spiel) · -ablauf · -vorteile · -voranmeldung · -faq, danach die Türen.
+   Bühne und Probespiel: assets/fgi-fragebogen.css (Insel, generiert).
+
+   Welt: --welt-produkt (Cyan-Navy; Atlas setzt .welt-produkt am <main>),
+   Akzent Logo-Lila (Strom der Fragebogen-Games, VX1 M2). Satzspiegel wie
+   /pages/turniere (Titel Protest Strike, Text Outfit, Gold-Pille mit
+   dunklem Kreis). Gold nur, wo es etwas zu gewinnen gibt. Keine
+   Versal-Kicker, keine Punktzahlen. Bewegung nur auf Handlung.
+   ═══════════════════════════════════════════════════════════════ */
+
+.fgf {
+  --fgf-welt: var(--welt-produkt, #172036);
+  --fgf-lila: var(--logo-lila, #c893fd);
+  --fgf-text-2: rgba(255, 255, 255, 0.76);
+  --fgf-linie: color-mix(in srgb, var(--fgf-lila) 22%, transparent);
+  --fgf-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  background: var(--fgf-welt);
+  color: var(--text-primary);
+}
+.fgf a:not([class]) {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--fgf-lila) 70%, transparent);
+  text-underline-offset: 3px;
+}
+.fgf a:not([class]):hover { color: var(--text-primary); text-decoration-color: var(--fgf-lila); text-decoration-thickness: 2px; }
+.fgf a:focus-visible,
+.fgf button:focus-visible,
+.fgf summary:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; border-radius: 6px; }
+
+/* Schriftskala (Coulson #18, assets/fg-design.css): Seitenkopf --fs-h1, Abschnitte --fs-h2, Karten --fs-h3, Satz --fs-lead */
+.fgf-h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h2);
+  line-height: 1.02;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+/* Leiser Textlink (extern, Pfeil als SVG wie im Kopf) */
+.fgf-direkt,
+.fgf-bruecke {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--fgf-lila) 60%, transparent);
+  text-underline-offset: 4px;
+}
+.fgf-direkt:hover,
+.fgf-bruecke:hover { color: var(--text-primary); text-decoration-color: var(--fgf-lila); text-decoration-thickness: 2px; }
+.fgf-direkt .fgf-raus { width: 15px; height: 15px; flex: none; opacity: 0.8; }
+
+/* ═══ 1 · #probespiel — Seitenkopf = Spiel ═══════════════════════ */
+.fgf-kopf {
+  overflow-x: clip;
+  padding-block: 22px 8px;
+  background:
+    radial-gradient(ellipse 52% 58% at 74% 52%, rgba(124, 92, 191, 0.3), transparent 70%),
+    radial-gradient(ellipse 40% 40% at 12% 18%, rgba(68, 217, 255, 0.08), transparent 70%),
+    var(--fgf-welt);
+}
+.fgf-kopf__raster { display: grid; align-items: center; gap: 18px; }
+.fgf-kopf__titel {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h1);
+  line-height: 0.95;
+  letter-spacing: -0.005em;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+.fgf-kopf__sub {
+  margin-top: 18px;
+  max-width: 44ch;
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+  color: var(--fgf-text-2);
+}
+.fgf-kopf__zeile {
+  margin-top: 14px;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--fgf-text-2);
+}
+.fgf-kopf__aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 22px;
+  margin-top: 22px;
+}
+.fgf-kopf .fgf-insel { width: 100%; }
+
+/* Kleiner Link „Probespiel starten“: startet das Spiel im Telefon (Handy: Vollbild) */
+.fgf-probe {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 0 4px;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--fgf-lila) 60%, transparent);
+  text-underline-offset: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+.fgf-probe:link, .fgf-probe:visited, .fgf-probe:hover, .fgf-probe:active { color: var(--text-primary); }
+.fgf-probe:hover { text-decoration-color: var(--fgf-lila); text-decoration-thickness: 2px; }
+.fgf-probe__kreis {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--fgf-lila) 22%, transparent);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fgf-lila) 70%, transparent);
+  color: var(--text-primary);
+}
+.fgf-probe__kreis svg { margin-left: 2px; }
+
+@media (min-width: 900px) {
+  .fgf-kopf { padding-block: clamp(12px, 2.5vh, 28px) clamp(8px, 2vh, 20px); }
+  .fgf-kopf__raster {
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+    gap: clamp(24px, 4vw, 56px);
+    min-height: min(calc(100svh - var(--chrome-height-desktop, 64px) - 64px), 790px);
+  }
+}
+
+/* ═══ 2 · So läuft der Tester Club ════════════════════════════════ */
+.fgf-ablauf { padding-block: clamp(28px, 4.5vh, 48px) clamp(24px, 4vh, 40px); }
+/* Handy einspaltig (Coulson #13: zwei Spalten à 171 px mit dreizeiligem Kleintext), ab 600 px zwei, ab 900 px vier */
+.fgf-ablauf__liste {
+  list-style: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin: 18px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--fgf-linie);
+}
+.fgf-schritt {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  column-gap: 12px;
+  align-content: start;
+}
+.fgf-schritt__nr {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid color-mix(in srgb, var(--fgf-lila) 85%, transparent);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--fgf-lila);
+}
+.fgf-schritt__titel { font-weight: 700; font-size: 1.0625rem; line-height: 1.3; }
+.fgf-schritt__text { margin-top: 2px; font-size: 1rem; line-height: 1.45; color: var(--fgf-text-2); }
+@media (min-width: 600px) {
+  .fgf-ablauf__liste { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; }
+}
+@media (min-width: 900px) {
+  .fgf-ablauf__liste { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+}
+
+/* ═══ 3 · Das bekommst du (Optik Testerclub Vorteile: Navy-Bühne, Licht von oben) ═══ */
+.fgf-vorteile { padding-block: clamp(20px, 3.5vh, 36px) clamp(32px, 5vh, 56px); }
+.fgf-karten {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.fgf-karte {
+  --licht: rgba(176, 140, 246, 0.5);
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px 14px 12px;
+  border-radius: 20px;
+  background:
+    radial-gradient(70% 90% at 14% 50%, var(--licht), transparent 74%),
+    linear-gradient(165deg, #2a2860, #15183a 82%);
+  box-shadow: 0 18px 40px rgba(10, 8, 40, 0.3), inset 0 0 0 1px rgba(200, 147, 253, 0.12);
+}
+.fgf-karte--versand {
+  --licht: rgba(255, 205, 40, 0.42);
+  box-shadow: 0 0 0 2px rgba(255, 205, 40, 0.85), 0 0 34px rgba(255, 205, 40, 0.28), 0 18px 40px rgba(10, 8, 40, 0.3);
+}
+.fgf-karte--kritik { --licht: rgba(255, 120, 165, 0.42); }
+.fgf-karte__bild { position: relative; display: grid; place-items: center; min-height: 92px; }
+.fgf-karte__titel {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h3);
+  line-height: 1;
+  color: #fff;
+  text-wrap: balance;
+}
+.fgf-karte__satz { margin-top: 6px; font-size: 0.9688rem; line-height: 1.45; color: var(--fgf-text-2); }
+
+/* Motiv Sendung: Box über der Bahn Verschickt · Unterwegs · Zugestellt (statisch) */
+.fgf-sendung { display: grid; justify-items: center; gap: 4px; width: 100%; }
+.fgf-sendung__box { width: 46px; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.4)); }
+.fgf-sendung__box svg { display: block; width: 100%; height: auto; }
+.fgf-sendung__bahn {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+}
+.fgf-sendung__bahn::before {
+  content: '';
+  position: absolute;
+  left: 16.6%;
+  right: 16.6%;
+  top: 6px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.55), var(--gold));
+}
+.fgf-sendung__halt { position: relative; display: grid; justify-items: center; gap: 5px; }
+.fgf-sendung__halt i {
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 3px #232456;
+}
+.fgf-sendung__halt.ist-ziel i { width: 20px; height: 20px; margin-top: -3px; background: var(--gold); color: var(--on-gold); box-shadow: 0 0 0 3px #232456, 0 0 14px rgba(255, 205, 40, 0.7); }
+.fgf-sendung__halt.ist-ziel i svg { width: 13px; height: 13px; }
+.fgf-sendung__halt small { display: none; font-size: 0.6875rem; font-weight: 600; line-height: 1.1; color: rgba(255, 255, 255, 0.7); white-space: nowrap; }
+.fgf-sendung__halt.ist-ziel small { color: #ffe9a6; }
+
+/* Motiv Points: Münzen → Leiste füllt sich → Surprise Box als Reward (Schleife 8 s, nur transform/opacity) */
+.fgf-leiste { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 4px; width: 100%; }
+.fgf-leiste__muenzen { position: relative; width: 30px; height: 30px; }
+.fgf-leiste__muenzen svg { position: absolute; left: 0; top: 0; width: 26px; height: 26px; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.35)); }
+.fgf-leiste__muenzen svg:nth-child(2) { left: 3px; top: -5px; }
+.fgf-leiste__muenzen svg:nth-child(3) { left: 6px; top: -10px; }
+.fgf-leiste__bahn { position: relative; height: 8px; overflow: hidden; border-radius: 8px; background: rgba(255, 255, 255, 0.14); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35); }
+.fgf-leiste__fuellung { position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, #56daff, var(--gold)); box-shadow: 0 0 10px rgba(255, 205, 40, 0.6); transform-origin: 0 50%; transform: scaleX(0.72); }
+.fgf-leiste__reward { position: relative; width: 44px; }
+.fgf-leiste__reward::before { content: ''; position: absolute; inset: -30%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 205, 40, 0.55), transparent 70%); opacity: 0.35; }
+.fgf-leiste__reward img { position: relative; display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.45)); }
+
+/* „0 €“: der USP der Karte Kostenlos */
+.fgf-karte__gross { display: block; margin-bottom: 2px; font-size: 1.9em; line-height: 0.92; color: var(--gold); text-shadow: 0 0 22px rgba(255, 205, 40, 0.35); }
+/* Goldpunkt auf der Sendungsbahn: Element so breit wie die Bahn (Halt 1 bis 3), der Punkt sitzt an seinem rechten Ende */
+.fgf-sendung__punkt { position: absolute; z-index: 1; left: 16.6%; width: 66.8%; top: 3px; height: 8px; opacity: 0; transform: translateX(-100%); pointer-events: none; }
+.fgf-sendung__punkt::after { content: ''; position: absolute; right: -4px; top: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .fgf-sendung__box { animation: fgf-schweben 3.6s ease-in-out infinite; }
+  .fgf-sendung__punkt { animation: fgf-unterwegs 4.8s cubic-bezier(0.45, 0, 0.3, 1) infinite; }
+  .fgf-sendung__halt.ist-ziel i { animation: fgf-zugestellt 4.8s ease-out infinite; }
+  .fgf-leiste__fuellung { animation: fgf-fuellen 8s cubic-bezier(0.3, 0, 0.25, 1) infinite; }
+  .fgf-leiste__reward img { animation: fgf-reward 8s ease-in-out infinite; }
+  .fgf-leiste__reward::before { animation: fgf-reward-schein 8s ease-in-out infinite; }
+  .fgf-leiste__muenzen svg { animation: fgf-muenze 8s ease-in-out infinite; }
+  .fgf-leiste__muenzen svg:nth-child(2) { animation-delay: 0.25s; }
+  .fgf-leiste__muenzen svg:nth-child(3) { animation-delay: 0.5s; }
+  .fgf-mini__kachel i svg { animation: fgf-haken 6s cubic-bezier(0.2, 1.5, 0.4, 1) infinite; }
+  .fgf-mini__kachel:last-child i svg { animation-delay: 0.9s; }
+}
+/* Außer Sicht steht alles (Sektion bekommt .fgf-sicht/.laeuft per IntersectionObserver, fg-fragebogen-vorteile.liquid) */
+.fgf-sicht:not(.laeuft) *,
+.fgf-sicht:not(.laeuft) *::before { animation-play-state: paused !important; }
+@keyframes fgf-schweben { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes fgf-unterwegs {
+  0% { opacity: 0; transform: translateX(-100%); }
+  8% { opacity: 1; transform: translateX(-100%); }
+  70% { opacity: 1; transform: translateX(0); }
+  82%, 100% { opacity: 0; transform: translateX(0); }
+}
+@keyframes fgf-zugestellt { 0%, 64% { transform: scale(1); } 72% { transform: scale(1.18); } 84%, 100% { transform: scale(1); } }
+@keyframes fgf-fuellen { 0% { transform: scaleX(0.08); } 62% { transform: scaleX(1); } 88% { transform: scaleX(1); opacity: 1; } 96% { opacity: 0; transform: scaleX(1); } 97% { transform: scaleX(0.08); opacity: 0; } 100% { opacity: 1; transform: scaleX(0.08); } }
+@keyframes fgf-reward { 0%, 58% { transform: scale(1) rotate(0); } 66% { transform: scale(1.1) rotate(-4deg); } 74% { transform: scale(1.02) rotate(2deg); } 82%, 100% { transform: scale(1) rotate(0); } }
+@keyframes fgf-reward-schein { 0%, 56% { opacity: 0.25; } 68% { opacity: 1; } 90%, 100% { opacity: 0.25; } }
+@keyframes fgf-muenze { 0%, 4% { transform: translateY(0); } 9% { transform: translateY(-4px); } 14%, 100% { transform: translateY(0); } }
+@keyframes fgf-haken { 0%, 6% { transform: scale(0); opacity: 0; } 14% { transform: scale(1.25); opacity: 1; } 20%, 86% { transform: scale(1); opacity: 1; } 94%, 100% { transform: scale(0); opacity: 0; } }
+
+/* Motiv Kritik: zwei Antwort-Kacheln (Optik der Quest-Kacheln), beide gezählt */
+.fgf-mini { display: grid; gap: 6px; width: 100%; }
+.fgf-mini__kachel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 4px 4px 4px 7px;
+  border: 2px solid #e8b626;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #ffe58a, var(--gold));
+  color: var(--on-gold);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+  box-shadow: 0 2px 0 #b78715;
+}
+.fgf-mini__kachel:first-child { rotate: -3deg; }
+.fgf-mini__kachel:last-child { rotate: 2deg; margin-left: 3px; }
+.fgf-mini__kachel i { display: grid; place-items: center; width: 15px; height: 15px; flex: none; border-radius: 5px; background: #fff8d6; box-shadow: inset 0 0 0 1.5px #b78715; }
+.fgf-mini__kachel svg { width: 12px; height: 12px; }
+
+@media (min-width: 900px) {
+  .fgf-karten { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 22px; }
+  .fgf-karte {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 150px auto;
+    align-items: start;
+    gap: 0;
+    padding: 0;
+    border-radius: 24px;
+    background:
+      radial-gradient(80% 60% at 50% 30%, var(--licht), transparent 74%),
+      linear-gradient(165deg, #2a2860, #15183a 82%);
+  }
+  .fgf-karte__bild { height: 150px; padding: 18px 26px 0; }
+  .fgf-karte__text { padding: 14px 24px 24px; }
+  .fgf-sendung { gap: 10px; max-width: 250px; }
+  .fgf-sendung__box { width: 60px; }
+  .fgf-sendung__halt small { display: block; font-size: 0.8125rem; }
+  .fgf-leiste { max-width: 270px; gap: 8px; }
+  .fgf-leiste__muenzen { width: 40px; height: 40px; }
+  .fgf-leiste__muenzen svg { width: 34px; height: 34px; }
+  .fgf-leiste__muenzen svg:nth-child(2) { left: 4px; top: -7px; }
+  .fgf-leiste__muenzen svg:nth-child(3) { left: 8px; top: -14px; }
+  .fgf-leiste__bahn { height: 10px; }
+  .fgf-leiste__reward { width: 84px; }
+  .fgf-mini { max-width: 200px; gap: 9px; }
+  .fgf-mini__kachel { padding: 9px 8px 9px 14px; border-radius: 13px; font-size: 1rem; box-shadow: 0 3px 0 #b78715; }
+  .fgf-mini__kachel i { width: 22px; height: 22px; border-radius: 7px; }
+  .fgf-mini__kachel svg { width: 15px; height: 15px; }
+  .fgf-mini__kachel:last-child { margin-left: 22px; }
+}
+
+/* ═══ 4 · Voranmelde-Band ════════════════════════════════════════ */
+.fgf-band { padding-block: 8px clamp(32px, 5vh, 56px); }
+.fgf-band__innen {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  padding: 24px 20px;
+  border-radius: 24px;
+  background:
+    radial-gradient(60% 120% at 100% 0%, rgba(255, 205, 40, 0.14), transparent 70%),
+    radial-gradient(70% 140% at 0% 100%, rgba(124, 92, 191, 0.38), transparent 70%),
+    color-mix(in srgb, var(--fgf-welt) 70%, #0b0d1c);
+  box-shadow: inset 0 0 0 1px var(--fgf-linie);
+}
+.fgf-band__titel {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h2);
+  line-height: 1.04;
+  text-wrap: balance;
+}
+.fgf-band__satz { margin-top: 8px; font-size: 1.0625rem; font-weight: 600; color: var(--fgf-text-2); }
+.fgf-band__aktionen { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; }
+@media (min-width: 900px) {
+  .fgf-band__innen { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 32px; padding: 34px 40px; }
+  .fgf-band__aktionen { flex-direction: column; align-items: flex-end; }
+}
+
+/* ═══ 5 · Fragen (Aufklapper: Optik business page.css „p-auf“, Akzent Lila) ═══ */
+.fgf-faq { padding-block: clamp(8px, 2vh, 20px) clamp(36px, 6vh, 64px); }
+.fgf-faq__raster { display: grid; gap: 14px; }
+.fgf-faq__wiki { margin-top: 8px; font-size: 1rem; line-height: 1.5; color: var(--fgf-text-2); }
+/* Wiki-Link: Trefferfläche ≥ 48 px (Coulson #14), ohne die Zeile sichtbar zu verschieben */
+.fgf-faq__wiki a { display: inline-block; padding-block: 13px; margin-block: -13px; }
+.fgf .p-auf-liste { border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+.fgf .p-auf { border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.fgf .p-auf__kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 60px;
+  padding: 12px 2px;
+  list-style: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  color: var(--text-primary);
+  -webkit-tap-highlight-color: transparent;
+}
+.fgf .p-auf__kopf::-webkit-details-marker { display: none; }
+.fgf .p-auf__kreis {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fgf-lila) 60%, transparent);
+  color: var(--fgf-lila);
+  transition: transform 240ms var(--fgf-ease), background-color 240ms var(--fgf-ease);
+}
+.fgf .p-auf__kreis svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.fgf .p-auf[open] .p-auf__kreis { transform: rotate(45deg); background: color-mix(in srgb, var(--fgf-lila) 14%, transparent); }
+@media (hover: hover) and (pointer: fine) {
+  .fgf .p-auf__kopf:hover .p-auf__kreis { background: color-mix(in srgb, var(--fgf-lila) 14%, transparent); }
+}
+.fgf .p-auf__text { padding: 0 52px 18px 2px; color: var(--fgf-text-2); font-size: 1rem; line-height: 1.6; }
+.fgf .p-auf__text p { max-width: 58ch; }
+.fgf .p-auf[open] .p-auf__text { animation: fgf-auf-rein 240ms var(--fgf-ease) both; }
+@keyframes fgf-auf-rein { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (min-width: 900px) {
+  .fgf-faq__raster { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+}
+
+/* ─── Reduzierte Bewegung ─── */
+@media (prefers-reduced-motion: reduce) {
+  .fgf .p-auf__kreis { transition: none; }
+  .fgf .p-auf[open] .p-auf__text { animation: none; }
+}

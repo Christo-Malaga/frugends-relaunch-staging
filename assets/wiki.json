@@ -1,0 +1,2405 @@
+{
+ "title": "Frugends Wiki",
+ "tagline": "Alles über das Frugendverse — Spielprinzip, Kartendeck, Turniere und mehr.",
+ "categories": [
+  {
+   "n": 1,
+   "title": "Was ist Frugends?",
+   "slug": "was-ist-frugends",
+   "subtitle": "Das Fundament: Idee, Werte und Zielgruppe von Frugends.",
+   "icon": "◆",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Mission",
+     "slug": "mission",
+     "body": [
+      {
+       "t": "p",
+       "x": "Frugends wurde mit einer klaren Mission entwickelt: Gaming, Community, Creator und Unternehmen auf einer gemeinsamen Plattform zu verbinden und dabei den Spaß am Spielen wieder in den Mittelpunkt zu stellen."
+      },
+      {
+       "t": "p",
+       "x": "Wir möchten eine Plattform schaffen, auf der nicht das größte Budget über den Erfolg entscheidet, sondern Engagement, Aktivität und spielerisches Können. Deshalb setzt Frugends bewusst auf ein System, bei dem sich Spieler viele Inhalte durch ihre Zeit und ihren Einsatz erspielen können."
+      },
+      {
+       "t": "p",
+       "x": "Gleichzeitig soll Frugends weit mehr sein als nur ein Trading Card Game. Die Plattform verbindet Live-Turniere, eine aktive Community, Creator, Unternehmen und digitale Rewards zu einem gemeinsamen Ökosystem. Jeder Bereich unterstützt den anderen und schafft dadurch ein Erlebnis, das weit über ein klassisches Mobile Game hinausgeht."
+      },
+      {
+       "t": "p",
+       "x": "Creator erhalten die Möglichkeit, ihre Community aktiv einzubinden. Unternehmen erreichen ihre Zielgruppe auf authentische Weise innerhalb einer lebendigen Gaming-Community. Spieler profitieren von regelmäßigen Events, spannenden Wettkämpfen und echten Rewards."
+      },
+      {
+       "t": "p",
+       "x": "Unser langfristiges Ziel ist es, eine Plattform aufzubauen, auf der Menschen nicht nur spielen, sondern gemeinsam wachsen, sich austauschen, an Turnieren teilnehmen und Teil einer stetig wachsenden Community werden."
+      },
+      {
+       "t": "p",
+       "x": "Kurz gesagt:"
+      },
+      {
+       "t": "p",
+       "x": "Frugends verbindet Gaming, Community, Creator und Unternehmen auf einer Plattform und schafft ein faires, langfristiges und gemeinschaftliches Spielerlebnis, bei dem der Mensch und der Spielspaß im Mittelpunkt stehen."
+      }
+     ]
+    },
+    {
+     "heading": "Vision",
+     "slug": "vision",
+     "body": [
+      {
+       "t": "p",
+       "x": "Unsere Vision ist es, Frugends zu einer der führenden Community-Gaming-Plattformen Europas und langfristig darüber hinaus zu entwickeln."
+      },
+      {
+       "t": "p",
+       "x": "Wir möchten eine Welt schaffen, in der Gaming nicht nur Unterhaltung ist, sondern Menschen verbindet. Spieler, Creator und Unternehmen sollen nicht nebeneinander existieren, sondern gemeinsam Teil eines lebendigen Ökosystems sein, in dem jeder einen echten Mehrwert erhält."
+      },
+      {
+       "t": "p",
+       "x": "Frugends soll für Live-Turniere, eine aktive Community, innovative Spielkonzepte und authentische Partnerschaften stehen. Dabei entwickeln wir die Plattform kontinuierlich weiter und ergänzen sie um neue Spielmodi, Features, Minispiele und Community-Funktionen."
+      },
+      {
+       "t": "p",
+       "x": "Langfristig soll Frugends zu einem festen Treffpunkt für Gaming-Begeisterte werden. Ein Ort, an dem sich Spieler messen, gemeinsam Erfolge feiern, neue Freundschaften schließen und über viele Jahre hinweg immer wieder neue Inhalte entdecken können."
+      },
+      {
+       "t": "p",
+       "x": "Dabei verfolgen wir einen nachhaltigen Ansatz: Statt kurzfristiger Trends setzen wir auf langfristige Weiterentwicklung, Fairness, Transparenz und eine enge Zusammenarbeit mit unserer Community."
+      },
+      {
+       "t": "p",
+       "x": "Unsere Vision ist es, eine Plattform zu schaffen, auf der Gaming, Community, Creator und Unternehmen dauerhaft miteinander wachsen und gemeinsam die Zukunft des Community-Gamings gestalten."
+      }
+     ]
+    },
+    {
+     "heading": "Für wen ist Frugends?",
+     "slug": "fuer-wen-ist-frugends",
+     "body": [
+      {
+       "t": "p",
+       "x": "Frugends richtet sich an alle, die Gaming nicht nur als Zeitvertreib sehen, sondern Teil einer aktiven und wachsenden Community sein möchten."
+      },
+      {
+       "t": "p",
+       "x": "Im Mittelpunkt stehen Spielerinnen und Spieler, die Spaß an Trading Card Games, spannenden Turnieren und fairen Wettbewerben haben. Dabei spielt es keine Rolle, ob du gerade erst einsteigst oder bereits Erfahrung mit Sammelkarten- und Strategiespielen hast. Frugends ist so aufgebaut, dass sowohl Einsteiger als auch erfahrene Spieler ihren Platz finden."
+      },
+      {
+       "t": "p",
+       "x": "Darüber hinaus richtet sich Frugends an Creator, die ihre Community auf eine neue Art begeistern möchten. Sie können ihre Reichweite nutzen, gemeinsam mit ihrer Community spielen, Turniere begleiten und ihre Follower aktiv in das Frugends-Universum einbinden."
+      },
+      {
+       "t": "p",
+       "x": "Auch Unternehmen sind ein wichtiger Bestandteil der Plattform. Sie erhalten die Möglichkeit, ihre Marke authentisch innerhalb einer engagierten Gaming-Community zu präsentieren und gemeinsam mit Creatorn kreative Kampagnen umzusetzen, anstatt klassische Werbung zu schalten."
+      },
+      {
+       "t": "p",
+       "x": "Vor allem richtet sich Frugends jedoch an Menschen, die gerne gemeinsam spielen, sich weiterentwickeln, neue Herausforderungen suchen und Teil einer Community sein möchten, die Fairness, Zusammenhalt und langfristigen Spielspaß in den Mittelpunkt stellt."
+      },
+      {
+       "t": "p",
+       "x": "Egal ob Spieler, Creator oder Unternehmen: Frugends bringt Menschen zusammen, die Gaming gemeinsam erleben und aktiv mitgestalten möchten."
+      }
+     ]
+    },
+    {
+     "heading": "Was macht Frugends besonders?",
+     "slug": "was-macht-frugends-besonders",
+     "body": [
+      {
+       "t": "p",
+       "x": "Frugends verbindet mehrere Welten auf einer einzigen Plattform. Statt nur ein Trading Card Game zu sein, vereint Frugends Gaming, Community, Creator, Unternehmen und Live-Turniere zu einem gemeinsamen Erlebnis."
+      },
+      {
+       "t": "p",
+       "x": "Ein besonderer Fokus liegt auf Fairness. Viele Inhalte können durch aktives Spielen freigeschaltet werden. Nicht die Höhe deiner Ausgaben entscheidet über den Erfolg, sondern Zeit, Engagement und spielerisches Können. Dadurch erhalten neue Spieler die Möglichkeit, sich Schritt für Schritt weiterzuentwickeln und mit der Community mitzuwachsen."
+      },
+      {
+       "t": "p",
+       "x": "Ein weiterer Unterschied sind die Live-Turniere. Die Arena-Turniere finden spontan statt, ohne festen Wochentag. Dort treten Spieler in der Arena gegeneinander an, messen sich mit anderen und spielen um attraktive Rewards."
+      },
+      {
+       "t": "p",
+       "x": "Auch Creator sind fest in das Konzept integriert. Sie begleiten ihre Community nicht nur als Zuschauer, sondern werden selbst Teil des Spiels. Gemeinsam mit ihren Followern können sie Teams aufbauen, an Turnieren teilnehmen und ihre Community aktiv in das Frugends-Universum einbinden."
+      },
+      {
+       "t": "p",
+       "x": "Unternehmen erhalten gleichzeitig die Möglichkeit, ihre Marke auf authentische Weise innerhalb einer aktiven Gaming-Community zu präsentieren. Statt klassischer Werbung entstehen Partnerschaften, die sich natürlich in die Plattform einfügen und für alle Beteiligten einen Mehrwert schaffen."
+      },
+      {
+       "t": "p",
+       "x": "Pro Monat vergeben wir bewusst nur vier Brand-Campaign-Slots. Das sind Marken, die das Arena-Turnier sponsern. Kaufen musst du nichts, um mitzuspielen, denn die Turniere sind kostenlos."
+      },
+      {
+       "t": "p",
+       "x": "Frugends entwickelt sich kontinuierlich weiter. Neue Spielmodi, Minispiele, Features, Events und Community-Funktionen sorgen dafür, dass die Plattform langfristig spannend bleibt und sich gemeinsam mit ihrer Community weiterentwickelt."
+      },
+      {
+       "t": "p",
+       "x": "Frugends ist mehr als ein Spiel. Es ist eine Plattform, auf der Gaming, Community, Creator und Unternehmen zusammenkommen und gemeinsam ein faires, lebendiges und langfristiges Gaming-Erlebnis schaffen."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 2,
+   "title": "Allgemein",
+   "slug": "allgemein",
+   "subtitle": "Die häufigsten Fragen rund um Frugends.",
+   "icon": "❔",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Was ist Frugends?",
+     "slug": "was-ist-frugends",
+     "body": [
+      {
+       "t": "p",
+       "x": "Frugends ist eine Gaming-Plattform, die Spieler, Creator und Unternehmen auf einer gemeinsamen Plattform zusammenbringt. Im Mittelpunkt steht ein selbst entwickeltes Trading Card Game (Sammelkartenspiel), Turniere, eine aktive Community und ein faires Fortschrittssystem."
+      },
+      {
+       "t": "p",
+       "x": "Bei Frugends kannst du kostenlos spielen, neue Karten und Inhalte freischalten, an Minigames teilnehmen und an den Turnieren teilnehmen, ebenfalls kostenlos. Dabei verfolgen wir ein klares Ziel: Spielerisches Können und Engagement sollen wichtiger sein als Geld."
+      },
+      {
+       "t": "p",
+       "x": "Neben dem eigentlichen Spiel bietet Frugends viele weitere Möglichkeiten, Teil der Community zu werden. Über unseren Discord-Server kannst du dich mit anderen Spielern austauschen, aktuelle Neuigkeiten verfolgen und an Community-Aktionen teilnehmen."
+      },
+      {
+       "t": "p",
+       "x": "Auch Creator sind ein wichtiger Bestandteil von Frugends. Sie begleiten ihre Communities, veranstalten gemeinsame Aktionen und können ihre Follower direkt in die Welt von Frugends mitnehmen. Unternehmen erhalten gleichzeitig die Möglichkeit, ihre Marke auf eine authentische und moderne Weise innerhalb der Community zu präsentieren."
+      },
+      {
+       "t": "p",
+       "x": "Frugends entwickelt sich kontinuierlich weiter. Neue Editionen, Minigames, Turniere, Community-Features und weitere Inhalte sorgen dafür, dass die Plattform stetig wächst und regelmäßig neue Erlebnisse bietet."
+      }
+     ]
+    },
+    {
+     "heading": "Ist Frugends kostenlos?",
+     "slug": "ist-frugends-kostenlos",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Die Nutzung von Frugends ist grundsätzlich kostenlos."
+      },
+      {
+       "t": "p",
+       "x": "Nach der Registrierung absolvierst du das Tutorial und bekommst danach kostenlos dein Kartendeck. Damit tauchst du Schritt für Schritt in die Welt von Frugends ein. Anschließend kannst du durch aktives Spielen weitere Inhalte freischalten und Fortschritte erzielen."
+      },
+      {
+       "t": "p",
+       "x": "Unser Ziel ist es, dass jeder Spieler alle spielrelevanten Inhalte grundsätzlich auch kostenlos erreichen kann. Deshalb setzen wir bewusst auf ein Fair-Play-Konzept und verzichten auf klassische Pay-to-Win-Mechaniken."
+      },
+      {
+       "t": "p",
+       "x": "Auch die Teilnahme an Turnieren ist kostenlos. Du musst dafür nichts kaufen, und es gibt keine Vorteile, die du dir im Match erkaufen könntest."
+      },
+      {
+       "t": "p",
+       "x": "Am Ende entscheiden Strategie, Erfahrung und dein Können über deinen Erfolg im Spiel."
+      }
+     ]
+    },
+    {
+     "heading": "Wie funktioniert Frugends?",
+     "slug": "wie-funktioniert-frugends",
+     "body": [
+      {
+       "t": "p",
+       "x": "Frugends basiert auf einem einfachen Prinzip: spielen, Fortschritte erzielen und gemeinsam mit der Community wachsen."
+      },
+      {
+       "t": "p",
+       "x": "Nach deiner Registrierung startest du mit dem Tutorial und lernst die wichtigsten Spielmechaniken kennen. Wenn du es abgeschlossen hast, bekommst du kostenlos dein Kartendeck. Damit spielst du deine ersten Matches und entwickelst dich Schritt für Schritt weiter."
+      },
+      {
+       "t": "p",
+       "x": "Jede Partie bringt dich im Spielfortschritt voran: Gespielte Partien zählen als Plays, gewonnene als Wins. So schaltest du neue Inhalte frei. An den Arena-Turnieren nimmst du kostenlos teil. Sie finden spontan statt, und die Termine kündigen wir über unsere Social-Kanäle an."
+      },
+      {
+       "t": "p",
+       "x": "Neben den Turnieren erwarten dich Minigames, Community-Aktionen, Discord-Events und regelmäßig neue Inhalte. Gleichzeitig wird Frugends kontinuierlich erweitert, sodass dich immer wieder neue Editionen, Features und Herausforderungen erwarten."
+      },
+      {
+       "t": "p",
+       "x": "Das Herzstück von Frugends ist das Fair-Play-Prinzip: Spielerisches Können, Engagement und langfristiger Fortschritt stehen im Mittelpunkt. Geld allein entscheidet nicht über den Erfolg, sondern wie gut du das Spiel beherrschst und dich weiterentwickelst."
+      },
+      {
+       "t": "p",
+       "x": "So entsteht eine Plattform, auf der sowohl Gelegenheitsspieler als auch ambitionierte Turnierspieler langfristig ihren Platz finden."
+      }
+     ]
+    },
+    {
+     "heading": "Muss ich etwas kaufen?",
+     "slug": "muss-ich-etwas-kaufen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nein. Du musst nichts kaufen, um Frugends spielen zu können."
+      },
+      {
+       "t": "p",
+       "x": "Du kannst kostenlos starten, das Tutorial absolvieren und dich Schritt für Schritt durch das Spiel arbeiten. Unser Ziel ist es, dass jeder Spieler die Möglichkeit hat, alle spielrelevanten Inhalte auch ohne zusätzliche Ausgaben freizuschalten."
+      },
+      {
+       "t": "p",
+       "x": "Auch für Turniere musst du nichts kaufen. Dein Kartendeck bekommst du kostenlos, und die Teilnahme an Turnieren kostet nichts. Pay-to-Win gibt es bei Frugends nicht."
+      },
+      {
+       "t": "p",
+       "x": "Unabhängig davon, ob du kostenlos spielst oder optionale Inhalte nutzt, gilt bei Frugends immer derselbe Grundsatz: Über den Erfolg entscheiden Strategie, Erfahrung und dein spielerisches Können, nicht dein Geldbeutel."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich alle Inhalte kostenlos freischalten?",
+     "slug": "kann-ich-alle-inhalte-kostenlos-freischalten",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Unser Ziel ist es, dass alle spielrelevanten Inhalte grundsätzlich auch kostenlos freigeschaltet werden können."
+      },
+      {
+       "t": "p",
+       "x": "Durch aktives Spielen und dein persönliches Fortschrittssystem kannst du Schritt für Schritt neue Inhalte, Artefakt-Karten und weitere Funktionen freischalten. Frugends verfolgt dabei bewusst ein Fair-Play-Konzept, bei dem Engagement und spielerisches Können wichtiger sind als finanzielle Investitionen."
+      },
+      {
+       "t": "p",
+       "x": "Auch die Teilnahme an Turnieren ist kostenlos. Du musst nichts bezahlen, um Frugends vollständig zu erleben. Dein Kartendeck bekommst du ohnehin kostenlos."
+      },
+      {
+       "t": "p",
+       "x": "Unser Anspruch ist es, eine Plattform zu schaffen, auf der jeder Spieler unabhängig vom Budget langfristig dieselben Chancen hat. Deshalb verzichten wir bewusst auf klassische Pay-to-Win-Mechaniken und setzen stattdessen auf ein faires, motivierendes Fortschrittssystem."
+      }
+     ]
+    },
+    {
+     "heading": "Auf welchen Geräten kann ich Frugends spielen?",
+     "slug": "auf-welchen-geraeten-kann-ich-frugends-spielen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Frugends ist plattformübergreifend verfügbar, sodass du flexibel auf deinem bevorzugten Gerät spielen kannst."
+      },
+      {
+       "t": "p",
+       "x": "Zum Start steht Frugends als App für iOS und Android zur Verfügung. Zusätzlich kannst du Frugends auch über die Desktop-Version nutzen."
+      },
+      {
+       "t": "p",
+       "x": "Dein Spielstand ist an deinen Account gebunden. Dadurch kannst du dich mit demselben Konto auf verschiedenen unterstützten Geräten anmelden und deinen Fortschritt jederzeit fortsetzen."
+      },
+      {
+       "t": "p",
+       "x": "Welche Funktionen auf den einzelnen Plattformen verfügbar sind, kann sich durch zukünftige Updates und neue Features erweitern. Über größere Änderungen informieren wir dich rechtzeitig über die App, unsere Website, Discord und unsere offiziellen Social-Media-Kanäle."
+      }
+     ]
+    },
+    {
+     "heading": "Gibt es eine Altersbeschränkung?",
+     "slug": "gibt-es-eine-altersbeschraenkung",
+     "body": [
+      {
+       "t": "p",
+       "x": "Frugends kannst du ab 16 Jahren nutzen. Für einzelne Bereiche der Plattform gelten zusätzlich besondere Voraussetzungen, um alle gesetzlichen Bestimmungen einzuhalten."
+      },
+      {
+       "t": "p",
+       "x": "Teilnahme an Turnieren und Rewards"
+      },
+      {
+       "t": "p",
+       "x": "Wenn du unter 18 bist, kannst du trotzdem an Turnieren teilnehmen und Rewards erspielen. Bevor wir Rewards verschicken, benötigen wir bei nicht volljährigen Gewinnern die Zustimmung eines Erziehungsberechtigten. Dieser Prozess ist unkompliziert und kann in der Regel schnell abgeschlossen werden."
+      },
+      {
+       "t": "p",
+       "x": "Teilnahme am Creator-Programm"
+      },
+      {
+       "t": "p",
+       "x": "Für die Teilnahme am Frugends Creator-Programm musst du mindestens 16 Jahre alt sein."
+      },
+      {
+       "t": "p",
+       "x": "Creator zwischen 16 und 18 Jahren benötigen zusätzlich die Zustimmung eines Erziehungsberechtigten, bevor sie dem Creator-Programm beitreten können."
+      },
+      {
+       "t": "p",
+       "x": "Mit diesen Regelungen stellen wir sicher, dass alle gesetzlichen Vorgaben eingehalten werden und sowohl Spieler als auch Creator sicher und verantwortungsvoll Teil der Frugends-Community werden können."
+      }
+     ]
+    },
+    {
+     "heading": "Benötige ich eine Internetverbindung?",
+     "slug": "benoetige-ich-eine-internetverbindung",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Für die Nutzung von Frugends benötigst du eine aktive Internetverbindung."
+      },
+      {
+       "t": "p",
+       "x": "Da Frugends eine Online-Plattform ist, werden Spielstände, Turniere, Rewards und weitere Funktionen in Echtzeit mit deinem Account synchronisiert. So kannst du deinen Fortschritt geräteübergreifend nutzen und jederzeit auf deine Inhalte zugreifen."
+      },
+      {
+       "t": "p",
+       "x": "Besonders für Turniere ist eine stabile Internetverbindung wichtig, damit alle Spiele fair und reibungslos ablaufen können. Sollte deine Verbindung während eines Spiels unterbrochen werden, gelten die jeweiligen Turnier- und Spielregeln."
+      },
+      {
+       "t": "p",
+       "x": "Wir empfehlen daher, Frugends möglichst über eine stabile WLAN- oder Mobilfunkverbindung zu nutzen, um das bestmögliche Spielerlebnis zu gewährleisten."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 3,
+   "title": "Spielprinzip",
+   "slug": "spielprinzip",
+   "subtitle": "Wie Frugends gespielt wird — von Heroes & Villains bis Rewards.",
+   "icon": "▶",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Grundprinzip",
+     "slug": "grundprinzip",
+     "body": [
+      {
+       "t": "p",
+       "x": "Das Grundprinzip von Frugends ist einfach: spielen, weiterentwickeln, an Turnieren teilnehmen und gemeinsam mit der Community wachsen."
+      },
+      {
+       "t": "p",
+       "x": "Nach der Registrierung startest du mit dem Tutorial und lernst Schritt für Schritt die wichtigsten Spielmechaniken kennen. Anschließend kannst du dein Deck ausbauen, Karten sammeln, neue Inhalte freischalten und dich auf die ersten Turniere vorbereiten."
+      },
+      {
+       "t": "p",
+       "x": "Frugends kombiniert die strategischen Elemente eines Trading Card Games mit einem langfristigen Fortschrittssystem. Jede Entscheidung, jedes Match und jede freigeschaltete Belohnung bringen dich ein Stück weiter. Dabei stehen nicht einzelne Partien im Vordergrund, sondern deine kontinuierliche Entwicklung innerhalb der gesamten Plattform."
+      },
+      {
+       "t": "p",
+       "x": "Turniere bilden das Herzstück von Frugends. Hier kannst du dein Können unter Beweis stellen, dich mit anderen Spielern messen und attraktive Rewards erspielen. Ergänzt wird das Spielerlebnis durch Minispiele und Community-Events."
+      },
+      {
+       "t": "p",
+       "x": "Ein zentraler Bestandteil des Konzepts ist Fairness. Viele Inhalte können durch aktives Spielen freigeschaltet werden. Fortschritt entsteht in erster Linie durch Engagement, Strategie und Zeit, nicht allein durch Käufe. Dadurch haben sowohl neue als auch erfahrene Spieler die Möglichkeit, sich langfristig weiterzuentwickeln."
+      },
+      {
+       "t": "p",
+       "x": "Frugends versteht sich nicht als Spiel, das nach wenigen Tagen abgeschlossen ist. Neue Features, Turniere, Events und Inhalte erweitern die Plattform kontinuierlich und sorgen dafür, dass es immer neue Ziele zu erreichen gibt."
+      },
+      {
+       "t": "p",
+       "x": "Das Grundprinzip von Frugends lautet: spielen, Fortschritte erzielen, gemeinsam wachsen und Teil einer aktiven Community werden."
+      }
+     ]
+    },
+    {
+     "heading": "Heroes",
+     "slug": "heroes",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Heroes Edition ist der ideale Einstieg in die Welt von Frugends und bildet für viele Spieler den Beginn ihrer Reise. Hier lernst du die grundlegenden Spielmechaniken kennen, entwickelst deine Strategie und sammelst erste Erfahrungen im Wettkampf gegen andere Spieler."
+      },
+      {
+       "t": "p",
+       "x": "Jeder Hero besitzt individuelle Eigenschaften und Fähigkeiten, die sich sinnvoll miteinander kombinieren lassen. Dadurch entstehen zahlreiche taktische Möglichkeiten und unterschiedliche Spielstile. Ob offensiv, defensiv oder ausgewogen: Mit deinem Deck findest du den Spielstil, der zu dir passt."
+      },
+      {
+       "t": "p",
+       "x": "Die Heroes Edition ist bewusst so gestaltet, dass sowohl Einsteiger als auch erfahrene Spieler schnell ins Spiel finden. Mit jeder Partie wächst nicht nur deine Erfahrung, sondern auch dein Verständnis für Kartenkombinationen, Strategien und den Aufbau eines erfolgreichen Decks."
+      },
+      {
+       "t": "p",
+       "x": "Mit deinen Heroes trittst du in der Arena an, dem kostenlosen Turnier von Frugends. Dort stellst du dein Können unter Beweis und spielst um attraktive Rewards. So wird jeder gesammelte Hero zu einem Baustein auf dem Weg zu deinem nächsten Turniererfolg."
+      },
+      {
+       "t": "p",
+       "x": "Die Heroes Edition bildet gleichzeitig die Grundlage für viele weitere Inhalte innerhalb von Frugends. Sobald du das Villains-Tutorial erfolgreich absolviert hast, sind die Villains sofort freigeschaltet. Mit deinem Fortschritt kommen weitere Inhalte dazu, die dein Spielerlebnis kontinuierlich erweitern."
+      },
+      {
+       "t": "p",
+       "x": "Die Heroes Edition steht für den Einstieg in Frugends, strategisches Spiel, spannende Duelle und den Beginn deiner persönlichen Reise durch das Frugends-Universum."
+      }
+     ]
+    },
+    {
+     "heading": "Villains",
+     "slug": "villains",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Villains Edition erweitert das Frugends-Universum um eine völlig neue Spielweise und bringt zusätzliche taktische Möglichkeiten ins Spiel. Während die Heroes Edition den Einstieg bildet, fordert die Villains Edition erfahrene Spieler mit neuen Strategien, Kartenkombinationen und spannenden Matchups heraus."
+      },
+      {
+       "t": "p",
+       "x": "Jeder Villain verfügt über eigene Fähigkeiten und Eigenschaften, die das Spielgeschehen auf unterschiedliche Weise beeinflussen. Dadurch entstehen neue Kartenkombinationen und Strategien, die für noch mehr Abwechslung und Tiefgang sorgen."
+      },
+      {
+       "t": "p",
+       "x": "Die Villains Edition ergänzt die Heroes Edition und ersetzt sie nicht. Heroes und Villains gehören beide zu deinem Kartendeck und sorgen für unterschiedliche Spielerlebnisse. So kannst du je nach Vorliebe zwischen verschiedenen Strategien wechseln."
+      },
+      {
+       "t": "p",
+       "x": "Auch in der Arena kannst du mit deinen Villains antreten und um attraktive Rewards und gute Platzierungen kämpfen. Jede Partie verlangt strategisches Denken, die richtige Kartenkombination und ein gutes Gespür für den richtigen Spielzug."
+      },
+      {
+       "t": "p",
+       "x": "Auch innerhalb der Villains Edition gilt das Grundprinzip von Frugends: Der langfristige Fortschritt entsteht durch aktives Spielen, kontinuierliche Weiterentwicklung und den Ausbau des eigenen Decks."
+      },
+      {
+       "t": "p",
+       "x": "Die Villains Edition sorgt für mehr strategische Vielfalt, neue Herausforderungen und zusätzliche Möglichkeiten, sich innerhalb der Frugends-Welt weiterzuentwickeln."
+      }
+     ]
+    },
+    {
+     "heading": "Sammeln",
+     "slug": "sammeln",
+     "body": [
+      {
+       "t": "p",
+       "x": "Das Sammeln ist ein zentraler Bestandteil von Frugends und begleitet dich während deiner gesamten Reise auf der Plattform. Mit jedem Fortschritt erweiterst du deine Sammlung, entwickelst dein Deck weiter und schaltest neue Inhalte frei."
+      },
+      {
+       "t": "p",
+       "x": "Im Mittelpunkt stehen die Heroes und Villains deines Kartendecks. Dazu kommen Artefakt-Karten, die du dir nach und nach erspielst. Jede neue Karte erweitert deine strategischen Möglichkeiten und macht dein Deck vielseitiger."
+      },
+      {
+       "t": "p",
+       "x": "Doch Frugends besteht aus weit mehr als nur Karten. Auch Artefakte, Erfolge, freigeschaltete Inhalte und zukünftige Sammelelemente gehören zu deiner persönlichen Sammlung. So wächst dein Profil kontinuierlich mit deiner Aktivität auf der Plattform."
+      },
+      {
+       "t": "p",
+       "x": "Das Sammeln verfolgt dabei keinen Selbstzweck. Jede freigeschaltete Karte und jedes neue Element können einen direkten Einfluss auf dein Spielerlebnis haben und dir neue Strategien oder Einsatzmöglichkeiten erschließen. Gleichzeitig dokumentiert deine Sammlung deinen Fortschritt innerhalb von Frugends und zeigt, welche Meilensteine du bereits erreicht hast."
+      },
+      {
+       "t": "p",
+       "x": "Durch Turniere, neue Inhalte und zukünftige Erweiterungen wird deine Sammlung kontinuierlich wachsen. Dadurch gibt es langfristig immer neue Ziele und neue Dinge zu entdecken."
+      },
+      {
+       "t": "p",
+       "x": "Sammeln bedeutet bei Frugends nicht nur, Karten zu besitzen. Es bedeutet, dein persönliches Frugends-Universum Schritt für Schritt aufzubauen und deine Entwicklung als Spieler sichtbar zu machen."
+      }
+     ]
+    },
+    {
+     "heading": "Spielen",
+     "slug": "spielen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Im Mittelpunkt von Frugends steht natürlich das Spielen. Jede Partie bietet die Möglichkeit, neue Strategien auszuprobieren, dein Deck besser kennenzulernen und dich kontinuierlich als Spieler weiterzuentwickeln."
+      },
+      {
+       "t": "p",
+       "x": "Mit deinen Heroes oder Villains trittst du gegen andere Spieler an und nutzt die individuellen Fähigkeiten deiner Karten, um das Match für dich zu entscheiden. Dabei kommt es nicht nur auf starke Karten an, sondern vor allem auf die richtige Strategie, kluge Entscheidungen und das perfekte Zusammenspiel deines Decks."
+      },
+      {
+       "t": "p",
+       "x": "Jedes gespielte Match bringt dich ein Stück weiter. Du sammelst Erfahrung, verbesserst dein Spielverständnis und bereitest dich gleichzeitig auf die nächsten Turniere vor. So wird jede Partie Teil deines persönlichen Fortschritts innerhalb der Frugends-Welt."
+      },
+      {
+       "t": "p",
+       "x": "Das Spiel ist bewusst leicht zugänglich, bietet aber gleichzeitig genügend strategische Tiefe, um auch langfristig spannend zu bleiben. Neue Kartenkombinationen, unterschiedliche Spielweisen und die stetige Weiterentwicklung deines Decks sorgen dafür, dass keine Partie der anderen gleicht."
+      },
+      {
+       "t": "p",
+       "x": "Frugends versteht Spielen nicht als einmaliges Erlebnis, sondern als fortlaufende Reise. Mit jedem Match wächst deine Erfahrung, deine Sammlung und deine Chance, dich in den nächsten Turnieren erfolgreich mit anderen Spielern zu messen."
+      },
+      {
+       "t": "p",
+       "x": "Spielen bedeutet bei Frugends, Strategien entwickeln, Erfahrungen sammeln, dein Deck kontinuierlich verbessern und gemeinsam mit der Community immer neue Herausforderungen zu meistern."
+      }
+     ]
+    },
+    {
+     "heading": "Turniere",
+     "slug": "turniere",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Turniere sind das Herzstück von Frugends. Hier treffen Spieler immer wieder aufeinander, messen sich in fairen Wettkämpfen und haben die Möglichkeit, attraktive Rewards zu erspielen."
+      },
+      {
+       "t": "p",
+       "x": "Das Arena-Turnier findet spontan statt, ohne festen Wochentag. Dort trittst du edition-übergreifend gegen andere Spieler an. Jedes Turnier stellt dich vor neue Herausforderungen, in denen du dein Können unter Beweis stellst."
+      },
+      {
+       "t": "p",
+       "x": "Die Teilnahme ist kostenlos. Du musst nichts kaufen, und Pay-to-Win gibt es bei Frugends nicht. Du brauchst nur dein Kartendeck, das du nach dem Tutorial kostenlos bekommst."
+      },
+      {
+       "t": "p",
+       "x": "Im Mittelpunkt steht dabei immer der faire Wettbewerb. Über den Ausgang eines Turniers entscheiden deine Strategie, dein Deck und dein spielerisches Können. Jede Partie bringt dich deinem nächsten Erfolg ein Stück näher."
+      },
+      {
+       "t": "p",
+       "x": "Ausgewählte Arena-Turniere übertragen wir künftig auch auf Twitch."
+      },
+      {
+       "t": "p",
+       "x": "Mit jeder Teilnahme sammelst du Erfahrungen, verbesserst dein Spiel und kannst dir wertvolle Rewards sichern. Gleichzeitig wächst deine Präsenz innerhalb der Community und du wirst Teil einer Plattform, auf der regelmäßige Events und gemeinsame Erlebnisse im Mittelpunkt stehen."
+      },
+      {
+       "t": "p",
+       "x": "Turniere sind das Herz von Frugends. Sie verbinden Wettbewerb, Strategie, Community und Live-Events zu einem einzigartigen Spielerlebnis."
+      }
+     ]
+    },
+    {
+     "heading": "Rewards",
+     "slug": "rewards",
+     "body": [
+      {
+       "t": "p",
+       "x": "Rewards sind ein fester Bestandteil von Frugends und belohnen Spieler für ihr Können, ihren Einsatz und ihre Erfolge in den Turnieren. Sie stehen für Anerkennung und Motivation und machen jede Platzierung zu etwas Besonderem."
+      },
+      {
+       "t": "p",
+       "x": "Im Arena-Turnier gewinnen die Plätze 1 bis 30 Winner Boxen in vier Stufen: Premium, Special, Winner und Mini. Der Versand startet ab Dezember. Alle Details findest du im Wiki unter „Rewards“."
+      },
+      {
+       "t": "p",
+       "x": "Bewusst sprechen wir bei Frugends von Rewards und nicht von Gewinnen. Der Fokus liegt auf dem gemeinsamen Spielerlebnis, dem fairen Wettbewerb und der Anerkennung deiner Leistung. Rewards sind eine Belohnung für erfolgreiches Spielen und Teil des Community-Erlebnisses."
+      },
+      {
+       "t": "p",
+       "x": "Alle Turniere sind klar strukturiert und die jeweiligen Rewards sind jederzeit nachvollziehbar. So weiß jeder Spieler bereits vor Turnierbeginn, welche Belohnungen auf die verschiedenen Platzierungen warten."
+      },
+      {
+       "t": "p",
+       "x": "Mit der Weiterentwicklung von Frugends werden auch die Rewards kontinuierlich ausgebaut. Neue Turnierformate, besondere Events und saisonale Aktionen sorgen dafür, dass es immer wieder neue Anreize und spannende Herausforderungen gibt."
+      },
+      {
+       "t": "p",
+       "x": "Rewards sind die Anerkennung für deine Leistung. Sie motivieren, regelmäßig an Turnieren teilzunehmen, sich weiterzuentwickeln und gemeinsam mit der Community immer neue Erfolge zu feiern."
+      }
+     ]
+    },
+    {
+     "heading": "Muss ich zuerst mit Heroes spielen?",
+     "slug": "muss-ich-zuerst-mit-heroes-spielen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Jeder neue Spieler beginnt seine Reise zunächst mit der Heroes-Edition."
+      },
+      {
+       "t": "p",
+       "x": "Dadurch lernst du Schritt für Schritt die Spielmechaniken kennen und kannst dich in Ruhe mit Frugends vertraut machen. Das Tutorial und die ersten Spielrunden sind bewusst darauf ausgelegt, dir einen einfachen und verständlichen Einstieg zu ermöglichen."
+      },
+      {
+       "t": "p",
+       "x": "Sobald du das Villains-Tutorial erfolgreich absolviert hast, wird die Villains-Edition sofort freigeschaltet. Ab diesem Zeitpunkt spielst du mit Heroes und Villains und entscheidest je nach Match und persönlicher Vorliebe, welche Strategie du wählst."
+      },
+      {
+       "t": "p",
+       "x": "Der strukturierte Einstieg sorgt dafür, dass alle Spieler dieselben Grundlagen erlernen und mit einem vergleichbaren Wissensstand in die weiteren Inhalte und Turniere starten."
+      }
+     ]
+    },
+    {
+     "heading": "Was passiert, wenn meine Internetverbindung während eines Spiels abbricht?",
+     "slug": "was-passiert-wenn-meine-internetverbindung-waehrend-eines-spiels-abbricht",
+     "body": [
+      {
+       "t": "p",
+       "x": "Eine stabile Internetverbindung ist wichtig, damit alle Spiele und Turniere fair und reibungslos ablaufen können."
+      },
+      {
+       "t": "p",
+       "x": "Sollte deine Verbindung während eines Spiels oder Turniers einmal unterbrochen werden, entscheidet das System gemäß den jeweils gültigen Spiel- und Turnierregeln über den weiteren Ablauf. Je nach Situation kann das Spiel fortgesetzt, als unterbrochen gewertet oder entsprechend der geltenden Regeln beendet werden."
+      },
+      {
+       "t": "p",
+       "x": "Da jede Unterbrechung unterschiedlich sein kann, empfehlen wir, Frugends möglichst über eine stabile WLAN- oder Mobilfunkverbindung zu nutzen."
+      },
+      {
+       "t": "p",
+       "x": "Die jeweils aktuellen Regelungen zu Verbindungsabbrüchen findest du jederzeit in den offiziellen Spiel- und Turnierregeln innerhalb der App oder auf unserer Website."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich gegen Freunde spielen?",
+     "slug": "kann-ich-gegen-freunde-spielen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Derzeit kannst du keine Spiele gezielt gegen Freunde oder bestimmte Spieler starten."
+      },
+      {
+       "t": "p",
+       "x": "Wenn du trainierst oder spielst, wird dir automatisch ein passender Gegner zugewiesen. Dadurch stellen wir sicher, dass alle Spieler unter denselben Voraussetzungen spielen und das Fortschrittssystem fair bleibt."
+      },
+      {
+       "t": "p",
+       "x": "Bei den offiziellen Frugends-Turnieren kann es natürlich vorkommen, dass du auf Freunde, Creator oder andere bekannte Spieler triffst. Welche Begegnungen stattfinden, entscheidet jedoch der jeweilige Turnierverlauf."
+      },
+      {
+       "t": "p",
+       "x": "Dieses System ist ein wichtiger Bestandteil unseres Fair-Play-Konzepts. Es verhindert, dass Spieler gezielt gegeneinander antreten, um sich gegenseitig Vorteile beim Fortschritt oder beim Freischalten von Inhalten zu verschaffen. So bleiben alle Erfolge und Freischaltungen für die gesamte Community fair und nachvollziehbar."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 4,
+   "title": "Erste Schritte",
+   "slug": "erste-schritte",
+   "subtitle": "Dein Einstieg: Registrierung, Tutorial und erstes Spiel.",
+   "icon": "➀",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Registrierung",
+     "slug": "registrierung",
+     "body": [
+      {
+       "t": "p",
+       "x": "Der Einstieg in Frugends beginnt mit deiner kostenlosen Registrierung. Innerhalb weniger Minuten kannst du deinen persönlichen Account erstellen und Teil der Frugends-Community werden."
+      },
+      {
+       "t": "p",
+       "x": "Nach der Anmeldung erhältst du Zugriff auf dein persönliches Profil sowie auf alle grundlegenden Funktionen der Plattform. Von hier aus startest du deine Reise durch das Frugends-Universum und kannst Schritt für Schritt neue Inhalte entdecken."
+      },
+      {
+       "t": "p",
+       "x": "Direkt nach der Registrierung wirst du durch die ersten Bereiche des Spiels geführt. Das Tutorial erklärt dir die wichtigsten Spielmechaniken und bereitet dich auf deine ersten Matches vor. So können sowohl Einsteiger als auch erfahrene Spieler ohne Vorkenntnisse direkt loslegen."
+      },
+      {
+       "t": "p",
+       "x": "Mit deinem Account werden deine Fortschritte, freigeschalteten Inhalte, Karten, Artefakte und Erfolge gespeichert. Dadurch begleitet dich dein Profil dauerhaft und entwickelt sich gemeinsam mit deinem Fortschritt weiter."
+      },
+      {
+       "t": "p",
+       "x": "Die Registrierung ist bewusst einfach gehalten, damit du möglichst schnell in das eigentliche Spielerlebnis eintauchen kannst. Innerhalb kürzester Zeit bist du bereit für dein erstes Match und die nächsten Schritte auf deinem Weg durch Frugends."
+      },
+      {
+       "t": "p",
+       "x": "Mit deiner Registrierung beginnt deine persönliche Reise in die Welt von Frugends – kostenlos, unkompliziert und der erste Schritt zu einer aktiven Community voller Turniere, Herausforderungen und gemeinsamer Erlebnisse."
+      }
+     ]
+    },
+    {
+     "heading": "Tutorial",
+     "slug": "tutorial",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nach deiner Registrierung startest du direkt mit dem Tutorial. Es bildet die Grundlage für deinen Einstieg in Frugends und führt dich Schritt für Schritt durch die wichtigsten Spielmechaniken."
+      },
+      {
+       "t": "p",
+       "x": "Im Tutorial lernst du die grundlegenden Funktionen des Spiels kennen. Du erfährst, wie Matches ablaufen, wie du deine Karten einsetzt und welche strategischen Möglichkeiten dir während einer Partie zur Verfügung stehen. Alle Inhalte werden verständlich erklärt, sodass sowohl Einsteiger als auch erfahrene Spieler schnell ins Spiel finden."
+      },
+      {
+       "t": "p",
+       "x": "Das Tutorial ist bewusst praxisnah aufgebaut. Statt lange Erklärungen zu lesen, lernst du die wichtigsten Abläufe direkt im Spiel kennen und sammelst dabei bereits erste Erfahrungen."
+      },
+      {
+       "t": "p",
+       "x": "Nach erfolgreichem Abschluss des Tutorials bekommst du kostenlos dein Kartendeck. Du kennst jetzt die wichtigsten Spielregeln, verstehst die grundlegenden Mechaniken und kannst dich auf den Führerschein sowie deine ersten echten Matches freuen."
+      },
+      {
+       "t": "p",
+       "x": "Das Tutorial ist mehr als nur eine Einführung. Es legt den Grundstein für deinen weiteren Fortschritt und sorgt dafür, dass alle Spieler mit denselben Voraussetzungen in die Welt von Frugends starten."
+      },
+      {
+       "t": "p",
+       "x": "Das Tutorial macht dich Schritt für Schritt mit Frugends vertraut und bereitet dich optimal auf deine ersten Spiele, deinen weiteren Fortschritt und die kommenden Turniere vor."
+      }
+     ]
+    },
+    {
+     "heading": "Erstes Spiel",
+     "slug": "erstes-spiel",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nach dem erfolgreichen Abschluss des Tutorials bist du bereit für dein erstes echtes Match. Jetzt kannst du das Gelernte direkt anwenden und deine ersten Erfahrungen gegen andere Spieler sammeln."
+      },
+      {
+       "t": "p",
+       "x": "Dein erstes Spiel dient dazu, ein Gefühl für den Ablauf einer Partie zu bekommen und die verschiedenen Karten sowie ihre Fähigkeiten in der Praxis kennenzulernen. Dabei stehen nicht Sieg oder Niederlage im Vordergrund, sondern der Einstieg in das eigentliche Spielerlebnis."
+      },
+      {
+       "t": "p",
+       "x": "Schon nach wenigen Partien wirst du feststellen, wie wichtig Strategie, das Zusammenspiel deiner Karten und die richtigen Entscheidungen im richtigen Moment sind. Jede Begegnung hilft dir dabei, dein Deck besser zu verstehen und deine Spielweise weiterzuentwickeln."
+      },
+      {
+       "t": "p",
+       "x": "Mit jedem gespielten Match wächst deine Erfahrung innerhalb von Frugends. Du bereitest dich Schritt für Schritt auf die kommenden Turniere vor, entwickelst deine Fähigkeiten weiter und legst den Grundstein für deinen langfristigen Fortschritt auf der Plattform."
+      },
+      {
+       "t": "p",
+       "x": "Dein erstes Spiel ist gleichzeitig der Beginn deiner persönlichen Reise. Von hier aus erwarten dich neue Karten, weitere Inhalte, Turniere, spannende Herausforderungen und eine Community, die gemeinsam mit dir wächst."
+      },
+      {
+       "t": "p",
+       "x": "Das erste Spiel ist der Start in dein Abenteuer bei Frugends – der Moment, in dem aus Theorie Praxis wird und deine Reise als Spieler wirklich beginnt."
+      }
+     ]
+    },
+    {
+     "heading": "Wann wird die Villains-Edition freigeschaltet?",
+     "slug": "villains-freischalten",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Villains-Edition wird sofort freigeschaltet, sobald du das Villains-Tutorial erfolgreich absolviert hast."
+      },
+      {
+       "t": "p",
+       "x": "Frugends führt neue Spieler bewusst Schritt für Schritt durch das Spiel. Deshalb startest du zunächst mit der Heroes-Edition und lernst dort die wichtigsten Spielmechaniken kennen. Im Villains-Tutorial lernst du danach die Villains kennen. Auf eine bestimmte Stufe oder ein Level musst du dafür nicht warten."
+      },
+      {
+       "t": "p",
+       "x": "Mit der Freischaltung spielst du mit Heroes und Villains. Beide Editionen gehören zu deinem Kartendeck, ein zusätzliches Deck brauchst du dafür nicht. Auch die Teilnahme am Arena-Turnier ist kostenlos."
+      },
+      {
+       "t": "p",
+       "x": "Dieses System sorgt für einen fairen Einstieg und stellt sicher, dass alle Spieler die Grundlagen des Spiels beherrschen, bevor weitere Inhalte freigeschaltet werden."
+      }
+     ]
+    },
+    {
+     "heading": "Wie komme ich zu meinem ersten Turnier?",
+     "slug": "vom-download-zum-turnier",
+     "body": [
+      {
+       "t": "p",
+       "x": "Der Weg zum ersten Turnier ist kurz und kostet nichts:"
+      },
+      {
+       "t": "li",
+       "x": "Lade die Frugends-App herunter."
+      },
+      {
+       "t": "li",
+       "x": "Registriere dich kostenlos."
+      },
+      {
+       "t": "li",
+       "x": "Spiele das Tutorial."
+      },
+      {
+       "t": "li",
+       "x": "Nimm an den Turnieren teil."
+      },
+      {
+       "t": "p",
+       "x": "Nach dem Tutorial bekommst du dein Kartendeck kostenlos. Die Arena-Turniere finden spontan statt, und die Termine kündigen wir über unsere Social-Kanäle an."
+      }
+     ]
+    },
+    {
+     "heading": "Die nächsten Schritte",
+     "slug": "die-naechsten-schritte",
+     "body": [
+      {
+       "t": "p",
+       "x": "Mit den ersten gespielten Matches beginnt deine eigentliche Reise durch Frugends. Von nun an entscheidest du selbst, welchen Weg du einschlagen möchtest und welche Ziele du als Nächstes erreichen willst."
+      },
+      {
+       "t": "p",
+       "x": "Du kannst dein Deck kontinuierlich erweitern, neue Karten sammeln, weitere Inhalte freischalten und deine Strategie immer weiter verbessern. Gleichzeitig warten regelmäßig neue Herausforderungen, Turniere und Events darauf, von dir entdeckt zu werden."
+      },
+      {
+       "t": "p",
+       "x": "Mit jedem Fortschritt entwickelst du nicht nur dein Deck weiter, sondern auch dein persönliches Profil innerhalb der Frugends-Community. Neue Features, zusätzliche Spielmodi und zukünftige Erweiterungen sorgen dafür, dass es immer neue Ziele zu erreichen gibt."
+      },
+      {
+       "t": "p",
+       "x": "Sobald du bereit bist, kannst du am Arena-Turnier teilnehmen, dich mit anderen Spielern messen und um attraktive Rewards spielen. Die Turniere finden spontan statt, und die Termine kündigen wir über unsere Social-Kanäle an. Außerdem lohnt es sich, Teil der Community zu werden und dich auf Discord mit anderen Spielern auszutauschen."
+      },
+      {
+       "t": "p",
+       "x": "Frugends wächst kontinuierlich weiter. Deshalb erwarten dich auch nach deinem Einstieg regelmäßig neue Inhalte, Funktionen und Möglichkeiten, deine persönliche Reise fortzusetzen."
+      },
+      {
+       "t": "p",
+       "x": "Nach den ersten Schritten beginnt das eigentliche Abenteuer: Spiele, sammle, entwickle dein Deck weiter, nimm an Turnieren teil und werde Teil einer Community, die gemeinsam mit dir wächst."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 5,
+   "title": "Registrierung & Account",
+   "slug": "registrierung-account",
+   "subtitle": "Account erstellen, anmelden und verwalten.",
+   "icon": "👤",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Wie registriere ich mich?",
+     "slug": "wie-registriere-ich-mich",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Registrierung bei Frugends ist schnell und unkompliziert."
+      },
+      {
+       "t": "p",
+       "x": "Du kannst deinen Account über die Frugends-App für iOS und Android oder über die Desktop-Version erstellen. Dafür benötigst du lediglich einen Benutzernamen, deine E-Mail-Adresse und dein Geburtsdatum. Ein Passwort ist nicht erforderlich."
+      },
+      {
+       "t": "p",
+       "x": "Nach deiner Registrierung erhältst du eine Bestätigungs-E-Mail. Sobald du deine E-Mail-Adresse bestätigt hast, kannst du dich direkt anmelden und mit Frugends starten."
+      }
+     ]
+    },
+    {
+     "heading": "Ich habe keine Bestätigungs-E-Mail erhalten.",
+     "slug": "ich-habe-keine-bestaetigungs-e-mail-erhalten",
+     "body": [
+      {
+       "t": "p",
+       "x": "Solltest du nach deiner Registrierung keine Bestätigungs-E-Mail erhalten haben, prüfe zunächst deinen Spam- oder Junk-Ordner."
+      },
+      {
+       "t": "p",
+       "x": "Ist dort keine E-Mail zu finden, warte bitte etwa fünf Minuten und versuche anschließend, dich erneut anzumelden. Dabei wird automatisch eine neue Bestätigungs-E-Mail versendet."
+      },
+      {
+       "t": "p",
+       "x": "Solltest du auch danach keine E-Mail erhalten, wende dich bitte an unseren Support. Wir helfen dir gerne weiter."
+      }
+     ]
+    },
+    {
+     "heading": "Wie melde ich mich an?",
+     "slug": "wie-melde-ich-mich-an",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Anmeldung bei Frugends erfolgt ganz einfach über deine E-Mail-Adresse. Ein Passwort benötigst du nicht."
+      },
+      {
+       "t": "p",
+       "x": "Gib einfach die E-Mail-Adresse ein, mit der du deinen Frugends-Account erstellt hast. Anschließend erhältst du eine Anmelde-E-Mail, über die du dich sicher in deinen Account einloggen kannst."
+      },
+      {
+       "t": "p",
+       "x": "So kannst du dich jederzeit schnell und unkompliziert auf all deinen Geräten bei Frugends anmelden."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich meine E-Mail-Adresse ändern?",
+     "slug": "kann-ich-meine-e-mail-adresse-aendern",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Du kannst die E-Mail-Adresse deines Frugends-Accounts jederzeit ändern."
+      },
+      {
+       "t": "p",
+       "x": "Die Änderung kannst du direkt in den Profileinstellungen deines Accounts vornehmen. Nach der Änderung erhältst du gegebenenfalls eine Bestätigungs-E-Mail an deine neue E-Mail-Adresse."
+      },
+      {
+       "t": "p",
+       "x": "Solltest du Probleme bei der Änderung deiner E-Mail-Adresse haben, hilft dir unser Support gerne weiter."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich meinen Account löschen?",
+     "slug": "kann-ich-meinen-account-loeschen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Du kannst deinen Frugends-Account jederzeit löschen."
+      },
+      {
+       "t": "p",
+       "x": "Gehe dazu einfach in die Profileinstellungen der Frugends-App und wähle die Option zum Löschen deines Accounts aus."
+      },
+      {
+       "t": "p",
+       "x": "Alternativ kannst du uns auch eine E-Mail an info@frugends.com senden. Wir kümmern uns anschließend um die Löschung deines Accounts."
+      },
+      {
+       "t": "p",
+       "x": "Bitte beachte, dass eine Kontolöschung dauerhaft ist und nicht rückgängig gemacht werden kann."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich mehrere Accounts besitzen?",
+     "slug": "kann-ich-mehrere-accounts-besitzen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Du kannst mehrere Frugends-Accounts besitzen."
+      },
+      {
+       "t": "p",
+       "x": "Für jeden Account wird jedoch eine eigene E-Mail-Adresse benötigt. Bitte beachte außerdem, dass der Spielfortschritt, freigeschaltete Inhalte und weitere Daten nicht zwischen verschiedenen Accounts übertragen oder geteilt werden."
+      },
+      {
+       "t": "p",
+       "x": "Jeder Account wird unabhängig voneinander verwaltet."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich auf mehreren Geräten spielen?",
+     "slug": "kann-ich-auf-mehreren-geraeten-spielen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Du kannst dich mit deinem Frugends-Account auf beliebig vielen Geräten anmelden."
+      },
+      {
+       "t": "p",
+       "x": "Egal, ob du die Frugends-App auf iOS oder Android oder die Desktop-Version nutzt – du kannst dich jederzeit mit demselben Account anmelden und weiterspielen."
+      },
+      {
+       "t": "p",
+       "x": "Dein Spielfortschritt ist mit deinem Frugends-Account verknüpft und steht dir auf allen unterstützten Geräten zur Verfügung."
+      }
+     ]
+    },
+    {
+     "heading": "Wie ändere ich meinen Benutzernamen?",
+     "slug": "wie-aendere-ich-meinen-benutzernamen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Deinen Benutzernamen kannst du jederzeit selbst ändern."
+      },
+      {
+       "t": "p",
+       "x": "Gehe dazu einfach in die Profileinstellungen der Frugends-App und passe deinen Benutzernamen mit wenigen Klicks an."
+      },
+      {
+       "t": "p",
+       "x": "Der neue Benutzername wird nach dem Speichern automatisch für deinen Frugends-Account übernommen."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 6,
+   "title": "Dein Kartendeck",
+   "slug": "kartendeck",
+   "subtitle": "Du bekommst dein Kartendeck kostenlos nach Registrierung und Tutorial.",
+   "icon": "❖",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Was ist dein Kartendeck?",
+     "slug": "was-ist-dein-kartendeck",
+     "body": [
+      {
+       "t": "p",
+       "x": "Bei Frugends gibt es genau ein Kartendeck. Mit ihm spielst du deine Matches, probierst neue Strategien aus und trittst in der Arena an."
+      },
+      {
+       "t": "p",
+       "x": "Alle starten mit demselben Deck. Es gibt keine Deck-Stufen und keine besseren Deck-Versionen, die man kaufen könnte. Wer ein Match gewinnt, entscheidet sich über Strategie, Erfahrung und spielerisches Können."
+      },
+      {
+       "t": "p",
+       "x": "Mit deinem Spielfortschritt baust du dein Deck weiter aus, zum Beispiel mit Artefakt-Karten, die du dir erspielst."
+      },
+      {
+       "t": "p",
+       "x": "Dein Kartendeck ist die Grundlage für alles, was bei Frugends folgt, und es kostet dich nichts."
+      }
+     ]
+    },
+    {
+     "heading": "Wie bekomme ich mein Kartendeck?",
+     "slug": "wie-bekomme-ich-mein-kartendeck",
+     "body": [
+      {
+       "t": "p",
+       "x": "Dein Kartendeck bekommst du automatisch und kostenlos, sobald du dich registriert und das Tutorial abgeschlossen hast. Weitere Schritte, Käufe oder Freischaltungen sind dafür nicht nötig."
+      },
+      {
+       "t": "p",
+       "x": "Ab diesem Moment liegt dein Deck dauerhaft in deinem Account. Damit kannst du direkt in deine ersten Matches starten, Strategien ausprobieren und die Spielmechaniken vertiefen."
+      },
+      {
+       "t": "p",
+       "x": "Ein Deck zu kaufen ist bei Frugends weder möglich noch nötig. Jeder soll unabhängig vom Budget mit denselben Voraussetzungen spielen können."
+      }
+     ]
+    },
+    {
+     "heading": "Warum kann ich noch nicht an Turnieren teilnehmen?",
+     "slug": "warum-kann-ich-noch-nicht-an-turnieren-teilnehmen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Für die Teilnahme am Arena-Turnier brauchst du nur dein Kartendeck. Kaufen musst du dafür nichts."
+      },
+      {
+       "t": "p",
+       "x": "Wenn du noch nicht teilnehmen kannst, liegt das meist an einem dieser Gründe:"
+      },
+      {
+       "t": "li",
+       "x": "Du hast das Tutorial noch nicht abgeschlossen und deshalb noch kein Kartendeck."
+      },
+      {
+       "t": "li",
+       "x": "Die Anmeldephase für das nächste Arena-Turnier hat noch nicht begonnen."
+      },
+      {
+       "t": "li",
+       "x": "Aktuell steht kein Turnier an. Die Turniere finden spontan statt, und die Termine kündigen wir über unsere Social-Kanäle an."
+      },
+      {
+       "t": "p",
+       "x": "Dein Kartendeck bekommst du kostenlos, sobald du das Tutorial abgeschlossen hast."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich mehrere Decks besitzen?",
+     "slug": "kann-ich-mehrere-decks-besitzen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nein. Bei Frugends spielt jede und jeder mit genau einem Kartendeck."
+      },
+      {
+       "t": "p",
+       "x": "Statt weitere Decks zu sammeln, entwickelst du dein eigenes Deck weiter. Artefakt-Karten und neue Inhalte, die du dir über deinen Spielfortschritt erspielst, erweitern deine strategischen Möglichkeiten."
+      },
+      {
+       "t": "p",
+       "x": "Frugends wird laufend erweitert. Über neue Editionen und Inhalte informieren wir dich rechtzeitig in der App, auf unserer Website und auf Discord."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 7,
+   "title": "Artefakt-Karten",
+   "slug": "artefakt-karten",
+   "subtitle": "Die seltenen Sammelkarten und warum sie nicht käuflich sind.",
+   "icon": "✦",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Was sind Artefakt-Karten?",
+     "slug": "was-sind-artefakt-karten",
+     "body": [
+      {
+       "t": "p",
+       "x": "Artefakt-Karten sind besondere Karten innerhalb einer Edition, die dir zusätzliche spielerische Möglichkeiten bieten."
+      },
+      {
+       "t": "p",
+       "x": "Jede Edition verfügt über drei eigene Artefakt-Karten. Diese erspielst du dir Schritt für Schritt über deinen Spielfortschritt, und sie erweitern deine strategischen Möglichkeiten im Spiel."
+      },
+      {
+       "t": "p",
+       "x": "Artefakt-Karten sind bewusst so gestaltet, dass sie das Spiel sinnvoll ergänzen, ohne das Fair-Play-Prinzip aus dem Gleichgewicht zu bringen. Sie bieten kleine taktische Vorteile, ersetzen jedoch niemals Strategie, Erfahrung oder spielerisches Können."
+      },
+      {
+       "t": "p",
+       "x": "Da jede Edition ihre eigenen Artefakt-Karten besitzt, wächst deine Sammlung mit jeder neuen Edition weiter. So kommen nach und nach neue Spielweisen und zusätzliche strategische Möglichkeiten hinzu."
+      }
+     ]
+    },
+    {
+     "heading": "Wie bekomme ich Artefakt-Karten?",
+     "slug": "wie-erhaelt-man-artefakt-karten",
+     "body": [
+      {
+       "t": "p",
+       "x": "Artefakt-Karten können nicht gekauft, sondern ausschließlich innerhalb von Frugends freigeschaltet werden."
+      },
+      {
+       "t": "p",
+       "x": "Sobald du nach dem Tutorial dein Kartendeck hast, kannst du die drei Artefakt-Karten einer Edition nach und nach erspielen. Jede freigeschaltete Artefakt-Karte erweitert deine strategischen Möglichkeiten und begleitet deinen weiteren Fortschritt im Spiel."
+      },
+      {
+       "t": "p",
+       "x": "Zusätzlich können einzelne Artefakt-Karten im Rahmen besonderer Community-Aktionen oder Events vergeben werden. So erhältst du beispielsweise für den Beitritt zu unserem offiziellen Discord-Server eine Artefakt-Karte als Willkommensbonus."
+      },
+      {
+       "t": "p",
+       "x": "Unser Ziel ist es, dass alle Spieler dieselben Chancen haben, ihre Artefakt-Karten zu erhalten. Deshalb sind sie bewusst an deinen Fortschritt und dein Engagement geknüpft und nicht an Käufe."
+      }
+     ]
+    },
+    {
+     "heading": "Welche Vorteile bieten Artefakt-Karten?",
+     "slug": "welche-vorteile-bieten-artefakt-karten",
+     "body": [
+      {
+       "t": "p",
+       "x": "Artefakt-Karten erweitern dein Kartendeck um zusätzliche spielerische Möglichkeiten. Jede der drei Artefakt-Karten einer Edition verleiht dir einen kleinen spielerischen Vorteil, der dein Deck sinnvoll ergänzt."
+      },
+      {
+       "t": "p",
+       "x": "Mit jeder freigeschalteten Artefakt-Karte wächst dein strategischer Handlungsspielraum. Je nachdem, ob du eine, zwei oder alle drei Artefakt-Karten einer Edition besitzt, stehen dir die entsprechenden zusätzlichen Effekte zur Verfügung."
+      },
+      {
+       "t": "p",
+       "x": "Dabei bleiben die Vorteile bewusst ausgewogen. Artefakt-Karten sollen das Spiel strategisch bereichern, ohne das Fair-Play-Prinzip von Frugends aus den Augen zu verlieren."
+      },
+      {
+       "t": "p",
+       "x": "Da Artefakt-Karten nicht gekauft werden können, sondern ausschließlich durch Spielaktivität oder Community-Aktionen freigeschaltet werden, hat jeder Spieler die Möglichkeit, sich dieselben Vorteile zu erarbeiten."
+      },
+      {
+       "t": "p",
+       "x": "Artefakt-Karten erweitern dein Kartendeck um kleine, ausgewogene spielerische Vorteile. Sie fördern strategische Vielfalt und sind für jeden Spieler auf demselben Weg erreichbar."
+      }
+     ]
+    },
+    {
+     "heading": "Warum können Artefakt-Karten nicht gekauft werden?",
+     "slug": "warum-koennen-artefakt-karten-nicht-gekauft-werden",
+     "body": [
+      {
+       "t": "p",
+       "x": "Artefakt-Karten können bewusst nicht gekauft werden. Damit folgt Frugends seiner Grundphilosophie, dass alle spielrelevanten Inhalte für jeden Spieler erreichbar sein sollen – unabhängig davon, wie viel Geld investiert wird."
+      },
+      {
+       "t": "p",
+       "x": "Stattdessen werden Artefakt-Karten ausschließlich durch Spielaktivität oder ausgewählte Community-Aktionen freigeschaltet. So haben alle Spieler die gleichen Möglichkeiten, die drei Artefakt-Karten einer Edition zu erhalten."
+      },
+      {
+       "t": "p",
+       "x": "Dieses System stellt sicher, dass der Fortschritt in Frugends nicht vom Geldbeutel abhängt, sondern von deiner Aktivität und deinem Engagement innerhalb der Community. Wer Zeit investiert und aktiv mitmacht, kann dieselben Inhalte und Vorteile freischalten wie jeder andere Spieler."
+      },
+      {
+       "t": "p",
+       "x": "Artefakt-Karten sind bewusst nicht käuflich. Sie stehen für Fair Play und sorgen dafür, dass alle Spieler die gleichen Chancen haben, ihre Edition vollständig auszubauen."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich Artefakt-Karten kaufen?",
+     "slug": "kann-ich-artefakt-karten-kaufen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nein. Artefakt-Karten können bewusst nicht gekauft werden."
+      },
+      {
+       "t": "p",
+       "x": "Bei Frugends sollen spielerischer Fortschritt, Strategie und Engagement im Mittelpunkt stehen. Deshalb werden Artefakt-Karten ausschließlich durch das Spielen oder über ausgewählte Community-Aktionen freigeschaltet."
+      },
+      {
+       "t": "p",
+       "x": "Mit dieser Entscheidung möchten wir sicherstellen, dass alle Spieler die gleichen Voraussetzungen haben und niemand sich spielerische Vorteile durch Käufe verschaffen kann."
+      },
+      {
+       "t": "p",
+       "x": "Das Freischalten der Artefakt-Karten ist Teil deines persönlichen Fortschritts innerhalb einer Edition und gehört zum Fair-Play-Konzept von Frugends. Jeder Spieler hat die Möglichkeit, alle Artefakt-Karten auf demselben Weg zu erhalten."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich Artefakt-Karten verlieren?",
+     "slug": "kann-ich-artefakt-karten-verlieren",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nein. Sobald du eine Artefakt-Karte freigeschaltet hast, bleibt sie dauerhaft deinem Account zugeordnet."
+      },
+      {
+       "t": "p",
+       "x": "Du musst bereits freigeschaltete Artefakt-Karten nicht erneut erspielen und kannst sie auch nicht durch das Spielen, Turniere oder andere Aktivitäten verlieren."
+      },
+      {
+       "t": "p",
+       "x": "Sollten künftig neue Editionen erscheinen, verfügt jede Edition über ihre eigenen Artefakt-Karten. Bereits freigeschaltete Artefakt-Karten aus früheren Editionen bleiben davon selbstverständlich unberührt."
+      },
+      {
+       "t": "p",
+       "x": "So kannst du deine Sammlung Schritt für Schritt erweitern, ohne befürchten zu müssen, bereits erreichte Fortschritte wieder zu verlieren."
+      }
+     ]
+    },
+    {
+     "heading": "Gibt es neue Artefakt-Karten?",
+     "slug": "gibt-es-neue-artefakt-karten",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Mit jeder neuen Edition können auch neue Artefakt-Karten veröffentlicht werden."
+      },
+      {
+       "t": "p",
+       "x": "Jede Edition besitzt ihre eigenen drei Artefakt-Karten, die speziell auf diese Edition abgestimmt sind. Dadurch wächst deine Sammlung mit jeder neuen Erweiterung und es entstehen immer wieder neue strategische Möglichkeiten."
+      },
+      {
+       "t": "p",
+       "x": "Neue Artefakt-Karten werden nicht nachträglich zu bestehenden Editionen hinzugefügt, sondern erscheinen gemeinsam mit neuen Editionen. So bleibt das Spiel übersichtlich, ausgewogen und fair."
+      },
+      {
+       "t": "p",
+       "x": "Über neue Editionen, Artefakt-Karten und weitere Inhalte informieren wir dich rechtzeitig über die Frugends-App, unsere Website, Discord und unsere offiziellen Social-Media-Kanäle."
+      }
+     ]
+    },
+    {
+     "heading": "Sind Artefakt-Karten spielentscheidend?",
+     "slug": "sind-artefakt-karten-spielentscheidend",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nein. Artefakt-Karten erweitern deine strategischen Möglichkeiten, entscheiden jedoch nicht allein über Sieg oder Niederlage."
+      },
+      {
+       "t": "p",
+       "x": "Jede Artefakt-Karte bietet einen kleinen spielerischen Vorteil und ermöglicht zusätzliche taktische Optionen. Der entscheidende Erfolgsfaktor bleibt jedoch dein Verständnis für das Spiel, deine Strategie und deine Erfahrung."
+      },
+      {
+       "t": "p",
+       "x": "Frugends verfolgt bewusst ein Fair-Play-Konzept. Deshalb sind Artefakt-Karten so ausbalanciert, dass sie das Spiel sinnvoll ergänzen, ohne Spielern einen unfairen oder übermächtigen Vorteil zu verschaffen."
+      },
+      {
+       "t": "p",
+       "x": "Unser Ziel ist es, dass spannende und faire Partien durch kluge Entscheidungen und spielerisches Können entschieden werden – nicht durch einzelne Karten oder finanzielle Investitionen."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 8,
+   "title": "Turniere",
+   "slug": "turniere",
+   "subtitle": "Das Herzstück von Frugends — Arena, Ablauf und Rewards.",
+   "icon": "🏆",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Was sind die Frugends-Turniere?",
+     "slug": "was-sind-die-frugends-turniere",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Frugends-Turniere bilden das Herzstück der Plattform. Hier hast du die Möglichkeit, dein Können unter Beweis zu stellen, dich mit anderen Spielern zu messen und immer wieder um attraktive Rewards zu spielen."
+      },
+      {
+       "t": "p",
+       "x": "In Frugends gibt es ein Turnierformat: das Arena-Turnier. Es findet spontan statt, ohne festen Wochentag, und die Teilnahme ist kostenlos."
+      },
+      {
+       "t": "p",
+       "x": "Die offiziellen Turniere bieten dir die Möglichkeit, dich immer wieder neuen Herausforderungen zu stellen. Dabei stehen Fair Play, spannende Wettkämpfe und der gemeinsame Spaß am Spiel im Mittelpunkt."
+      },
+      {
+       "t": "p",
+       "x": "Die Frugends-Turniere sind fester Bestandteil der Plattform und verbinden Spieler und Community zu einem gemeinsamen Erlebnis."
+      },
+      {
+       "t": "p",
+       "x": "Die Frugends-Turniere sind das Herzstück von Frugends. Sie bieten spannende Wettkämpfe, attraktive Rewards und die Möglichkeit, sich mit der gesamten Community zu messen."
+      }
+     ]
+    },
+    {
+     "heading": "Welche Turniere gibt es?",
+     "slug": "welche-turniere-gibt-es",
+     "body": [
+      {
+       "t": "p",
+       "x": "Bei Frugends gibt es aktuell ein Turnierformat: das Arena-Turnier."
+      },
+      {
+       "t": "p",
+       "x": "Das Arena-Turnier findet spontan statt, ohne festen Wochentag. Dort treten Spieler aller Editionen gegeneinander an und spielen um attraktive Rewards. Die Teilnahme ist kostenlos."
+      },
+      {
+       "t": "p",
+       "x": "Das Turnier findet online statt, sodass du von überall aus teilnehmen kannst. Mit zukünftigen Updates können weitere Turnierformate und Editionen hinzukommen."
+      }
+     ]
+    },
+    {
+     "heading": "Wie nehme ich an einem Turnier teil?",
+     "slug": "wie-kann-ich-an-einem-turnier-teilnehmen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Teilnahme an einem Turnier ist ganz einfach."
+      },
+      {
+       "t": "p",
+       "x": "Stelle zunächst sicher, dass du das Tutorial abgeschlossen hast. Dann hast du dein Kartendeck, und mehr brauchst du nicht."
+      },
+      {
+       "t": "p",
+       "x": "Sobald die Anmeldephase startet, kannst du dich mit wenigen Klicks registrieren. Nach erfolgreicher Anmeldung wirst du automatisch für das Turnier vorgemerkt und nimmst zum Start teil."
+      },
+      {
+       "t": "p",
+       "x": "Achte darauf, dass du zum Turnierbeginn eine stabile Internetverbindung hast und rechtzeitig online bist, damit du dein erstes Match ohne Verzögerung starten kannst."
+      }
+     ]
+    },
+    {
+     "heading": "Kostet die Teilnahme etwas?",
+     "slug": "kostet-die-teilnahme-etwas",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nein. Die Teilnahme an den Frugends-Turnieren ist kostenlos."
+      },
+      {
+       "t": "p",
+       "x": "Du brauchst nur dein Kartendeck, das du nach dem Tutorial kostenlos bekommst. Kaufen musst du nichts."
+      },
+      {
+       "t": "p",
+       "x": "Bei Frugends gibt es kein Pay-to-Win. Wer ein Match gewinnt, entscheidet sich über Strategie, Erfahrung und spielerisches Können."
+      }
+     ]
+    },
+    {
+     "heading": "Wie läuft ein Turnier ab?",
+     "slug": "wie-laeuft-ein-turnier-ab",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nach erfolgreicher Anmeldung wirst du automatisch einem Turnierraum mit bis zu 300 Teilnehmern zugeteilt."
+      },
+      {
+       "t": "p",
+       "x": "Sobald das Turnier beginnt, treten alle Spieler im K.-o.-System gegeneinander an. Wer sein Match gewinnt, erreicht die nächste Runde. Der Verlierer scheidet aus dem laufenden Turnier aus."
+      },
+      {
+       "t": "p",
+       "x": "Da nicht immer genau 300 Spieler teilnehmen, kann es bei einer ungeraden Teilnehmerzahl vorkommen, dass einzelne Spieler in einer Runde ein Freilos erhalten und automatisch in die nächste Runde einziehen."
+      },
+      {
+       "t": "p",
+       "x": "Nach jeder Runde werden die Begegnungen automatisch neu zugeteilt, bis schließlich das Finale ausgespielt wird."
+      },
+      {
+       "t": "p",
+       "x": "Nach Turnierende werden alle Platzierungen automatisch ausgewertet. Gewinner von Rewards werden anschließend automatisch per E-Mail informiert. Dort erhältst du alle weiteren Informationen zur Einlösung deines Rewards. Sofern erforderlich, wirst du aufgefordert, die notwendigen Angaben für die Bereitstellung deines Rewards zu übermitteln."
+      },
+      {
+       "t": "p",
+       "x": "Die jeweiligen Rewards und Platzierungen kannst du bereits vor Turnierbeginn jederzeit in der App einsehen."
+      }
+     ]
+    },
+    {
+     "heading": "Wo werden die Arena-Turniere übertragen?",
+     "slug": "wo-werden-die-turniere-uebertragen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ausgewählte Arena-Turniere übertragen wir künftig auch auf Twitch."
+      },
+      {
+       "t": "p",
+       "x": "Dort kannst du dann spannende Matches verfolgen und mit der Community mitfiebern, auch wenn du selbst nicht mitspielst oder schon ausgeschieden bist."
+      }
+     ]
+    },
+    {
+     "heading": "Welche Rewards gibt es?",
+     "slug": "welche-rewards-gibt-es",
+     "body": [
+      {
+       "t": "p",
+       "x": "Im Arena-Turnier gewinnen die Plätze 1 bis 30 Winner Boxen. So verteilen sie sich:"
+      },
+      {
+       "t": "li",
+       "x": "Platz 1: drei Premium Winner Boxen mit zusammen ca. 90 € Warenwert, über drei Monate verteilt, jeden Monat eine andere"
+      },
+      {
+       "t": "li",
+       "x": "Platz 2: zwei Premium Winner Boxen mit zusammen ca. 60 € Warenwert, über zwei Monate verteilt"
+      },
+      {
+       "t": "li",
+       "x": "Platz 3: zwei Special Winner Boxen mit zusammen ca. 50 € Warenwert, über zwei Monate verteilt"
+      },
+      {
+       "t": "li",
+       "x": "Platz 4 bis 10: je eine Premium Winner Box mit ca. 30 € Warenwert"
+      },
+      {
+       "t": "li",
+       "x": "Platz 11 bis 20: je eine Winner Box mit ca. 20 € Warenwert"
+      },
+      {
+       "t": "li",
+       "x": "Platz 21 bis 30: je eine Mini Winner Box mit ca. 15 € Warenwert"
+      },
+      {
+       "t": "p",
+       "x": "Jede Winner Box stellen wir anders zusammen. Wir verschicken die Winner Boxen ab Dezember."
+      },
+      {
+       "t": "p",
+       "x": "Geld oder Wunschgutscheine gibt es als Reward nicht."
+      }
+     ]
+    },
+    {
+     "heading": "Wann finden die Turniere statt?",
+     "slug": "wann-finden-die-turniere-statt",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Arena-Turniere finden spontan statt, ohne festen Wochentag. Den nächsten Termin findest du immer auf unserer Turnierseite."
+      },
+      {
+       "t": "p",
+       "x": "Die Termine kündigen wir außerdem über unsere Social-Kanäle an, und auch Creator teilen sie."
+      },
+      {
+       "t": "p",
+       "x": "Die genauen Startzeiten sowie die Anmeldephase werden dir direkt in der App angezeigt. Wir empfehlen dir, dich rechtzeitig anzumelden und einige Minuten vor Turnierbeginn online zu sein. So kannst du pünktlich starten und verpasst kein Match."
+      }
+     ]
+    },
+    {
+     "heading": "Wie lange dauert ein Turnier?",
+     "slug": "wie-lange-dauert-ein-turnier",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Dauer eines Turniers hängt davon ab, wie weit du im Turnier kommst."
+      },
+      {
+       "t": "p",
+       "x": "Jedes Turnier wird in Gruppen mit bis zu 300 Teilnehmern im K.-o.-System ausgetragen. Eine einzelne Spielrunde dauert in der Regel etwa 12 bis 15 Minuten."
+      },
+      {
+       "t": "p",
+       "x": "Scheidest du früh aus, ist dein Turnier entsprechend früher beendet. Erreichst du dagegen das Finale, solltest du insgesamt etwa zwei Stunden einplanen."
+      },
+      {
+       "t": "p",
+       "x": "Die tatsächliche Dauer kann je nach Turnierverlauf und organisatorischen Abläufen leicht variieren. Plane deshalb am besten genügend Zeit ein, wenn du an einem Turnier teilnimmst."
+      }
+     ]
+    },
+    {
+     "heading": "Wie werden die Gegner ausgewählt?",
+     "slug": "wie-werden-die-gegner-ausgewaehlt",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Gegner werden während des gesamten Turniers automatisch durch das Turniersystem zugeteilt."
+      },
+      {
+       "t": "p",
+       "x": "Nach jeder gewonnenen Runde wirst du automatisch einem anderen Spieler zugeordnet, der sein Match ebenfalls gewonnen hat. So entsteht Runde für Runde ein fairer Turnierbaum bis zum Finale."
+      },
+      {
+       "t": "p",
+       "x": "Eine freie Gegnerwahl ist nicht möglich. Dadurch wird sichergestellt, dass alle Teilnehmer die gleichen Voraussetzungen haben und jedes Turnier unter fairen Bedingungen abläuft."
+      },
+      {
+       "t": "p",
+       "x": "Sollte es aufgrund einer ungeraden Teilnehmerzahl erforderlich sein, erhält ein Spieler automatisch ein Freilos und zieht ohne Match in die nächste Runde ein."
+      }
+     ]
+    },
+    {
+     "heading": "Was passiert bei einer ungeraden Teilnehmerzahl?",
+     "slug": "was-passiert-bei-einer-ungeraden-teilnehmerzahl",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nehmen in einer Turnierrunde nicht genau gleich viele Spieler teil, vergibt das Turniersystem automatisch ein Freilos."
+      },
+      {
+       "t": "p",
+       "x": "Der Spieler mit einem Freilos zieht ohne Match direkt in die nächste Runde ein. Anschließend läuft das Turnier ganz normal weiter und alle weiteren Begegnungen werden automatisch erstellt."
+      },
+      {
+       "t": "p",
+       "x": "Die Vergabe eines Freiloses erfolgt vollständig automatisch durch das System und kann weder beeinflusst noch ausgewählt werden."
+      }
+     ]
+    },
+    {
+     "heading": "Was passiert bei einem Verbindungsabbruch?",
+     "slug": "was-passiert-bei-einem-verbindungsabbruch",
+     "body": [
+      {
+       "t": "p",
+       "x": "Eine stabile Internetverbindung ist Voraussetzung für die Teilnahme an einem Turnier."
+      },
+      {
+       "t": "p",
+       "x": "Sollte deine Verbindung während eines laufenden Matches unterbrochen werden, versucht das System zunächst, die Verbindung wiederherzustellen. Gelingt dies nicht rechtzeitig, kann das laufende Match entsprechend der Turnierregeln als verloren gewertet werden."
+      },
+      {
+       "t": "p",
+       "x": "Um das Risiko eines Verbindungsabbruchs zu minimieren, empfehlen wir dir, Turniere möglichst über eine stabile WLAN- oder Mobilfunkverbindung zu spielen und während des Turniers die App nicht zu schließen."
+      },
+      {
+       "t": "p",
+       "x": "Sollte es zu einem technischen Problem kommen, das nicht von deiner Internetverbindung verursacht wurde, wende dich bitte an unseren Support. Wir prüfen den jeweiligen Fall sorgfältig."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich mich nach der Anmeldung wieder abmelden?",
+     "slug": "kann-ich-mich-nach-der-anmeldung-wieder-abmelden",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Solange das Turnier noch nicht begonnen hat, kannst du deine Teilnahme jederzeit wieder stornieren."
+      },
+      {
+       "t": "p",
+       "x": "Hat das Turnier bereits begonnen, ist eine Abmeldung nicht mehr möglich. In diesem Fall wird deine Anmeldung als verbindliche Teilnahme gewertet."
+      },
+      {
+       "t": "p",
+       "x": "Die Anmeldung ist kostenlos, du kannst dich also für jedes weitere Turnier einfach neu anmelden."
+      }
+     ]
+    },
+    {
+     "heading": "Was passiert, wenn ich ein Turnier verlasse?",
+     "slug": "was-passiert-wenn-ich-ein-turnier-verlasse",
+     "body": [
+      {
+       "t": "p",
+       "x": "Wenn du ein laufendes Turnier vorzeitig verlässt oder die Teilnahme abbrichst, gilt das Turnier für dich als beendet."
+      },
+      {
+       "t": "p",
+       "x": "Deshalb empfehlen wir dir, ein Turnier nur zu starten, wenn du ausreichend Zeit hast und über eine stabile Internetverbindung verfügst."
+      },
+      {
+       "t": "p",
+       "x": "Sollte es während eines Turniers zu technischen Problemen oder einer unerwarteten Störung kommen, gelten die jeweils aktuellen Turnierregeln. In solchen Fällen entscheidet das System oder gegebenenfalls der Support anhand der geltenden Richtlinien über den weiteren Ablauf."
+      },
+      {
+       "t": "p",
+       "x": "Unser Ziel ist es, allen Teilnehmern einen fairen und reibungslosen Turnierablauf zu ermöglichen."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich an mehreren Turnieren teilnehmen?",
+     "slug": "kann-ich-an-mehreren-turnieren-teilnehmen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Du kannst an jedem Arena-Turnier teilnehmen, sobald du das Tutorial abgeschlossen hast."
+      },
+      {
+       "t": "p",
+       "x": "Jede Teilnahme ist kostenlos. Für weitere Turniere musst du nichts kaufen."
+      }
+     ]
+    },
+    {
+     "heading": "Muss ich live dabei sein?",
+     "slug": "muss-ich-live-dabei-sein",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Wenn du an einem Turnier teilnehmen möchtest, musst du während deiner Matches online sein."
+      },
+      {
+       "t": "p",
+       "x": "Alle Turniere werden live ausgetragen. Deshalb musst du deine Begegnungen innerhalb der vorgegebenen Zeit bestreiten. Bist du zum Zeitpunkt deines Matches nicht online oder trittst nicht rechtzeitig an, kann das Match entsprechend der Turnierregeln als verloren gewertet werden."
+      },
+      {
+       "t": "p",
+       "x": "Plane daher ausreichend Zeit für das Turnier ein und sorge möglichst für eine stabile Internetverbindung, damit du alle deine Matches ohne Unterbrechung spielen kannst."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 9,
+   "title": "Rewards",
+   "slug": "rewards",
+   "subtitle": "Was du gewinnen kannst und wie Rewards vergeben werden.",
+   "icon": "🎁",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Was sind Rewards?",
+     "slug": "was-sind-rewards",
+     "body": [
+      {
+       "t": "p",
+       "x": "Rewards sind die Belohnungen, die du in Frugends durch erfolgreiche Teilnahmen an offiziellen Turnieren erhalten kannst. Sie würdigen deine Leistung und deinen Erfolg im Wettbewerb mit anderen Spielern."
+      },
+      {
+       "t": "p",
+       "x": "Im Arena-Turnier gewinnen die Plätze 1 bis 30 Winner Boxen in vier Stufen: Premium, Special, Winner und Mini. Wir verschicken sie ab Dezember."
+      },
+      {
+       "t": "p",
+       "x": "Welche Rewards in einem Turnier vergeben werden, wird vor Turnierbeginn transparent veröffentlicht. So weiß jeder Spieler bereits im Vorfeld, welche Belohnungen ihn bei einer erfolgreichen Platzierung erwarten."
+      },
+      {
+       "t": "p",
+       "x": "Rewards sind ein fester Bestandteil des Frugends-Turniersystems und sorgen dafür, dass sich regelmäßige Turnierteilnahmen und gute Leistungen auszahlen."
+      },
+      {
+       "t": "p",
+       "x": "Rewards sind die offiziellen Belohnungen in Frugends. Sie werden für erfolgreiche Platzierungen im Arena-Turnier vergeben und bestehen aus Winner Boxen."
+      }
+     ]
+    },
+    {
+     "heading": "Wie werden Rewards vergeben?",
+     "slug": "wie-werden-rewards-vergeben",
+     "body": [
+      {
+       "t": "p",
+       "x": "Rewards werden ausschließlich im Rahmen offizieller Frugends-Turniere vergeben. Welchen Reward du bekommst, richtet sich nach deiner Platzierung im Arena-Turnier."
+      },
+      {
+       "t": "p",
+       "x": "Vor jedem Turnier wird transparent veröffentlicht, welche Rewards auf die einzelnen Platzierungen entfallen. So weiß jeder Teilnehmer bereits vor Turnierbeginn, welche Belohnungen erspielt werden können."
+      },
+      {
+       "t": "p",
+       "x": "Nach Abschluss des Turniers wird die endgültige Rangliste erstellt. Anschließend informieren wir die Gewinner per E-Mail über die nächsten Schritte. Die Winner Boxen verschicken wir ab Dezember."
+      },
+      {
+       "t": "p",
+       "x": "Frugends legt großen Wert auf Transparenz und Fairness. Deshalb werden alle Reward-Verteilungen vorab veröffentlicht und nach einheitlichen Regeln vergeben."
+      },
+      {
+       "t": "p",
+       "x": "Rewards werden anhand deiner Platzierung in einem offiziellen Frugends-Turnier vergeben. Die jeweilige Reward-Verteilung wird vor Turnierbeginn transparent bekannt gegeben."
+      }
+     ]
+    },
+    {
+     "heading": "Müssen Minderjährige etwas beachten?",
+     "slug": "hinweise-fuer-minderjaehrige",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Frugends kannst du ab 16 Jahren nutzen. Wenn du unter 18 bist, kannst du an den Turnieren teilnehmen und Rewards gewinnen."
+      },
+      {
+       "t": "p",
+       "x": "Für die Bereitstellung deiner Winner Boxen kann jedoch die Zustimmung eines Erziehungsberechtigten erforderlich sein. Dies gilt insbesondere dann, wenn gesetzliche Vorgaben dies verlangen."
+      },
+      {
+       "t": "p",
+       "x": "Sollten zusätzliche Angaben oder eine Zustimmung notwendig sein, informieren wir dich nach deinem Gewinn automatisch per E-Mail über die weiteren Schritte."
+      },
+      {
+       "t": "p",
+       "x": "So stellen wir sicher, dass alle Rewards unter Einhaltung der geltenden gesetzlichen Bestimmungen bereitgestellt werden."
+      }
+     ]
+    },
+    {
+     "heading": "Welche Rewards gibt es?",
+     "slug": "welche-rewards-gibt-es",
+     "body": [
+      {
+       "t": "p",
+       "x": "Im Arena-Turnier gewinnen die Plätze 1 bis 30 Winner Boxen. So verteilen sie sich:"
+      },
+      {
+       "t": "li",
+       "x": "Platz 1: drei Premium Winner Boxen mit zusammen ca. 90 € Warenwert, über drei Monate verteilt, jeden Monat eine andere"
+      },
+      {
+       "t": "li",
+       "x": "Platz 2: zwei Premium Winner Boxen mit zusammen ca. 60 € Warenwert, über zwei Monate verteilt"
+      },
+      {
+       "t": "li",
+       "x": "Platz 3: zwei Special Winner Boxen mit zusammen ca. 50 € Warenwert, über zwei Monate verteilt"
+      },
+      {
+       "t": "li",
+       "x": "Platz 4 bis 10: je eine Premium Winner Box mit ca. 30 € Warenwert"
+      },
+      {
+       "t": "li",
+       "x": "Platz 11 bis 20: je eine Winner Box mit ca. 20 € Warenwert"
+      },
+      {
+       "t": "li",
+       "x": "Platz 21 bis 30: je eine Mini Winner Box mit ca. 15 € Warenwert"
+      },
+      {
+       "t": "p",
+       "x": "Jede Winner Box stellen wir anders zusammen. Der Versand startet ab Dezember."
+      },
+      {
+       "t": "p",
+       "x": "Alle ausgeschriebenen Rewards werden transparent vor Turnierbeginn veröffentlicht, sodass du jederzeit weißt, worum du spielst."
+      },
+      {
+       "t": "p",
+       "x": "Geld oder Wunschgutscheine gibt es als Reward nicht."
+      }
+     ]
+    },
+    {
+     "heading": "Wann erhalte ich meinen Reward?",
+     "slug": "wann-erhalte-ich-meinen-reward",
+     "body": [
+      {
+       "t": "p",
+       "x": "Sobald ein Turnier abgeschlossen ist, werden alle Ergebnisse und Platzierungen automatisch ausgewertet."
+      },
+      {
+       "t": "p",
+       "x": "Anschließend werden die Gewinner der ausgeschriebenen Rewards automatisch per E-Mail informiert. Dort erhältst du alle weiteren Informationen zur Einlösung deines Rewards. Sofern erforderlich, wirst du aufgefordert, die notwendigen Angaben für die Bereitstellung deines Rewards zu übermitteln."
+      },
+      {
+       "t": "p",
+       "x": "Je nach Art des Rewards kann die Bereitstellung unterschiedlich lange dauern. Unser Ziel ist es, alle Rewards schnellstmöglich bereitzustellen."
+      }
+     ]
+    },
+    {
+     "heading": "Wie erhalte ich meinen Reward?",
+     "slug": "wie-erhalte-ich-meinen-reward",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nachdem ein Turnier beendet und alle Ergebnisse ausgewertet wurden, werden die Gewinner automatisch per E-Mail benachrichtigt."
+      },
+      {
+       "t": "p",
+       "x": "In dieser E-Mail erhältst du alle wichtigen Informationen zur Einlösung deines Rewards. Je nach Art des Rewards kann es erforderlich sein, dass du weitere notwendige Angaben übermittelst."
+      },
+      {
+       "t": "p",
+       "x": "Sobald alle erforderlichen Angaben vollständig vorliegen, wird dein Reward entsprechend bereitgestellt."
+      },
+      {
+       "t": "p",
+       "x": "Bitte achte darauf, dass die bei deiner Registrierung hinterlegte E-Mail-Adresse aktuell ist, damit wir dich im Gewinnfall problemlos erreichen können."
+      }
+     ]
+    },
+    {
+     "heading": "Wie funktionieren Rewards?",
+     "slug": "wie-funktionieren-rewards",
+     "body": [
+      {
+       "t": "p",
+       "x": "Rewards sind die Belohnungen, die du durch erfolgreiche Platzierungen in Turnieren erhalten kannst."
+      },
+      {
+       "t": "p",
+       "x": "Je nach Turnier und Platzierung können unterschiedliche Rewards ausgeschrieben werden. Welche Rewards es in einem Turnier gibt, wird dir bereits vor Turnierbeginn transparent in der App angezeigt."
+      },
+      {
+       "t": "p",
+       "x": "Nach Abschluss des Turniers werden die Gewinner automatisch ermittelt und per E-Mail informiert. Dort erhältst du alle weiteren Informationen zur Einlösung deines Rewards sowie – falls erforderlich – die Möglichkeit, notwendige Angaben für die Bereitstellung zu übermitteln."
+      },
+      {
+       "t": "p",
+       "x": "So ist jederzeit transparent nachvollziehbar, welche Rewards vergeben werden und wie du sie erhältst."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich einen Reward ablehnen oder tauschen?",
+     "slug": "kann-ich-einen-reward-ablehnen-oder-tauschen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Du kannst einen gewonnenen Reward selbstverständlich ablehnen."
+      },
+      {
+       "t": "p",
+       "x": "Ein Anspruch auf einen Tausch, eine Änderung oder die Auswahl eines anderen Rewards besteht jedoch grundsätzlich nicht. Welche Rewards vergeben werden, wird vor jedem Turnier transparent bekanntgegeben."
+      },
+      {
+       "t": "p",
+       "x": "Solltest du einen Reward nicht annehmen wollen oder Fragen zu deinem Gewinn haben, kannst du dich jederzeit an unseren Support wenden. Wir prüfen dein Anliegen gerne im Einzelfall."
+      }
+     ]
+    },
+    {
+     "heading": "Was passiert bei Gleichstand?",
+     "slug": "was-passiert-bei-gleichstand",
+     "body": [
+      {
+       "t": "p",
+       "x": "Sollte es in einem Turnier zu einem Gleichstand kommen, entscheidet das Turniersystem automatisch anhand der für das jeweilige Turnier geltenden Regeln über die endgültige Platzierung."
+      },
+      {
+       "t": "p",
+       "x": "Die genaue Wertung richtet sich nach den zum Zeitpunkt des Turniers gültigen Turnierregeln und wird vollständig automatisiert durchgeführt. Dadurch ist eine faire und einheitliche Bewertung aller Teilnehmer gewährleistet."
+      },
+      {
+       "t": "p",
+       "x": "Die endgültigen Platzierungen werden nach Abschluss des Turniers automatisch ausgewertet und anschließend veröffentlicht."
+      }
+     ]
+    },
+    {
+     "heading": "Wo sehe ich meine Rewards?",
+     "slug": "wo-sehe-ich-meine-rewards",
+     "body": [
+      {
+       "t": "p",
+       "x": "Alle Informationen zu deinen Rewards findest du direkt in deinem Frugends-Account."
+      },
+      {
+       "t": "p",
+       "x": "Dort kannst du jederzeit einsehen, welche Rewards du bereits erhalten hast, welche Rewards sich noch in Bearbeitung befinden und ob für die Einlösung oder Bereitstellung noch weitere Angaben von dir benötigt werden."
+      },
+      {
+       "t": "p",
+       "x": "Zusätzlich wirst du im Gewinnfall automatisch per E-Mail informiert und erhältst dort alle wichtigen Informationen zu den nächsten Schritten."
+      },
+      {
+       "t": "p",
+       "x": "So hast du jederzeit den Überblick über deine gewonnenen Rewards und deren aktuellen Status."
+      }
+     ]
+    },
+    {
+     "heading": "Werden Rewards automatisch bereitgestellt?",
+     "slug": "werden-rewards-automatisch-bereitgestellt",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Nach Abschluss eines Turniers werden alle Platzierungen automatisch ausgewertet."
+      },
+      {
+       "t": "p",
+       "x": "Gewinner werden anschließend automatisch per E-Mail informiert und erhalten dort alle weiteren Informationen zur Einlösung ihres Rewards. Sofern für die Bereitstellung weitere Angaben erforderlich sind, wirst du in der E-Mail entsprechend darauf hingewiesen."
+      },
+      {
+       "t": "p",
+       "x": "Sobald alle notwendigen Informationen vorliegen, wird dein Reward entsprechend bereitgestellt. Du musst dich also nicht eigenständig melden, sofern keine zusätzlichen Angaben von dir benötigt werden."
+      }
+     ]
+    },
+    {
+     "heading": "Verfallen Rewards?",
+     "slug": "verfallen-rewards",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ob ein Reward verfällt, hängt von der jeweiligen Art des Rewards ab."
+      },
+      {
+       "t": "p",
+       "x": "Sofern für einen Reward eine Einlösefrist gilt, wird diese in der jeweiligen Gewinnbenachrichtigung oder den dazugehörigen Informationen ausdrücklich angegeben. Bitte beachte diese Fristen, damit dein Reward rechtzeitig eingelöst werden kann."
+      },
+      {
+       "t": "p",
+       "x": "Gibt es keine gesonderte Frist, gelten die jeweils zum Zeitpunkt der Reward-Vergabe veröffentlichten Bedingungen."
+      },
+      {
+       "t": "p",
+       "x": "Solltest du Fragen zu einem gewonnenen Reward oder dessen Gültigkeit haben, hilft dir unser Support jederzeit gerne weiter."
+      }
+     ]
+    },
+    {
+     "heading": "An wen wende ich mich bei Problemen?",
+     "slug": "an-wen-wende-ich-mich-bei-problemen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Solltest du Fragen oder Probleme rund um deine Rewards haben, steht dir unser Support gerne zur Verfügung."
+      },
+      {
+       "t": "p",
+       "x": "Egal, ob du Fragen zur Gewinnbenachrichtigung, zur Bereitstellung deines Rewards, zu erforderlichen Angaben oder zu einer ausbleibenden E-Mail hast – unser Support hilft dir schnell und unkompliziert weiter."
+      },
+      {
+       "t": "p",
+       "x": "Damit wir dein Anliegen möglichst zügig bearbeiten können, gib bei deiner Anfrage nach Möglichkeit deinen Benutzernamen, das betroffene Turnier sowie den gewonnenen Reward an."
+      },
+      {
+       "t": "p",
+       "x": "Die aktuellen Kontaktmöglichkeiten findest du jederzeit auf unserer Website sowie im Bereich Support innerhalb der Frugends-App."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 10,
+   "title": "Minigames",
+   "slug": "minigames",
+   "subtitle": "Kleine Spiele für zwischendurch, in denen du an deinen Bestleistungen feilst.",
+   "icon": "🎮",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Was sind Minigames?",
+     "slug": "was-sind-minigames",
+     "body": [
+      {
+       "t": "p",
+       "x": "Minigames sind zusätzliche Spielmodi innerhalb von Frugends, die dir neben den offiziellen Turnieren weitere Möglichkeiten bieten, aktiv zu spielen und Fortschritte zu erzielen."
+      },
+      {
+       "t": "p",
+       "x": "In den Minigames spielst du auf Bestleistungen: Über das Highscore-System verbesserst du deine Ergebnisse und misst dich mit anderen Spielern. Für die Turniere brauchst du die Minigames nicht."
+      },
+      {
+       "t": "p",
+       "x": "Zum Start steht bereits das erste Minigame zur Verfügung. Weitere Minigames werden nach und nach ergänzt und erweitern Frugends kontinuierlich um neue Herausforderungen und Spielmöglichkeiten."
+      }
+     ]
+    },
+    {
+     "heading": "Kann ich Minigames beliebig oft spielen?",
+     "slug": "kann-ich-minigames-beliebig-oft-spielen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Du kannst Minigames jederzeit beliebig oft spielen."
+      },
+      {
+       "t": "p",
+       "x": "Auch nachdem du alle Meilensteine eines Minigames erreicht hast, kannst du weiterhin antreten. Über das Highscore-System hast du die Möglichkeit, deine Bestleistungen zu verbessern und dich mit anderen Spielern zu messen."
+      },
+      {
+       "t": "p",
+       "x": "Neue persönliche Bestleistungen und zukünftige Minigames sorgen dafür, dass sich regelmäßiges Spielen weiterhin lohnt."
+      }
+     ]
+    },
+    {
+     "heading": "Was passiert, wenn ich alle Meilensteine abgeschlossen habe?",
+     "slug": "was-passiert-wenn-ich-alle-meilensteine-abgeschlossen-habe",
+     "body": [
+      {
+       "t": "p",
+       "x": "Auch nach Abschluss aller Meilensteine kannst du das Minigame weiterhin spielen."
+      },
+      {
+       "t": "p",
+       "x": "Über das Highscore-System hast du die Möglichkeit, deine Bestleistungen zu verbessern, dich mit anderen Spielern zu messen und deinen Platz in der Rangliste weiter auszubauen."
+      },
+      {
+       "t": "p",
+       "x": "Das Minigame endet also nicht mit dem letzten Meilenstein, sondern bleibt dauerhaft spielbar."
+      }
+     ]
+    },
+    {
+     "heading": "Benötige ich Minigames für Turniere?",
+     "slug": "benoetige-ich-minigames-fuer-turniere",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nein. Minigames sind keine Voraussetzung für die Teilnahme an Turnieren."
+      },
+      {
+       "t": "p",
+       "x": "Für die Teilnahme am Arena-Turnier brauchst du lediglich dein Kartendeck, das du nach dem Tutorial kostenlos bekommst."
+      },
+      {
+       "t": "p",
+       "x": "Minigames sind ein Extra für zwischendurch, in dem du an deinen Bestleistungen arbeitest."
+      }
+     ]
+    },
+    {
+     "heading": "Werden weitere Minigames hinzukommen?",
+     "slug": "werden-weitere-minigames-hinzukommen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Ja. Frugends wird kontinuierlich um neue Minigames erweitert."
+      },
+      {
+       "t": "p",
+       "x": "Zum Start steht bereits das erste Minigame zur Verfügung. Mit zukünftigen Updates werden nach und nach weitere Minigames ergänzt, die für noch mehr Abwechslung, neue Herausforderungen und zusätzliche Spielmöglichkeiten sorgen."
+      },
+      {
+       "t": "p",
+       "x": "Über neue Minigames und deren Funktionen informieren wir dich rechtzeitig direkt in der Frugends-App, auf unserer Website und in unserer Community."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 11,
+   "title": "Fortschrittssystem",
+   "slug": "fortschrittssystem",
+   "subtitle": "Hier erfährst du, wie dich jede Partie voranbringt und was du dabei freischaltest.",
+   "icon": "📈",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Wie funktioniert das Fortschrittssystem?",
+     "slug": "wie-funktioniert-das-fortschrittssystem",
+     "body": [
+      {
+       "t": "p",
+       "x": "Das Fortschrittssystem von Frugends begleitet dich während deiner gesamten Spielerreise. Mit jeder Partie, jedem erreichten Meilenstein und jeder neuen Herausforderung entwickelst du deinen Account Schritt für Schritt weiter."
+      },
+      {
+       "t": "p",
+       "x": "Durch deine Aktivität sammelst du Erfahrung, steigst im Level auf und schaltest nach und nach neue Inhalte und Möglichkeiten frei. So entsteht ein kontinuierlicher Spielfortschritt, der langfristig motiviert und immer wieder neue Ziele bietet."
+      },
+      {
+       "t": "p",
+       "x": "Dabei verfolgt Frugends bewusst das Prinzip, dass alle spielrelevanten Inhalte für jeden Spieler erreichbar sind. Den vollständigen Spielumfang erreichst du über das Spielen, kaufen musst du dafür nichts."
+      },
+      {
+       "t": "p",
+       "x": "Das Fortschrittssystem wird kontinuierlich erweitert. Mit neuen Editionen, Minigames, Funktionen und weiteren Inhalten kommen regelmäßig neue Ziele und Herausforderungen hinzu."
+      },
+      {
+       "t": "p",
+       "x": "Das Fortschrittssystem sorgt dafür, dass dein Account mit jeder Aktivität wächst. Du sammelst Erfahrung, schaltest neue Inhalte frei und entwickelst dich Schritt für Schritt weiter – mit immer neuen Zielen und Herausforderungen."
+      }
+     ]
+    },
+    {
+     "heading": "Plays und Wins: So kommst du voran",
+     "slug": "plays-und-wins",
+     "body": [
+      {
+       "t": "p",
+       "x": "Das Herzstück des Fortschrittssystems ist die Reward-Progression. Sie läuft bei jeder Partie mit, die du mit deinem Kartendeck spielst."
+      },
+      {
+       "t": "p",
+       "x": "Die Reward-Progression zählt zwei Dinge: deine gespielten Partien (Plays) und deine Siege (Wins). Du kommst über beides voran. Auch eine verlorene Partie zählt als Play und bringt dich ein Stück weiter."
+      },
+      {
+       "t": "p",
+       "x": "Auf deinem Weg durch die Progression schaltest du weitere Inhalte frei, die deinen langfristigen Fortschritt erweitern. Wie viele Plays oder Wins du für den nächsten Schritt brauchst, zeigt dir die Progression in der App. So kannst du dir alles komplett erspielen."
+      },
+      {
+       "t": "p",
+       "x": "Für alle gilt derselbe Weg: Alle starten mit demselben Kartendeck und durchlaufen dieselbe Progression."
+      }
+     ]
+    },
+    {
+     "heading": "Was kann ich freischalten?",
+     "slug": "was-kann-ich-freischalten",
+     "body": [
+      {
+       "t": "p",
+       "x": "Während deiner Reise durch Frugends schaltest du nach und nach immer neue Inhalte und Funktionen frei. Welche Freischaltungen dir zur Verfügung stehen, hängt von deinem jeweiligen Fortschritt ab."
+      },
+      {
+       "t": "p",
+       "x": "Dazu gehören unter anderem Artefakt-Karten sowie weitere Inhalte und Belohnungen aus der Reward-Progression. Die Villains-Edition schaltest du sofort frei, sobald du das Villains-Tutorial erfolgreich absolviert hast."
+      },
+      {
+       "t": "p",
+       "x": "Mit neuen Editionen, Minigames und zukünftigen Funktionen wird Frugends kontinuierlich erweitert. Dadurch entstehen regelmäßig neue Ziele, Meilensteine und Freischaltungen, die deinen langfristigen Fortschritt bereichern."
+      },
+      {
+       "t": "p",
+       "x": "Welche Inhalte du bereits freigeschaltet hast und welche Ziele als Nächstes auf dich warten, kannst du jederzeit direkt in der Frugends-App oder auf der Desktop-Version einsehen."
+      },
+      {
+       "t": "p",
+       "x": "In Frugends erwarten dich kontinuierlich neue Freischaltungen. Mit deinem Fortschritt erhältst du Zugang zu weiteren Inhalten, Belohnungen und Funktionen, die deine Spielerreise Schritt für Schritt erweitern."
+      }
+     ]
+    },
+    {
+     "heading": "Warum gibt es ein Fortschrittssystem?",
+     "slug": "warum-gibt-es-ein-fortschrittssystem",
+     "body": [
+      {
+       "t": "p",
+       "x": "Das Fortschrittssystem ist ein zentraler Bestandteil von Frugends. Es sorgt dafür, dass deine Spielerreise nicht nach kurzer Zeit endet, sondern dir langfristig immer wieder neue Ziele und Herausforderungen bietet."
+      },
+      {
+       "t": "p",
+       "x": "Anstatt alle Inhalte sofort freizuschalten, entwickelst du deinen Account Schritt für Schritt weiter. Mit jeder gespielten Partie, jedem erreichten Meilenstein und jedem neuen Level kommst du deinem nächsten Ziel näher."
+      },
+      {
+       "t": "p",
+       "x": "Dabei verfolgt Frugends bewusst das Prinzip, dass alle spielrelevanten Inhalte für jeden Spieler erreichbar sind. Alle starten mit demselben Kartendeck und entwickeln ihren Account über das Spielen weiter."
+      },
+      {
+       "t": "p",
+       "x": "Gleichzeitig wird Frugends laufend erweitert. Neue Editionen, Minigames, Turniere, Rewards und weitere Funktionen sorgen dafür, dass auch langfristig immer neue Inhalte und Ziele auf dich warten."
+      },
+      {
+       "t": "p",
+       "x": "Das Fortschrittssystem schafft langfristige Motivation und sorgt dafür, dass es in Frugends immer neue Ziele, Herausforderungen und Freischaltungen zu entdecken gibt."
+      }
+     ]
+    },
+    {
+     "heading": "Geht mein Spielfortschritt verloren?",
+     "slug": "geht-mein-spielfortschritt-verloren",
+     "body": [
+      {
+       "t": "p",
+       "x": "Nein. Dein Spielfortschritt ist mit deinem persönlichen Frugends-Account verknüpft."
+      },
+      {
+       "t": "p",
+       "x": "Alle wichtigen Informationen, wie beispielsweise dein Kartendeck, dein Fortschritt, Rewards und weitere Spielfortschritte, werden deinem Account zugeordnet. Dadurch kannst du dich jederzeit erneut anmelden und dort weiterspielen, wo du zuletzt aufgehört hast."
+      },
+      {
+       "t": "p",
+       "x": "Solltest du Frugends auf einem anderen unterstützten Gerät nutzen, kannst du dich einfach mit deinem Account anmelden und deinen bisherigen Fortschritt fortsetzen."
+      },
+      {
+       "t": "p",
+       "x": "Falls es dennoch einmal zu Problemen mit deinem Account oder deinem Spielfortschritt kommen sollte, hilft dir unser Support gerne weiter."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  },
+  {
+   "n": 12,
+   "title": "Community",
+   "slug": "community",
+   "subtitle": "Discord, Twitch, Support und News rund um Frugends.",
+   "icon": "💬",
+   "intro": [],
+   "sections": [
+    {
+     "heading": "Was ist die Frugends-Community?",
+     "slug": "was-ist-die-frugends-community",
+     "body": [
+      {
+       "t": "p",
+       "x": "Die Frugends-Community ist der Ort, an dem Spieler, Creator und Unternehmen zusammenkommen. Sie ist ein fester Bestandteil von Frugends und macht die Plattform weit mehr als nur ein Spiel."
+      },
+      {
+       "t": "p",
+       "x": "Hier kannst du dich mit anderen Spielern austauschen, gemeinsam spielen, an Turnieren teilnehmen und immer über die neuesten Entwicklungen informiert bleiben. Gleichzeitig hast du die Möglichkeit, direkt mit dem Frugends-Team und der Community in Kontakt zu treten."
+      },
+      {
+       "t": "p",
+       "x": "Die Community wächst kontinuierlich und entwickelt sich gemeinsam mit Frugends weiter. Neue Funktionen, Editionen, Events und Aktionen entstehen häufig im Austausch mit unseren Spielern und werden Schritt für Schritt in die Plattform integriert."
+      },
+      {
+       "t": "p",
+       "x": "Egal, ob du Fragen hast, Unterstützung suchst oder einfach Teil einer aktiven Gaming-Community sein möchtest – bei Frugends findest du einen Ort, an dem Fair Play, Zusammenhalt und gemeinsamer Spielspaß im Mittelpunkt stehen."
+      },
+      {
+       "t": "p",
+       "x": "Die Frugends-Community verbindet Spieler, Creator und Unternehmen auf einer gemeinsamen Plattform. Sie lebt von Austausch, Fair Play und der gemeinsamen Begeisterung für Gaming."
+      }
+     ]
+    },
+    {
+     "heading": "Was ist Discord?",
+     "slug": "discord",
+     "body": [
+      {
+       "t": "p",
+       "x": "Discord ist eine kostenlose Kommunikationsplattform, die weltweit von Millionen Menschen genutzt wird. Besonders in der Gaming-, Creator- und Streaming-Community dient Discord als zentraler Ort für den Austausch mit anderen Nutzern."
+      },
+      {
+       "t": "p",
+       "x": "Über sogenannte Server können Communities eigene Bereiche mit Text- und Sprachkanälen erstellen. Dort können Mitglieder miteinander chatten, sich austauschen, an Sprachgesprächen teilnehmen und aktuelle Informationen verfolgen."
+      },
+      {
+       "t": "p",
+       "x": "Auch Frugends nutzt einen eigenen Discord-Server als zentrale Anlaufstelle für die Community. Dort findest du Neuigkeiten, Turnierankündigungen, Creator-Calls, Hilfestellungen sowie den direkten Austausch mit anderen Spielern, Creatorn und unserem Team."
+      },
+      {
+       "t": "p",
+       "x": "Wenn du nichts rund um Frugends verpassen möchtest, empfehlen wir dir, unserem Discord-Server beizutreten."
+      }
+     ]
+    },
+    {
+     "heading": "Gemeinsam spielen",
+     "slug": "gemeinsam-spielen",
+     "body": [
+      {
+       "t": "p",
+       "x": "Frugends macht am meisten Spaß, wenn man gemeinsam spielt. Deshalb ist die Plattform darauf ausgelegt, Spieler miteinander zu verbinden und gemeinsame Erlebnisse zu schaffen."
+      },
+      {
+       "t": "p",
+       "x": "Du kannst gemeinsam mit Freunden an Turnieren teilnehmen, euch gegenseitig herausfordern, euch über Strategien austauschen und zusammen die verschiedenen Editionen und Minigames entdecken."
+      },
+      {
+       "t": "p",
+       "x": "Auch unsere Creator spielen dabei eine wichtige Rolle. Über ihre Communities entstehen regelmäßig gemeinsame Aktionen, Turniere und Events, bei denen neue Spieler schnell Anschluss finden und Teil der Frugends-Community werden können."
+      },
+      {
+       "t": "p",
+       "x": "Ganz gleich, ob du alleine startest oder gemeinsam mit Freunden spielst – in Frugends bist du Teil einer wachsenden Community, in der Fair Play, Teamgeist und gemeinsamer Spielspaß im Mittelpunkt stehen."
+      },
+      {
+       "t": "p",
+       "x": "Frugends verbindet Menschen durch Gaming. Gemeinsam spielen, gemeinsam wachsen und gemeinsam unvergessliche Momente erleben – genau dafür steht unsere Community."
+      }
+     ]
+    },
+    {
+     "heading": "Was ist Twitch?",
+     "slug": "twitch",
+     "body": [
+      {
+       "t": "p",
+       "x": "Twitch ist eine der weltweit größten Live-Streaming-Plattformen und besonders in der Gaming- und Creator-Community weit verbreitet."
+      },
+      {
+       "t": "p",
+       "x": "Zuschauer können dort in Echtzeit zusehen, im Chat mitdiskutieren und gemeinsam besondere Momente erleben."
+      },
+      {
+       "t": "p",
+       "x": "Ausgewählte Arena-Turniere übertragen wir künftig auch auf Twitch. So kannst du dann spannende Matches verfolgen und mit der Community mitfiebern."
+      }
+     ]
+    },
+    {
+     "heading": "Wie erreiche ich den Support?",
+     "slug": "support",
+     "body": [
+      {
+       "t": "p",
+       "x": "Unser Support hilft dir gerne bei Fragen oder Problemen rund um Frugends weiter."
+      },
+      {
+       "t": "p",
+       "x": "Egal, ob es um deinen Account, Turniere, Rewards oder technische Fragen geht – wir unterstützen dich schnell und unkompliziert."
+      },
+      {
+       "t": "p",
+       "x": "Die aktuellen Kontaktmöglichkeiten findest du jederzeit in der Frugends-App, auf unserer Website sowie auf unserem Discord-Server. Damit wir dir möglichst schnell helfen können, beschreibe dein Anliegen so genau wie möglich und teile uns – sofern relevant – deinen Benutzernamen oder weitere wichtige Informationen mit."
+      },
+      {
+       "t": "p",
+       "x": "Unser Ziel ist es, jedes Anliegen schnellstmöglich zu bearbeiten, damit du dich wieder auf das Wesentliche konzentrieren kannst: den Spielspaß bei Frugends."
+      }
+     ]
+    },
+    {
+     "heading": "Wo finde ich Neuigkeiten?",
+     "slug": "news-events",
+     "body": [
+      {
+       "t": "p",
+       "x": "Über neue Funktionen, Turniere, Updates, Aktionen und wichtige Ankündigungen informieren wir dich regelmäßig über unsere offiziellen Kanäle."
+      },
+      {
+       "t": "p",
+       "x": "Die aktuellsten Informationen findest du direkt in der Frugends-App, auf unserer Website sowie auf unserem Discord-Server. Zusätzlich halten wir dich auf unseren Social-Media-Kanälen über wichtige Neuigkeiten und kommende Events auf dem Laufenden."
+      },
+      {
+       "t": "p",
+       "x": "Wenn du immer auf dem neuesten Stand bleiben möchtest, empfehlen wir dir, regelmäßig unsere offiziellen Kanäle zu besuchen und unserem Discord-Server beizutreten."
+      }
+     ]
+    },
+    {
+     "heading": "Warum sollte ich unserem Discord-Server beitreten?",
+     "slug": "warum-sollte-ich-unserem-discord-server-beitreten",
+     "body": [
+      {
+       "t": "p",
+       "x": "Unser Discord-Server ist der zentrale Treffpunkt der Frugends-Community."
+      },
+      {
+       "t": "p",
+       "x": "Dort erhältst du Neuigkeiten und Ankündigungen oft als Erstes, kannst dich mit anderen Spielern austauschen, Fragen stellen und an Community-Aktionen teilnehmen. Außerdem findest du dort Informationen zu Turnieren, Updates, Creator-Calls und vielen weiteren Themen rund um Frugends."
+      },
+      {
+       "t": "p",
+       "x": "Ganz gleich, ob du neu dabei bist oder bereits aktiv spielst – auf unserem Discord-Server bleibst du immer auf dem Laufenden und wirst Teil einer wachsenden Community."
+      }
+     ]
+    },
+    {
+     "heading": "Wie werde ich Creator?",
+     "slug": "wie-werde-ich-creator",
+     "body": [
+      {
+       "t": "p",
+       "x": "Klicke hier im Menü auf „Creator werden“ und folge dem Prozess. Wir melden uns in der Regel am gleichen Tag bei dir – und freuen uns auf deine „Bewerbung“!"
+      }
+     ]
+    },
+    {
+     "heading": "Wie trete ich einem Creator-Team bei?",
+     "slug": "wie-trete-ich-einem-creator-team-bei",
+     "body": [
+      {
+       "t": "p",
+       "x": "Jeder Spieler kann einem Creator-Team beitreten."
+      },
+      {
+       "t": "p",
+       "x": "Während der Registrierung oder später in deinem Frugends-Account kannst du den Creator-Code eines Creators eingeben. Anschließend wirst du automatisch dessen Creator-Team zugeordnet."
+      },
+      {
+       "t": "p",
+       "x": "Falls du keinem Creator-Team beitreten möchtest oder keinen Creator-Code angibst, wirst du automatisch dem Frugends-Team zugeordnet."
+      },
+      {
+       "t": "p",
+       "x": "Ein Wechsel in ein anderes Creator-Team ist selbstverständlich auch später jederzeit möglich."
+      }
+     ]
+    },
+    {
+     "heading": "Was ist das Frugends-Team?",
+     "slug": "was-ist-das-frugends-team",
+     "body": [
+      {
+       "t": "p",
+       "x": "Das Frugends-Team ist das Standard-Team für alle Spieler, die keinem Creator-Team beitreten."
+      },
+      {
+       "t": "p",
+       "x": "Wenn du bei deiner Registrierung keinen Creator-Code angibst, wirst du automatisch dem Frugends-Team zugeordnet. So gehörst du von Anfang an einem Team an und kannst direkt loslegen."
+      },
+      {
+       "t": "p",
+       "x": "Möchtest du später einem Creator-Team beitreten, ist das jederzeit möglich. Gib einfach den Creator-Code des gewünschten Creators ein und wechsle anschließend in dessen Team."
+      }
+     ]
+    }
+   ],
+   "missing": []
+  }
+ ],
+ "faq_pending": false
+}

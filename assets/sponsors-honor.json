@@ -1,0 +1,110 @@
+{
+  "_comment": "VISIBLE section title MUST stay NEUTRAL ('Unsere Partner'). Do NOT reveal these are founding/honor sponsors anywhere user-facing. 10 entries. Per sponsor: brand, logo (grey-box placeholder SVG; degrades to text box on 404), products (Produktpalette, ein Satz), philosophy (richtext: a <strong> tag is allowed), click_out (label + url, rendered rel='sponsored nofollow noopener' target=_blank). `active:false` => skip in render. ALLES PLATZHALTER — vom Partner-Onboarding befüllen.",
+  "section": {
+    "heading": "Unsere Partner",
+    "anchor_id": "sponsoren",
+    "intro": "Diese Marken stiften die Rewards für unsere Turniere und machen den Wettbewerb möglich."
+  },
+  "sponsors": [
+    {
+      "id": "honor-01",
+      "brand": "Marke Eins",
+      "logo": "assets/img/sponsors/placeholder-01.svg",
+      "products": "Marke Eins bietet vegane Snacks für die Spielrunde.",
+      "philosophy": "Marke Eins steht für <strong>echte Zutaten</strong> und faire Produktion.",
+      "click_out_label": "Zur Marke",
+      "click_out_url": "https://example.com/marke-eins?ref=frugends",
+      "active": true
+    },
+    {
+      "id": "honor-02",
+      "brand": "Marke Zwei",
+      "logo": "assets/img/sponsors/placeholder-02.svg",
+      "products": "Marke Zwei bietet Gaming-Zubehör für Einsteiger und Profis.",
+      "philosophy": "Marke Zwei steht für <strong>Langlebigkeit</strong> und ehrliches Design.",
+      "click_out_label": "Zur Marke",
+      "click_out_url": "https://example.com/marke-zwei?ref=frugends",
+      "active": true
+    },
+    {
+      "id": "honor-03",
+      "brand": "Marke Drei",
+      "logo": "assets/img/sponsors/placeholder-03.svg",
+      "products": "Marke Drei bietet nachhaltige Apparel für die Community.",
+      "philosophy": "Marke Drei steht für <strong>Verantwortung</strong> und Stil.",
+      "click_out_label": "Zur Marke",
+      "click_out_url": "https://example.com/marke-drei?ref=frugends",
+      "active": true
+    },
+    {
+      "id": "honor-04",
+      "brand": "Marke Vier",
+      "logo": "assets/img/sponsors/placeholder-04.svg",
+      "products": "Marke Vier bietet Audio-Hardware für Gamer.",
+      "philosophy": "Marke Vier steht für <strong>klaren Sound</strong> und faire Preise.",
+      "click_out_label": "Zur Marke",
+      "click_out_url": "https://example.com/marke-vier?ref=frugends",
+      "active": true
+    },
+    {
+      "id": "honor-05",
+      "brand": "Marke Fünf",
+      "logo": "assets/img/sponsors/placeholder-05.svg",
+      "products": "Marke Fünf bietet Getränke ohne künstliche Zusätze.",
+      "philosophy": "Marke Fünf steht für <strong>Natürlichkeit</strong> und Transparenz.",
+      "click_out_label": "Zur Marke",
+      "click_out_url": "https://example.com/marke-fuenf?ref=frugends",
+      "active": true
+    },
+    {
+      "id": "honor-06",
+      "brand": "Marke Sechs",
+      "logo": "assets/img/sponsors/placeholder-06.svg",
+      "products": "Marke Sechs bietet Print- und Art-Produkte für Sammler.",
+      "philosophy": "Marke Sechs steht für <strong>Handwerk</strong> und Liebe zum Detail.",
+      "click_out_label": "Zur Marke",
+      "click_out_url": "https://example.com/marke-sechs?ref=frugends",
+      "active": true
+    },
+    {
+      "id": "honor-07",
+      "brand": "Marke Sieben",
+      "logo": "assets/img/sponsors/placeholder-07.svg",
+      "products": "Marke Sieben bietet Peripherie für den Schreibtisch.",
+      "philosophy": "Marke Sieben steht für <strong>Ergonomie</strong> und Qualität.",
+      "click_out_label": "Zur Marke",
+      "click_out_url": "https://example.com/marke-sieben?ref=frugends",
+      "active": true
+    },
+    {
+      "id": "honor-08",
+      "brand": "Marke Acht",
+      "logo": "assets/img/sponsors/placeholder-08.svg",
+      "products": "Marke Acht bietet Merchandise und Collectibles.",
+      "philosophy": "Marke Acht steht für <strong>Community</strong> und Wiedererkennung.",
+      "click_out_label": "Zur Marke",
+      "click_out_url": "https://example.com/marke-acht?ref=frugends",
+      "active": true
+    },
+    {
+      "id": "honor-09",
+      "brand": "Marke Neun",
+      "logo": "assets/img/sponsors/placeholder-09.svg",
+      "products": "Marke Neun bietet Energie-Snacks für lange Sessions.",
+      "philosophy": "Marke Neun steht für <strong>Klarheit</strong> bei den Inhaltsstoffen.",
+      "click_out_label": "Zur Marke",
+      "click_out_url": "https://example.com/marke-neun?ref=frugends",
+      "active": true
+    },
+    {
+      "id": "honor-10",
+      "brand": "Marke Zehn",
+      "logo": "assets/img/sponsors/placeholder-10.svg",
+      "products": "Marke Zehn bietet Software-Tools für Creator.",
+      "philosophy": "Marke Zehn steht für <strong>Einfachheit</strong> und schnelle Ergebnisse.",
+      "click_out_label": "Zur Marke",
+      "click_out_url": "https://example.com/marke-zehn?ref=frugends",
+      "active": true
+    }
+  ]
+}

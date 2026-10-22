@@ -1,0 +1,1492 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — COMPONENTS
+   The reusable class system. Load AFTER tokens.css + base.css.
+   Build pages by composing these classes — do not redefine colors
+   or spacing inline; pull from the tokens.
+
+   CLASS VOCABULARY (for Spider / page builders)
+   ─────────────────────────────────────────────
+   Layout
+     .container          centered max-width wrapper w/ responsive pad
+     .section            vertical rhythm block (generous spacing)
+   Atoms
+     .chip               mono uppercase pill label  (--gold/--cyan/--purple)
+     .chapter-headline   big display headline       (gold-gradient/white/cyan/purple)
+     .chapter-box        glass info box w/ <em> highlight
+     .cta                button base (.cta--primary gold glow / .cta--ghost outline)
+     .card               generic glass card
+   Modules
+     .faq                CSS-grid accordion (.faq__item.is-open)
+     .team-card          team member card (×11)
+     .testimonial        quote card
+   Shell
+     .site-header / .site-nav / .nav-toggle / .nav-menu
+     .site-footer / .footer-col
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══ LAYOUT ═══════════════════════════════════════════════════ */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.section {
+  padding-block: var(--space-16);
+}
+@media (min-width: 768px) {
+  .section { padding-block: var(--space-24); }
+}
+
+/* ═══ CHIP — mono uppercase pill label ═════════════════════════ */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 14px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  line-height: 1;
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  /* letter-spacing adds a phantom trailing gap after the last glyph;
+     pull text back so the pill looks optically centered */
+  text-indent: 0.28em;
+}
+
+.chip--gold   { color: var(--gold);   border-color: var(--gold-40);   background: var(--gold-12); }
+.chip--cyan   { color: var(--cyan);   border-color: var(--cyan-24);   background: var(--cyan-12); }
+.chip--purple { color: var(--purple); border-color: var(--purple-24); background: var(--purple-12); }
+
+/* ═══ CHAPTER-HEADLINE — display headline ══════════════════════ */
+.chapter-headline {
+  font-family: var(--font-display);
+  font-size: var(--fs-hero);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+/* Gold-gradient variant — double-layer technique:
+   an outline "backplate" via text-shadow gives the gradient text a
+   crisp edge against busy backgrounds, while the front layer is a
+   gradient clipped to the glyphs. */
+.chapter-headline--gold {
+  background: linear-gradient(
+    100deg,
+    #fff7d6 0%,
+    var(--gold) 38%,
+    var(--orange) 70%,
+    var(--gold) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* backplate outline so it stays legible on any surface */
+  text-shadow: 0 0 1px var(--gold-40), 0 2px 18px var(--gold-24);
+  animation: goldShimmer 6s linear infinite;
+}
+/* Reduced motion: keep the gradient, kill the shimmer sweep */
+@media (prefers-reduced-motion: reduce) {
+  .chapter-headline--gold { animation: none; }
+}
+
+.chapter-headline--white  { color: var(--text-primary); }
+.chapter-headline--cyan   { color: var(--cyan);   text-shadow: 0 0 24px var(--cyan-24); }
+.chapter-headline--purple { color: var(--purple); text-shadow: 0 0 24px var(--purple-24); }
+
+/* ═══ CHAPTER-BOX — glass info box w/ colored highlight ════════ */
+.chapter-box {
+  /* extends .glass; apply both classes:  <div class="glass chapter-box"> */
+  padding: var(--space-6);
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+  line-height: 1.7;
+  box-shadow: var(--shadow);
+}
+@media (min-width: 768px) {
+  .chapter-box { padding: var(--space-8); }
+}
+.chapter-box em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--gold);
+}
+.chapter-box em.is-cyan   { color: var(--cyan); }
+.chapter-box em.is-purple { color: var(--purple); }
+.chapter-box em.is-green  { color: var(--green); }
+
+/* ═══ CTA — buttons ════════════════════════════════════════════ */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 48px;            /* touch target */
+  padding: 12px 28px;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur) var(--ease-out),
+              background-color var(--dur) var(--ease-out),
+              border-color var(--dur) var(--ease-out),
+              color var(--dur) var(--ease-out);
+}
+.cta:active { transform: translateY(1px) scale(0.99); }
+
+.cta--primary {
+  color: var(--on-gold);
+  background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 130%);
+  border: 1px solid var(--gold);
+  box-shadow: var(--shadow-gold);
+}
+.cta--primary:hover {
+  color: var(--on-gold);
+  box-shadow: 0 0 36px var(--gold-40);
+  transform: translateY(-2px);
+}
+.cta--primary:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.cta--ghost {
+  color: var(--text-primary);
+  background: transparent;
+  border: 1.5px solid var(--border);
+}
+.cta--ghost:hover {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: var(--cyan-12);
+  transform: translateY(-2px);
+}
+.cta--ghost:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+/* ═══ CARD — generic glass card ════════════════════════════════ */
+.card {
+  /* extends .glass; apply both:  <article class="glass card"> */
+  padding: var(--space-5);
+  box-shadow: var(--shadow);
+  transition: transform var(--dur) var(--ease-out),
+              box-shadow var(--dur) var(--ease-out),
+              border-color var(--dur) var(--ease-out);
+}
+@media (min-width: 768px) {
+  .card { padding: var(--space-6); }
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold-40);
+  box-shadow: var(--shadow-lg);
+}
+.card__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-subheading);
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+.card__body {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ═══ FAQ — CSS-grid accordion (no JS height measurement) ══════ */
+.faq { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.faq__item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--space-4) var(--space-5);
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.faq__question:hover { color: var(--gold); }
+.faq__icon {
+  flex: none;
+  width: 20px; height: 20px;
+  position: relative;
+  transition: transform var(--dur) var(--ease-out);
+}
+/* plus → minus chevron drawn with two bars */
+.faq__icon::before,
+.faq__icon::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 12px; height: 2px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+  transition: transform var(--dur) var(--ease-out);
+}
+.faq__icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+
+/* The collapsible region: grid-template-rows 0fr → 1fr is the
+   pure-CSS height transition. A tiny .is-open toggle (JS or :target)
+   flips it. No scrollHeight measuring needed. */
+.faq__answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-slow) var(--ease-out);
+}
+.faq__answer > div {
+  overflow: hidden;
+  min-height: 0;               /* required for the 0fr collapse */
+}
+.faq__answer-inner {
+  padding: 0 var(--space-5) var(--space-5);
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.faq__item.is-open .faq__answer { grid-template-rows: 1fr; }
+.faq__item.is-open .faq__icon::after { transform: translate(-50%, -50%) rotate(0); }
+.faq__item.is-open .faq__question { color: var(--gold); }
+
+/* ═══ TEAM-CARD — for 11 members ═══════════════════════════════ */
+.team-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-6) var(--space-5);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: transform var(--dur) var(--ease-out),
+              border-color var(--dur) var(--ease-out),
+              box-shadow var(--dur) var(--ease-out);
+}
+.team-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--cyan);
+  box-shadow: var(--shadow-cyan);
+}
+.team-card__avatar {
+  width: 96px; height: 96px;
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+  border: 2px solid var(--gold-40);
+  margin-bottom: var(--space-4);
+  background: var(--surface);
+}
+.team-card__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-subheading);
+  color: var(--text-primary);
+}
+.team-card__role {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
+  margin-top: var(--space-1);
+}
+.team-card__bio {
+  margin-top: var(--space-3);
+  font-size: var(--fs-caption);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ═══ TESTIMONIAL — quote card ═════════════════════════════════ */
+.testimonial {
+  position: relative;
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+}
+.testimonial::before {
+  content: "\201C";              /* opening curly quote */
+  position: absolute;
+  top: -0.1em; left: var(--space-4);
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--gold-40);
+  pointer-events: none;
+}
+.testimonial__quote {
+  font-size: var(--fs-subheading);
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+.testimonial__author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+.testimonial__avatar {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+.testimonial__name { font-weight: 600; color: var(--text-primary); }
+.testimonial__meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SHELL — header + footer
+   Markup lives in partials/shell-header.html + shell-footer.html.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── HEADER ─── */
+
+/* ── STICKY-HEADER ROOT-CAUSE FIX ──────────────────────────────────
+   The shell markup is injected inside <div data-include="…">. A
+   position:sticky element only sticks within the bounds of its
+   CONTAINING BLOCK (its parent box). The include wrapper's rendered
+   height is just the header (the scrim/menu are fixed and
+   out of flow), so the sticky header un-stuck after ~92px of scroll and
+   scrolled away with its short wrapper — most visible during the tall
+   on-scroll cinema where the nav vanished entirely.
+   display:contents removes the wrapper's box so the header's containing
+   block becomes <body> (full page height) and it pins for the whole
+   scroll. This does NOT alter DOM siblinghood, so the CSS-only mobile
+   menu (.nav-checkbox:checked ~ .site-header / ~ .nav-menu) still works.
+   Liquid-safe: in Shopify these become native {% section %} includes
+   with no wrapper at all, so the rule is a harmless no-op there. */
+[data-include] { display: contents; }
+
+.site-header {
+  position: sticky;
+  top: 0;   /* header pins at the very top */
+  /* sits above the cinema's sticky-scrub stages (stage z-index is auto;
+     this positive z-index always paints the chrome on top) */
+  z-index: var(--z-chrome);
+  height: var(--chrome-height-mobile);
+  display: flex;
+  align-items: center;
+  /* frosted broadcast chrome */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(20, 23, 41, 0.85);   /* --bg-deep @ 85% */
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 1024px) {
+  .site-header { height: var(--chrome-height-desktop); }
+}
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.site-logo {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+.site-logo img {
+  height: 34px;
+  width: auto;
+}
+@media (min-width: 1024px) {
+  .site-logo img { height: 40px; }
+}
+
+/* Desktop nav */
+.site-nav { display: none; }
+@media (min-width: 1024px) {
+  .site-nav {
+    display: flex;
+    align-items: center;
+    /* mitwachsender Abstand: bei 1024 px muss die Bar samt „Mehr“ und
+       optionalen Header-Buttons in eine Zeile passen, ab ~1300 px darf
+       sie atmen */
+    gap: clamp(var(--space-3), 1.7vw, var(--space-6));
+    /* Logo links, Navigation rechtsbündig: die Leiste endet sauber am
+       rechten Rand, auch wenn rechts kein Button/Warenkorb sitzt */
+    margin-left: auto;
+  }
+  /* Aktions-Slot ohne sichtbaren Inhalt (Hamburger ist ab 1024 px aus)
+     fällt komplett weg — sonst bliebe rechts ein Gap-Loch stehen */
+  .site-header__actions:not(:has(> .cta, > .news-cta, > .cart-link)) { display: none; }
+  /* Labels dürfen nie zweizeilig werden — sonst kippt die Kopfhöhe
+     und die „Neu“-Pill rutscht auf eine eigene Zeile */
+  .site-nav .nav-link { white-space: nowrap; }
+  .site-header .cta { white-space: nowrap; }
+}
+/* Enges Desktop-Fenster (Tablet quer, halbierte Bildschirme): Logo +
+   Menüpunkte + optionaler Creator-Button + Warenkorb passen bei 1024 px
+   nur, wenn die Chrome einen Zahn zulegt. Betrifft ausschließlich den Header — Container-
+   Padding und Schriftgrößen des Seiteninhalts bleiben unangetastet. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .site-header .container { padding-inline: var(--space-6); }
+  .site-header__inner { gap: var(--space-3); }
+  .site-nav { gap: var(--space-3); }
+  .site-nav .nav-link { font-size: 13px; }
+  .site-header .cta { padding-inline: var(--space-3); font-size: 13px; }
+  /* SHOP DEAKTIVIERT 2026-09-24 — zum Reaktivieren Kommentar entfernen (siehe audit/DECISIONS.md E16)
+  .cart-link { width: 40px; }
+  */
+}
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 2px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 6px;
+  width: 100%;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease-out);
+}
+.nav-link:hover { color: var(--text-primary); }
+.nav-link:hover::after,
+.nav-link[aria-current="page"]::after { transform: scaleX(1); }
+.nav-link[aria-current="page"] { color: var(--text-primary); }
+
+/* "Turniere" gets a NEW flag */
+.nav-link__new {
+  margin-left: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-gold);
+  background: var(--gold);
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+}
+
+/* Header right-side actions */
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+/* SHOP DEAKTIVIERT 2026-09-24 — zum Reaktivieren Kommentar entfernen (siehe audit/DECISIONS.md E16)
+.cart-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  transition: background-color var(--dur) var(--ease-out);
+}
+.cart-link:hover { background: var(--surface); color: var(--gold); }
+.cart-link svg { width: 22px; height: 22px; }
+*/
+
+/* Header buttons (e.g. "Creator werden") hide on mobile — the menu carries them */
+.site-header .cta { display: none; }
+@media (min-width: 1024px) {
+  .site-header .cta { display: inline-flex; min-height: 44px; padding: 8px 20px; }
+}
+
+/* ─── „Big News“ (E22.3 / E27 / Design-Review 2026-09-26) ─────────
+   Ersetzt den früheren Shop-CTA. Gold-Pille mit dunkler Schrift — die
+   EINE bewegte Stelle der Leiste. Bewegung mit Bedeutung: ein dunkler
+   Live-Punkt (Broadcast-Sprache der Seite, kein Blau/Cyan) pulsiert
+   ruhig, alle 6 s zieht ein Glanz durch, dahinter atmet ein Gold/Purple-
+   Glow. Schrift ist in JEDEM Zustand dunkel (--on-gold) — die globale
+   Regel a:hover { color: gold } darf hier nie greifen.
+   Maße: sichtbare Pille schlanker als die Touch-Fläche; ::after erweitert
+   das Klickziel unsichtbar auf ≥ 44 px (mobil: Pille 34 px in 56-px-Leiste).
+   Animiert werden nur opacity/transform; prefers-reduced-motion → statisch. */
+.news-cta {
+  --ncta-h: 40px;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: var(--ncta-h);
+  padding: 0 18px 0 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid #ffd95a;
+  background: linear-gradient(160deg, #ffe16b 0%, var(--gold) 38%, #f5b21a 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55),
+              inset 0 -1px 0 rgba(150, 90, 0, 0.35),
+              0 2px 10px rgba(0, 0, 0, 0.35);
+  color: var(--on-gold);
+  font-family: var(--font-display);
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 0 rgba(255, 240, 190, 0.45);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: transform 180ms var(--ease-out), box-shadow 180ms var(--ease-out);
+}
+/* Schrift bleibt in allen Zuständen dunkel (schlägt a:hover/visited) */
+.news-cta:link, .news-cta:visited, .news-cta:hover,
+.news-cta:focus, .news-cta:focus-visible, .news-cta:active,
+.news-cta[aria-current="page"] { color: var(--on-gold); }
+
+/* unsichtbar erweitertes Klickziel: immer ≥ 44 px hoch */
+.news-cta::after {
+  content: "";
+  position: absolute;
+  left: -4px; right: -4px;
+  top: calc((44px - var(--ncta-h)) / -2 - 1px);
+  bottom: calc((44px - var(--ncta-h)) / -2 - 1px);
+}
+
+/* Glow-Atem: eigene Ebene hinter der Pille, nur deren Deckkraft atmet */
+.news-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: 0 0 16px 1px rgba(255, 205, 40, 0.55), 0 0 34px 4px rgba(124, 92, 191, 0.45);
+  opacity: 0.35;
+  pointer-events: none;
+  transition: opacity 180ms var(--ease-out);
+  animation: newsBreath 4s ease-in-out infinite;
+}
+
+/* Live-Punkt: dunkler Kern + nach außen laufender Ring */
+.news-cta__dot {
+  position: relative;
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--on-gold);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.news-cta__dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--on-gold);
+  opacity: 0.45;
+  animation: newsDot 2s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+}
+
+/* Glanz: eigene, auf die Pillenform beschnittene Ebene */
+.news-cta__shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+.news-cta__shine::before {
+  content: "";
+  position: absolute;
+  top: -20%; bottom: -20%; left: 0;
+  width: 55%;
+  background: linear-gradient(100deg, transparent 10%, rgba(255, 250, 225, 0.35) 35%, rgba(255, 252, 238, 0.9) 50%, rgba(255, 250, 225, 0.35) 65%, transparent 90%);
+  opacity: 0;
+  transform: translateX(-120%) skewX(-12deg);
+  animation: newsShine 6s cubic-bezier(0.45, 0, 0.25, 1) 1.2s infinite;
+}
+.news-cta__label { position: relative; }
+
+/* Zustände */
+.news-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65),
+              inset 0 -1px 0 rgba(150, 90, 0, 0.35),
+              0 6px 18px rgba(0, 0, 0, 0.4);
+}
+.news-cta:hover::before { opacity: 1; animation-play-state: paused; }
+.news-cta:hover .news-cta__shine::before { animation: newsShineOnce 700ms cubic-bezier(0.45, 0, 0.25, 1) 1; }
+.news-cta:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: inset 0 2px 4px rgba(150, 90, 0, 0.45),
+              0 1px 4px rgba(0, 0, 0, 0.35);
+}
+.news-cta:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* Man ist auf der Big-News-Seite: abgesetzter Goldring, Punkt steht, kein Glanz */
+.news-cta[aria-current="page"] {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55),
+              inset 0 -1px 0 rgba(150, 90, 0, 0.35),
+              0 0 0 3px var(--bg-deep),
+              0 0 0 4.5px var(--gold);
+}
+.news-cta[aria-current="page"]::before { animation: none; opacity: 0.6; }
+.news-cta[aria-current="page"] .news-cta__shine { display: none; }
+.news-cta[aria-current="page"] .news-cta__dot::after { animation: none; opacity: 0; }
+
+@keyframes newsBreath { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+@keyframes newsDot {
+  0%        { transform: scale(1);   opacity: 0.5; }
+  70%, 100% { transform: scale(2.6); opacity: 0; }
+}
+/* 6-s-Zyklus: ~0,8 s Glanz, danach Ruhe */
+@keyframes newsShine {
+  0%        { transform: translateX(-120%) skewX(-12deg); opacity: 0; }
+  2%        { opacity: 1; }
+  12%       { opacity: 1; }
+  14%, 100% { transform: translateX(230%) skewX(-12deg);  opacity: 0; }
+}
+@keyframes newsShineOnce {
+  0%   { transform: translateX(-120%) skewX(-12deg); opacity: 1; }
+  100% { transform: translateX(230%) skewX(-12deg);  opacity: 1; }
+}
+
+/* Top-Bar unter 1024 px: schlanke Pille in der 56-px-Leiste, klarer
+   Abstand zum Hamburger, optisch mittig zum Logo */
+@media (max-width: 1023px) {
+  .site-header__actions { gap: var(--space-3); }
+  .site-header .news-cta {
+    --ncta-h: 34px;
+    gap: 7px;
+    padding: 0 14px 0 11px;
+    font-size: 14px;
+  }
+  .site-header .news-cta__dot { width: 6px; height: 6px; }
+}
+@media (max-width: 374px) {
+  .site-header .news-cta { padding: 0 12px 0 10px; font-size: 13px; gap: 6px; }
+}
+@media (min-width: 1024px) {
+  .site-header__actions .news-cta { margin-left: var(--space-2); }
+}
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .site-header__actions .news-cta { margin-left: 0; padding: 0 15px 0 12px; font-size: 14px; }
+}
+
+/* Mobil-Menü: oben links, auf Höhe des Schließen-X */
+.nav-menu .news-cta--menu {
+  --ncta-h: 38px;
+  position: absolute;
+  top: calc(var(--space-4) + 3px);
+  left: var(--space-5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .news-cta, .news-cta::before { transition: none; animation: none; }
+  .news-cta::before { opacity: 0.55; }
+  .news-cta__shine { display: none; }
+  .news-cta__dot::after { animation: none; opacity: 0; }
+  .news-cta:hover, .news-cta:active { transform: none; }
+}
+
+/* ─── Mobile hamburger + slide-out menu (CSS-driven via checkbox) ─── */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+}
+@media (min-width: 1024px) { .nav-toggle { display: none; } }
+
+/* hidden checkbox drives the menu — no JS required */
+.nav-checkbox { position: absolute; opacity: 0; pointer-events: none; }
+
+.nav-toggle__bars,
+.nav-toggle__bars::before,
+.nav-toggle__bars::after {
+  content: "";
+  display: block;
+  width: 22px; height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform var(--dur) var(--ease-out),
+              opacity var(--dur) var(--ease-out);
+}
+.nav-toggle__bars { position: relative; }
+.nav-toggle__bars::before { position: absolute; top: -7px; left: 0; }
+.nav-toggle__bars::after  { position: absolute; top:  7px; left: 0; }
+
+/* checked → X */
+.nav-checkbox:checked ~ .site-header .nav-toggle__bars { background: transparent; }
+.nav-checkbox:checked ~ .site-header .nav-toggle__bars::before { transform: translateY(7px) rotate(45deg); }
+.nav-checkbox:checked ~ .site-header .nav-toggle__bars::after  { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile menu panel */
+.nav-menu {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(86vw, 360px);
+  z-index: var(--z-overlay);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-5);
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(100%);
+  transition: transform var(--dur-slow) var(--ease-out);
+  overflow-y: auto;
+}
+@media (min-width: 1024px) { .nav-menu { display: none; } }
+.nav-checkbox:checked ~ .nav-menu { transform: translateX(0); }
+
+/* scrim behind the menu */
+.nav-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-chrome);
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-slow) var(--ease-out), visibility var(--dur-slow);
+}
+.nav-checkbox:checked ~ .nav-scrim { opacity: 1; visibility: visible; }
+
+.nav-menu .nav-link {
+  min-height: 52px;
+  font-size: var(--fs-subheading);
+  border-bottom: 1px solid var(--border);
+}
+.nav-menu .nav-link::after { display: none; }
+.nav-menu .cta { margin-top: var(--space-4); display: inline-flex; }
+
+/* ─── Sammel-Menüpunkt „Mehr“ ────────────────────────────────────
+   Desktop (.nav-more): Dropdown. Öffnet per :hover / :focus-within
+   (reines CSS, trägt auch ohne JS) und zusätzlich per Klick über
+   .is-open (main.js initNavMore, das aria-expanded mitführt).
+   Mobile (.nav-group): eingerückte Gruppe im Drawer, kein Toggle. */
+.nav-more { position: relative; display: inline-flex; align-items: center; }
+.nav-more__toggle { gap: var(--space-1); }
+.nav-more__chev {
+  width: 14px; height: 14px;
+  transition: transform var(--dur) var(--ease-out);
+}
+.nav-more:hover .nav-more__chev,
+.nav-more:focus-within .nav-more__chev,
+.nav-more.is-open .nav-more__chev { transform: rotate(180deg); }
+/* aktive Seite liegt im Dropdown → Toggle zeigt es an (main.js) */
+.nav-more__toggle.is-current { color: var(--text-primary); }
+.nav-more__toggle.is-current::after { transform: scaleX(1); }
+
+.nav-more__panel {
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 50%;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(20, 23, 41, 0.96);   /* --bg-deep @ 96% */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 6px);
+  transition: opacity var(--dur) var(--ease-out),
+              transform var(--dur) var(--ease-out),
+              visibility var(--dur);
+}
+.nav-more:hover .nav-more__panel,
+.nav-more:focus-within .nav-more__panel,
+.nav-more.is-open .nav-more__panel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+.nav-more__link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+.nav-more__link:hover { color: var(--text-primary); background: var(--surface); }
+.nav-more__link:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+.nav-more__link[aria-current="page"] { color: var(--gold); }
+
+.nav-group { display: flex; flex-direction: column; }
+.nav-group__label {
+  margin-top: var(--space-5);
+  padding-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.nav-menu .nav-group__link { padding-left: var(--space-3); font-size: var(--fs-body); min-height: 48px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-more__panel, .nav-more__chev { transition: none; }
+}
+
+/* ─── FOOTER ─── */
+.site-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding-block: var(--space-16) var(--space-8);
+  color: var(--text-secondary);
+}
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-10);
+}
+@media (min-width: 600px) {
+  .site-footer__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .site-footer__grid { grid-template-columns: repeat(4, 1fr); }
+}
+.footer-col__title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  margin-bottom: var(--space-4);
+}
+.footer-col ul { display: flex; flex-direction: column; gap: var(--space-1); list-style: none; }
+.footer-col a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+}
+.footer-col a:hover { color: var(--cyan); }
+
+.footer-social { display: flex; gap: var(--space-3); }
+.footer-social a {
+  width: 44px; height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+}
+.footer-social a:hover { color: var(--gold); border-color: var(--gold-40); background: var(--gold-12); }
+.footer-social svg { width: 20px; height: 20px; }
+
+.footer-app { display: flex; flex-direction: column; gap: var(--space-3); }
+.footer-app a img { height: 44px; width: auto; }
+
+.site-footer__bottom {
+  margin-top: var(--space-12);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs-caption);
+  color: var(--text-muted);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   WIKI CTA  —  reusable closing band that links to /pages/wiki
+   "Alle Fragen. Alle Antworten." Sits in place of / after the FAQ on
+   content pages. Purple knowledge tone (distinct from the gold app/
+   order CTAs). Lives here so any page loading the shell can use it.
+   ════════════════════════════════════════════════════════════════ */
+.wiki-cta { padding-block: clamp(var(--space-12), 8vw, var(--space-20)); }
+.wiki-cta__inner {
+  position: relative;
+  overflow: hidden;
+  max-width: 760px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+  padding: clamp(var(--space-8), 5vw, var(--space-16)) var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(120% 150% at 50% -20%, var(--purple-24) 0%, transparent 60%),
+    rgba(30, 33, 64, 0.6);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.wiki-cta__lede {
+  max-width: 46ch;
+  color: var(--text-secondary);
+  font-size: var(--fs-subheading);
+  line-height: 1.55;
+}
+.wiki-cta .cta { margin-top: var(--space-2); }
+
+/* ─── "App laden" fire flag + active-section highlight (amber, animated) ─── */
+.nav-link__fire {
+  margin-left: 6px;
+  font-size: 15px;
+  line-height: 1;
+  display: inline-block;
+  transform-origin: 50% 85%;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.9));
+  animation: navFire 1.05s ease-in-out infinite;
+}
+@keyframes navFire {
+  0%   { transform: scale(1) rotate(-6deg);   filter: drop-shadow(0 0 5px rgba(245,158,11,.7)); }
+  35%  { transform: scale(1.32) rotate(6deg);  filter: drop-shadow(0 0 13px rgba(255,120,20,1)); }
+  55%  { transform: scale(1.10) rotate(-3deg); filter: drop-shadow(0 0 8px rgba(245,158,11,.85)); }
+  75%  { transform: scale(1.26) rotate(4deg);  filter: drop-shadow(0 0 15px rgba(255,140,30,1)); }
+  100% { transform: scale(1) rotate(-6deg);    filter: drop-shadow(0 0 5px rgba(245,158,11,.7)); }
+}
+/* current section: amber underline that stays + gently pulses */
+.nav-link[aria-current="page"]::after {
+  background: var(--orange);
+  height: 3px;
+  box-shadow: 0 0 10px var(--orange);
+  animation: navActive 2.2s ease-in-out infinite;
+}
+@keyframes navActive { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+/* mobile slide-out: active gets an amber left rail */
+.nav-menu .nav-link[aria-current="page"] {
+  color: var(--text-primary);
+  border-left: 3px solid var(--orange);
+  padding-left: var(--space-3);
+  box-shadow: -1px 0 12px rgba(245, 158, 11, 0.30);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-link__fire,
+  .nav-link[aria-current="page"]::after { animation: none; }
+}
+
+/* ═══ GLOBAL MOBILE STICKY CTA — "App holen · Kostenlos gamen" ═══ */
+.app-cta {
+  position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom));
+  transform: translateX(-50%); z-index: 95;
+  display: none; align-items: center; gap: 11px;
+  padding: 11px 22px 11px 14px; border-radius: var(--radius-pill);
+  /* glass fill + glowy cyan outline (no solid fill) */
+  color: var(--cyan); text-decoration: none;
+  background: rgba(20, 23, 41, 0.42);
+  -webkit-backdrop-filter: blur(13px) saturate(1.3); backdrop-filter: blur(13px) saturate(1.3);
+  border: 1.5px solid var(--cyan);
+  box-shadow: 0 0 18px rgba(68,217,255,0.5), 0 0 40px rgba(68,217,255,0.22), inset 0 0 12px rgba(68,217,255,0.12);
+  animation: appCtaBob 2.6s ease-in-out infinite, appCtaGlow 2.4s ease-in-out infinite;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+.app-cta__ico { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: var(--cyan); background: rgba(68,217,255,0.14); box-shadow: inset 0 0 0 1px rgba(68,217,255,0.35); }
+.app-cta__ico svg { width: 20px; height: 20px; }
+.app-cta__text { display: flex; flex-direction: column; line-height: 1.12; }
+.app-cta__title { font-family: var(--font-display); font-size: 1.02rem; color: var(--cyan); }
+.app-cta__sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cyan); opacity: 0.82; }
+@media (max-width: 879px) { .app-cta.is-enabled { display: inline-flex; } }
+.app-cta.is-hidden { opacity: 0; pointer-events: none; }
+@keyframes appCtaBob { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-5px); } }
+@keyframes appCtaGlow {
+  0%, 100% { box-shadow: 0 0 16px rgba(68,217,255,0.45), 0 0 34px rgba(68,217,255,0.20), inset 0 0 10px rgba(68,217,255,0.10); }
+  50%      { box-shadow: 0 0 27px rgba(68,217,255,0.72), 0 0 56px rgba(68,217,255,0.34), inset 0 0 15px rgba(68,217,255,0.18); }
+}
+@media (prefers-reduced-motion: reduce) { .app-cta { animation: none; } }
+
+/* ═══ GLOBAL DISCORD CTA — "Discord beitreten" ═══════════════════
+   Floating community button on every page (shell header renders it as
+   [data-dc-fab]). Desktop: blurple glass pill — logo puck with an
+   online badge + two-line label, breathing aura, looping sheen sweep.
+   Mobile (<880px): icon-only puck hugging the right edge so it never
+   fights the centered .app-cta. main.js initDiscordFab() adds
+   .is-hidden while another bottom-fixed element owns that corner. */
+.dc-fab {
+  /* Discord blurple — brand of the target platform, scoped here only */
+  --dc:        #5865f2;
+  --dc-deep:   #3d47c9;
+  --dc-bright: #8b95ff;
+  --dc-glow:   rgba(88, 101, 242, 0.62);
+
+  position: fixed;
+  right: clamp(14px, 2.2vw, 28px);
+  bottom: calc(clamp(14px, 2.4vh, 26px) + env(safe-area-inset-bottom));
+  z-index: 96;                 /* over content, under header/buybar/drawer */
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 22px 9px 9px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;            /* clips the sheen sweep to the pill */
+  text-decoration: none;
+  color: #fff;
+  background: linear-gradient(135deg, var(--dc-deep) 0%, var(--dc) 52%, #6d5ce0 100%);
+  border: 1.5px solid rgba(160, 170, 255, 0.55);
+  animation: dcAura 3.2s var(--ease-out) infinite;
+  transition: transform var(--dur) var(--ease-out),
+              filter    var(--dur) var(--ease-out),
+              opacity   var(--dur-slow) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.dc-fab__ico {
+  position: relative;
+  flex: none;
+  display: grid; place-items: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.30);
+  transition: transform var(--dur) var(--ease-out);
+}
+.dc-fab__ico svg { width: 24px; height: 24px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35)); }
+/* Discord-style "online" badge on the logo puck */
+.dc-fab__dot {
+  position: absolute; right: -1px; bottom: -1px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--green);
+  border: 2px solid var(--dc-deep);
+  animation: dcDot 2.4s var(--ease-out) infinite;
+}
+.dc-fab__text { display: flex; flex-direction: column; line-height: 1.14; }
+.dc-fab__title { font-family: var(--font-display); font-size: 1.05rem; }
+.dc-fab__sub {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+.dc-fab__sheen {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 36%, rgba(255,255,255,0.38) 50%, transparent 64%);
+  transform: translateX(-130%);
+  animation: dcSheen 5.4s ease-in-out infinite;
+}
+.dc-fab:hover {
+  color: #fff;                 /* beats the global a:hover gold */
+  transform: translateY(-3px);
+  filter: brightness(1.07) saturate(1.12) drop-shadow(0 0 18px var(--dc-glow));
+}
+.dc-fab:hover .dc-fab__ico { transform: rotate(-8deg) scale(1.06); }
+.dc-fab:active { transform: translateY(-1px) scale(0.98); }
+.dc-fab:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+@keyframes dcAura {
+  0%   { box-shadow: 0 0 0 0    var(--dc-glow),                0 0 18px rgba(88,101,242,0.42), 0 10px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.22); }
+  50%  { box-shadow: 0 0 0 13px rgba(88,101,242,0.10),         0 0 34px rgba(88,101,242,0.66), 0 10px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.22); }
+  70%  { box-shadow: 0 0 0 20px rgba(88,101,242,0),            0 0 26px rgba(88,101,242,0.50), 0 10px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.22); }
+  100% { box-shadow: 0 0 0 0    rgba(88,101,242,0),            0 0 18px rgba(88,101,242,0.42), 0 10px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.22); }
+}
+@keyframes dcSheen { 0% { transform: translateX(-130%); } 55%, 100% { transform: translateX(130%); } }
+@keyframes dcDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.70); }
+  60%      { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0);   }
+}
+
+/* Mobile: icon-only puck (the pill would collide with the app CTA) */
+@media (max-width: 879px) {
+  .dc-fab {
+    gap: 0; padding: 0; overflow: visible;
+    width: 56px; height: 56px; justify-content: center;
+  }
+  .dc-fab__text, .dc-fab__sheen { display: none; }
+  .dc-fab__ico { width: 40px; height: 40px; background: transparent; box-shadow: none; }
+  .dc-fab__ico svg { width: 27px; height: 27px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dc-fab { animation: none;
+            box-shadow: 0 0 22px rgba(88,101,242,0.55), 0 10px 30px rgba(0,0,0,0.45),
+                        inset 0 1px 0 rgba(255,255,255,0.22); }
+  .dc-fab__sheen { display: none; }
+  .dc-fab__dot { animation: none; }
+  .dc-fab:hover, .dc-fab:active { transform: none; }
+  .dc-fab:hover .dc-fab__ico { transform: none; }
+}
+
+/* stepped aside while a bottom-fixed element owns the corner — last so
+   it wins the specificity tie against :hover */
+.dc-fab.is-hidden { opacity: 0; transform: translateY(14px) scale(0.94); pointer-events: none; }
+
+/* soft glow behind phone mockups (game=cyan, turniere=purple, …) */
+.device-stack, .tn-hero__phone { position: relative; }
+.phone-glow {
+  position: absolute; top: 50%; left: 50%;
+  width: 138%; height: 106%; transform: translate(-50%, -50%);
+  z-index: -1; border-radius: 50%;
+  background: radial-gradient(ellipse 50% 50% at 50% 48%, var(--pg, rgba(255,205,40,0.32)) 0%, transparent 70%);
+  filter: blur(22px); pointer-events: none;
+  animation: phoneGlowPulse 5s ease-in-out infinite;
+}
+.phone-glow--cyan   { --pg: rgba(68,217,255,0.30); }
+.phone-glow--purple { --pg: rgba(124,92,191,0.36); }
+@keyframes phoneGlowPulse {
+  0%, 100% { opacity: 0.75; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) { .phone-glow { animation: none; } }
+
+/* ═══ PHONE MOCKUP (shared: home + game + turniere heroes) ═══ */
+.iphone {
+  position: relative;
+  width: clamp(212px, 24vw, 340px);
+  aspect-ratio: 9 / 18;
+  border-radius: clamp(34px, 3.2vw, 46px);
+  padding: clamp(8px, 0.9vw, 12px);
+  background: linear-gradient(160deg, #16182c, #0b0d18 70%);
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,0.07),
+    0 34px 80px rgba(0,0,0,0.6),
+    0 0 60px rgba(124,92,191,0.18);
+}
+.iphone__screen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: clamp(26px, 2.5vw, 36px);
+  background: #000;
+  display: block;
+}
+.iphone__island {
+  position: absolute;
+  top: clamp(16px, 1.8vw, 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28%;
+  height: clamp(14px, 1.4vw, 20px);
+  border-radius: 999px;
+  background: #000;
+  z-index: 2;
+}
+
+/* ─── SOUND CTA · big pulsing "tap to hear it" pill over the lower screen ───
+   The dock does the centering so the button's own transform stays free for
+   the pulse breathe + hover lift (no transform conflicts). */
+.iphone__mute-dock {
+  position: absolute;
+  left: 50%;
+  top: 72%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+.iphone__mute {
+  position: relative;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 22px 0 18px;
+  border: 1px solid var(--gold-40);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--on-gold);
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  box-shadow: 0 0 0 1px var(--gold-40), var(--shadow-gold);
+  cursor: pointer;
+  transition: box-shadow var(--dur) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+/* the attention pulse — radar ring + gentle breathe. JS removes .is-pulse
+   on first tap. Compositor-cheap: transform + box-shadow only. */
+.iphone__mute.is-pulse { animation: mutePulse 2.1s var(--ease-out) infinite; }
+.iphone__mute:not(.is-pulse):hover { transform: translateY(-2px); }
+.iphone__mute:hover {
+  box-shadow: 0 0 0 1px var(--gold-40), 0 0 40px var(--gold-40), 0 14px 34px rgba(0,0,0,0.4);
+}
+.iphone__mute:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+.iphone__mute-ico { display: inline-flex; }
+.iphone__mute-svg { width: 22px; height: 22px; display: block; }
+.iphone__mute-svg--on { display: none; }
+.iphone__mute[aria-pressed="true"] .iphone__mute-svg--off { display: none; }
+.iphone__mute[aria-pressed="true"] .iphone__mute-svg--on  { display: block; }
+
+.iphone__mute-label--on { display: none; }
+.iphone__mute[aria-pressed="true"] .iphone__mute-label--off { display: none; }
+.iphone__mute[aria-pressed="true"] .iphone__mute-label--on  { display: inline; }
+
+@keyframes mutePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 1px var(--gold-40), 0 0 0 0 rgba(255,205,40,0.55), var(--shadow-gold);
+  }
+  50% {
+    transform: scale(1.045);
+    box-shadow: 0 0 0 1px var(--gold-40), 0 0 0 14px rgba(255,205,40,0), 0 0 42px rgba(255,205,40,0.6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .iphone__mute.is-pulse { animation: none; box-shadow: 0 0 0 1px var(--gold-40), 0 0 30px var(--gold-40), var(--shadow-gold); }
+  .iphone__mute:hover { transform: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CREATOR WERDEN — nav trigger + modal (character DM + form)
+   ═══════════════════════════════════════════════════════════════ */
+/* "Creator werden" = own header button: purple outline + glass interior,
+   thin border + lighter text, deliberately quieter than a primary CTA */
+.cta--creator {
+  color: var(--purple);
+  background: rgba(30, 33, 64, 0.5);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border: 1px solid var(--purple);
+  box-shadow: none;
+  font-weight: 600;
+}
+.cta--creator:hover {
+  color: var(--purple);
+  background: var(--purple-12);
+  border-color: var(--purple);
+  box-shadow: 0 0 18px var(--purple-24);
+  transform: translateY(-2px);
+}
+.cta--creator:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+/* ── modal shell (mirrors .app-modal geometry) ── */
+.creator-modal {
+  position: fixed; inset: 0;
+  z-index: var(--z-overlay);
+  display: grid; place-items: center;
+  padding: var(--space-5);
+}
+.creator-modal[hidden] { display: none; }
+.creator-modal__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(8, 9, 18, 0.72);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  animation: modalFade var(--dur) var(--ease-out);
+}
+.creator-modal__card {
+  position: relative; z-index: 1;
+  width: min(460px, 100%);
+  max-height: calc(100dvh - var(--space-10));
+  overflow-y: auto;
+  padding: clamp(var(--space-6), 4vw, var(--space-8)) clamp(var(--space-5), 4vw, var(--space-8));
+  text-align: left;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  animation: modalPop var(--dur-slow) var(--ease-out);
+}
+.creator-modal__close {
+  position: absolute; top: var(--space-3); right: var(--space-3);
+  width: 40px; height: 40px; display: inline-flex;
+  align-items: center; justify-content: center;
+  color: var(--text-secondary); background: transparent;
+  border: 0; border-radius: var(--radius-pill); cursor: pointer;
+  transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+}
+.creator-modal__close:hover { color: var(--text-primary); background: var(--surface); }
+.creator-modal__close:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.creator-modal__close svg { width: 20px; height: 20px; }
+.creator-modal__chip {
+  display: inline-flex; font-family: var(--font-mono); font-size: var(--fs-caption);
+  letter-spacing: 0.28em; text-transform: uppercase; text-indent: 0.28em;
+  color: var(--gold); padding: 6px 14px; margin-bottom: var(--space-3);
+  background: var(--gold-12); border: 1px solid var(--gold-40); border-radius: var(--radius-pill);
+}
+.creator-modal__title { font-size: clamp(1.4rem, 4.5vw, 1.9rem); margin-bottom: var(--space-5); }
+
+/* ── speaking character + typewriter ── */
+.creator-chat {
+  display: grid; grid-template-columns: auto 1fr;
+  gap: var(--space-4); align-items: start;
+  margin-bottom: var(--space-6);
+}
+.creator-chat__avatar { position: relative; flex: none; }
+.creator-chat__melon {
+  width: 132px; height: 132px;
+  border-radius: var(--radius-pill);
+  background: radial-gradient(circle at 50% 40%, var(--gold-12), transparent 70%);
+  border: 2px solid var(--gold-40);
+  box-shadow: var(--shadow-gold);
+  object-fit: cover; object-position: 50% 22%;
+}
+.creator-chat__status {
+  position: absolute; right: 8px; bottom: 8px;
+  width: 14px; height: 14px; border-radius: var(--radius-pill);
+  background: var(--green); border: 3px solid var(--card);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .creator-chat__status { animation: pulse 2s var(--ease-out) infinite; }
+}
+.creator-chat__bubble {
+  position: relative;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: var(--space-4);
+  box-shadow: var(--shadow);
+}
+.creator-chat__name {
+  display: block; font-family: var(--font-mono); font-size: var(--fs-caption);
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan);
+  margin-bottom: var(--space-2);
+}
+.creator-chat__msg {
+  margin: 0; font-family: var(--font-body); font-size: 15px; line-height: 1.6;
+  color: var(--text-primary); min-height: 6.4em;
+}
+.creator-chat__bubble::before,
+.creator-chat__bubble::after {
+  content: ""; position: absolute; top: 26px; width: 0; height: 0; border-style: solid;
+}
+.creator-chat__bubble::before { left: -10px; border-width: 8px 10px 8px 0; border-color: transparent var(--border) transparent transparent; }
+.creator-chat__bubble::after  { left: -8px;  border-width: 8px 10px 8px 0; border-color: transparent var(--card) transparent transparent; }
+.creator-chat__caret {
+  display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: -0.15em;
+  background: var(--gold); animation: creatorCaret 1s steps(1) infinite;
+}
+@keyframes creatorCaret { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+.creator-chat__caret.is-done { animation: none; opacity: 0; }
+@media (max-width: 559px) {
+  .creator-chat { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: var(--space-3); }
+  .creator-chat__melon { width: 96px; height: 96px; }
+  .creator-chat__bubble { text-align: left; }
+  .creator-chat__bubble::before { top: -10px; left: 28px; border-width: 0 8px 10px 8px; border-color: transparent transparent var(--border) transparent; }
+  .creator-chat__bubble::after  { top: -8px;  left: 28px; border-width: 0 8px 10px 8px; border-color: transparent transparent var(--card) transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .creator-chat__caret { animation: none; opacity: 0; }
+  .creator-modal__backdrop, .creator-modal__card { animation: none; }
+}
+
+/* ── form ── */
+.creator-field { margin-bottom: var(--space-4); }
+.creator-field__label {
+  display: block; margin-bottom: var(--space-2);
+  font-family: var(--font-mono); font-size: var(--fs-caption);
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary);
+}
+.creator-field__req { color: var(--gold); }
+.creator-field__opt { color: var(--text-muted); font-size: 10px; letter-spacing: 0.1em; }
+.creator-field__input {
+  width: 100%; box-sizing: border-box;
+  min-height: 48px; padding: 12px var(--space-4);
+  font-family: var(--font-body); font-size: 16px;
+  color: var(--text-primary); background: var(--bg-deep);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  transition: border-color var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out);
+}
+.creator-field__input::placeholder { color: var(--text-muted); }
+.creator-field__input:hover { border-color: var(--cyan-24); }
+.creator-field__input:focus-visible {
+  outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-24);
+}
+.creator-field.is-invalid .creator-field__input {
+  border-color: var(--red); box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.24);
+}
+.creator-field__err {
+  margin: var(--space-2) 0 0; font-family: var(--font-body); font-size: var(--fs-caption);
+  color: var(--red); line-height: 1.4;
+}
+
+/* ── platform multi-select (tag chips, no selectbox) ── */
+.creator-platforms { border: 0; padding: 0; margin: 0 0 var(--space-4); min-width: 0; }
+.creator-platforms legend { padding: 0; }
+.creator-platforms__row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.creator-chip { position: relative; }
+.creator-chip__input {
+  position: absolute; width: 1px; height: 1px; opacity: 0;
+  margin: 0; pointer-events: none;
+}
+.creator-chip__face {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  min-height: 40px; padding: 8px 14px;
+  font-family: var(--font-body); font-size: var(--fs-body); font-weight: 500;
+  color: var(--text-secondary); background: var(--bg-deep);
+  border: 1px solid var(--border); border-radius: 999px;
+  cursor: pointer; user-select: none; -webkit-user-select: none;
+  transition: border-color var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out),
+              background var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+}
+.creator-chip__icon { width: 16px; height: 16px; flex: none; }
+.creator-chip:hover .creator-chip__face { border-color: var(--cyan-24); color: var(--text-primary); }
+.creator-chip__input:focus-visible + .creator-chip__face {
+  border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-24);
+}
+.creator-chip__input:checked + .creator-chip__face {
+  border-color: var(--cyan); background: var(--cyan-12); color: var(--text-primary);
+}
+.creator-platforms.is-invalid .creator-chip__face { border-color: var(--red); }
+.creator-form__submit { width: 100%; margin-top: var(--space-2); }
+.creator-form__note { margin: var(--space-3) 0 0; text-align: center; font-size: var(--fs-caption); color: var(--text-muted); }
+.creator-form__submit.is-busy { opacity: 0.6; pointer-events: none; }
+.creator-success { text-align: center; padding: var(--space-2) 0; }
+.creator-success__melon { display: inline-block; margin-bottom: var(--space-3); }
+.creator-success__melon img { width: 88px; height: 88px; }
+.creator-success__title {
+  font-family: var(--font-display); font-size: clamp(1.3rem, 4vw, 1.7rem);
+  color: var(--text-primary); margin: 0 0 var(--space-3); outline: none;
+}
+.creator-success__text {
+  color: var(--text-secondary); line-height: 1.6; margin: 0 auto var(--space-6);
+  max-width: 34ch; font-family: var(--font-body);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .creator-success { animation: fadeIn var(--dur-slow) var(--ease-out); }
+}
+
+/* ── mobile menu: prominent close X (top-right); closes via #nav-checkbox ── */
+.nav-menu { padding-top: calc(var(--space-4) + 56px); }   /* clear room for the X */
+.nav-menu__close {
+  position: absolute;
+  top: var(--space-4); right: var(--space-4);
+  width: 44px; height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  background: var(--card);
+  border: 1px solid var(--border);
+  cursor: pointer; z-index: 2;
+  transition: color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out);
+}
+.nav-menu__close svg { width: 22px; height: 22px; }
+.nav-menu__close:hover { color: var(--gold); border-color: var(--gold-40); background: var(--surface); }
+.nav-menu__close:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+@media (min-width: 1024px) { .nav-menu__close { display: none; } }
+
+/* multi-paragraph FAQ answers */
+.faq__answer-inner p { margin: 0 0 var(--space-3); }
+.faq__answer-inner p:last-child { margin-bottom: 0; }

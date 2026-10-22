@@ -1,0 +1,154 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — BASE
+   Reset + document defaults. Mobile-first. Load AFTER tokens.css.
+
+   Font loading method
+   ───────────────────
+   Fonts are loaded via the @import below. For best performance on
+   Shopify, you MAY instead drop this <link> in the theme <head> and
+   delete the @import (preconnect avoids the @import request waterfall):
+
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Protest+Strike&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+   display=swap => no invisible text (FOIT); see ux/font-loading.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Shopify port: fonts load via <link> in layout/theme.liquid <head>
+   (preconnect + stylesheet, see comment above) — @import removed. */
+
+/* ─── Reset / box model ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Tell the UA this is a dark UI: prevents OS dark-mode from
+     re-inverting form controls, scrollbars, etc. */
+  color-scheme: dark;
+  /* Smooth scroll is owned by Pietro (scroll mechanics). Keep auto
+     globally so we never fight his scroll-snap/anchor logic. */
+  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ─── Document ─── */
+html {
+  font-size: 16px;             /* base; never below 16px on body */
+}
+
+body {
+  min-height: 100dvh;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;          /* no horizontal scroll on mobile */
+}
+
+/* ─── Media defaults ─── */
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ─── Headings use the display face ─── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 400;            /* Protest Strike ships one weight */
+  line-height: 1.1;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--fs-display); }
+h2 { font-size: var(--fs-slide-title); }
+h3 { font-size: var(--fs-subheading); }
+
+p { text-wrap: pretty; }
+
+/* ─── Links ─── */
+a {
+  color: var(--cyan);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+a:hover { color: var(--gold); }
+
+/* ─── Button reset (visual styling lives in components.css) ─── */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+/* ─── Lists used as nav/menus drop their markers ─── */
+nav ul,
+nav ol {
+  list-style: none;
+}
+
+/* ─── Form element inheritance ─── */
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ─── Code / mono ─── */
+code, kbd, pre, samp {
+  font-family: var(--font-mono);
+}
+
+/* ─── Global focus-visible ring (keyboard a11y). Components may
+       refine this, but every interactive element gets a baseline. ─── */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+/* Don't show the ring on mouse click, only keyboard. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ─── Selection ─── */
+::selection {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+/* ─── Reduced motion: respect the OS preference globally ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Reveal elements must still be visible even with motion off. */
+  .reveal { opacity: 1; transform: none; }
+}

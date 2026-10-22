@@ -1,0 +1,51 @@
+.frugends-burst {
+  position: relative;
+  height: 480vh;
+  background: transparent;
+}
+
+.frugends-burst__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: transparent;
+  isolation: isolate;
+}
+
+.frugends-burst surprise-box {
+  position: absolute !important;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.frugends-burst surprise-box > div:last-child {
+  display: none !important;
+}
+
+.frugends-burst-next {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: clamp(32px, 7vw, 96px);
+  background: #fff;
+  color: #141729;
+  text-align: center;
+}
+
+.frugends-burst-next h2 {
+  margin: 0;
+  max-width: 18ch;
+  font: 800 clamp(40px, 7vw, 92px)/.95 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -.055em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frugends-burst { height: 260vh; }
+}

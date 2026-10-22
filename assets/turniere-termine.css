@@ -1,0 +1,404 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — TURNIERE · Nächste Turniere (#announcements)
+   Section: sections/fg-turniere-announcements.liquid
+   Stand 2026-10-12 (Wanda, Runde 2: Kanal-Hub statt Karten)
+
+   Ein Bild: der Kanal-Hub der Surprise-Box-LP (live-viz.css, .lv-hub),
+   nach Vanilla portiert. Arena-Logo im Zentrum, darunter der Termin als
+   goldene Plakette (Gold gehört nur ihr), Kanäle als Knoten auf einem
+   Kreis (mobil: hochkant gerechnete Ellipse), Speichen zum Zentrum.
+   Geometrie in CSS: die Bühne ist ein Container, Knoten und Speichen
+   rechnen mit cqw + cos/sin/atan2/hypot.
+   Bewegung: nur als Antwort auf eine Auswahl (oder die einmalige
+   Eingangs-Vorführung aus turniere-termine.js). Keine Puls-Ringe,
+   kein Atmen, kein Treiben der Knoten: keine Endlos-Animation.
+   ═══════════════════════════════════════════════════════════════ */
+
+.tt-termine {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+.tt-termine.section { padding-bottom: 0; }
+
+.tt-termine__head { max-width: 760px; margin-bottom: 0; }
+.tt-termine__title { font-size: clamp(2.2rem, 6vw, 4rem); }
+.tt-termine .tt-termine__intro {
+  font-size: clamp(1rem, 1.6vw, 1.125rem);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ── Hub: volle Breite, Wallpaper dahinter ─────────────────────── */
+.tt-hub {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-top: var(--space-4);
+  padding-block: var(--space-12) var(--space-16);
+}
+@media (min-width: 768px) {
+  .tt-hub { margin-top: var(--space-6); padding-block: var(--space-16) var(--space-24); }
+}
+
+.tt-hub__wall {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: none;            /* mobil ohne Foto hinter dem Rad (wie LP, Kritik m8) */
+  /* weich ein- und ausblenden, damit oben und unten keine Kante zur Sektion entsteht */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 26%, #000 80%, transparent 100%);
+          mask-image: linear-gradient(180deg, transparent 0%, #000 26%, #000 80%, transparent 100%);
+}
+@media (min-width: 760px) { .tt-hub__wall { display: block; } }
+.tt-hub__wallimg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 500ms ease, transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tt-hub__wallimg.is-on { opacity: 0.6; transform: none; }
+.tt-hub__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 40% 44% at 50% 50%, rgba(20, 23, 41, 0.6) 0%, rgba(20, 23, 41, 0.16) 70%, transparent 100%),
+    linear-gradient(180deg, rgba(20, 23, 41, 0.8) 0%, rgba(20, 23, 41, 0.7) 22%, rgba(20, 23, 41, 0.2) 38%, rgba(20, 23, 41, 0.2) 72%, rgba(20, 23, 41, 0.75) 100%);
+}
+
+.tt-hub__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+.tt-hub__head {
+  max-width: 26ch;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.8vw, 2.125rem);
+  line-height: 1.1;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+.tt-hub__text {
+  max-width: 58ch;
+  margin-top: var(--space-3);
+  font-size: clamp(0.95rem, 1.4vw, 1.0625rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.76);
+  text-wrap: pretty;
+}
+.tt-hub__lead {
+  margin-top: var(--space-6);
+  font-size: clamp(0.95rem, 1.4vw, 1.0625rem);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.tt-hub__hint {
+  margin-top: 2px;
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.6);
+  transition: opacity 300ms;
+}
+.tt-hub__hint.is-hidden { opacity: 0; }
+
+/* ── Bühne: Kreis (Desktop) / Ellipse (mobil) ──────────────────── */
+.tt-hub__stage {
+  container-type: inline-size;
+  position: relative;
+  width: min(840px, 100%);
+  aspect-ratio: 920 / 520;
+  margin: var(--space-2) auto 0;
+  /* Geometrie wie live (W 920, H 520, R 200), in Prozent der Bühnenbreite */
+  --cy: 28.26cqw;
+  --rx: 21.74cqw;
+  --ry: 21.74cqw;
+}
+@media (max-width: 759px) {
+  .tt-hub__stage {
+    width: min(360px, 100%);
+    aspect-ratio: 360 / 470;
+    --cy: 65.28cqw;
+    --rx: 38.33cqw;
+    --ry: 51.67cqw;
+  }
+}
+
+/* Zentrum: Arena-Logo + Termin-Plakette */
+.tt-hub__center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  z-index: 2;
+}
+.tt-hub__glow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 62cqw;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(124, 92, 191, 0.5) 0%, rgba(124, 92, 191, 0.16) 40%, transparent 68%);
+}
+.tt-hub__logo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30cqw;
+  max-width: none;
+  height: auto;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 20px rgba(124, 92, 191, 0.75)) drop-shadow(0 6px 18px rgba(0, 0, 0, 0.5));
+}
+.tt-hub__center--date .tt-hub__logo { top: -2.6cqw; }
+.tt-hub__date {
+  position: absolute;
+  left: 0;
+  top: 6.4cqw;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 7px 14px;
+  border-radius: 8px;
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 140%);
+  color: var(--on-gold);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 26px var(--gold-24), 0 6px 16px rgba(0, 0, 0, 0.45);
+}
+@media (max-width: 759px) {
+  .tt-hub__logo { width: 42cqw; }
+  .tt-hub__glow { width: 92cqw; }
+  .tt-hub__center--date .tt-hub__logo { top: -4.5cqw; }
+  .tt-hub__date { top: 8.5cqw; padding: 6px 11px; font-size: 13px; }
+}
+
+/* Knoten + Speichen */
+.tt-hub__nodes { position: absolute; inset: 0; }
+.tt-hub__nodewrap {
+  position: absolute;
+  left: calc(50cqw + cos(var(--a)) * var(--rx));
+  top: calc(var(--cy) + sin(var(--a)) * var(--ry));
+  width: 0;
+  height: 0;
+}
+.tt-hub__spoke {
+  position: absolute;
+  left: 0;
+  top: -0.5px;
+  z-index: 1;
+  width: hypot(cos(var(--a)) * var(--rx), sin(var(--a)) * var(--ry));
+  height: 1px;
+  transform-origin: 0 50%;
+  transform: rotate(calc(atan2(sin(var(--a)) * var(--ry), cos(var(--a)) * var(--rx)) + 180deg));
+  background: rgba(124, 92, 191, 0.38);
+  pointer-events: none;
+  transition: background-color 300ms ease, box-shadow 300ms ease;
+}
+.tt-hub__nodewrap.is-selected .tt-hub__spoke {
+  top: -1.25px;
+  height: 2.5px;
+  background: var(--nc);
+  box-shadow: 0 0 12px var(--nc);
+}
+
+.tt-hub__node {
+  position: absolute;
+  left: -29px;
+  top: -29px;
+  z-index: 3;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--nc);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.22), 0 3px 14px rgba(0, 0, 0, 0.4);
+  transition: opacity 200ms ease, transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.tt-hub__node--tiktok {
+  background: #0d0d12;
+  box-shadow: inset 0 0 0 1.5px rgba(37, 244, 238, 0.6), 0 3px 14px rgba(0, 0, 0, 0.4);
+}
+.tt-hub__node--instagram {
+  background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+}
+.tt-hub__node--creator,
+.tt-hub__node--other {
+  background: #1b2140;
+  color: var(--nc);
+  box-shadow: inset 0 0 0 1.5px var(--nc), 0 3px 14px rgba(0, 0, 0, 0.4);
+}
+.tt-hub__glyph { width: 26px; height: 26px; }
+.tt-hub__node:hover,
+.tt-hub__node:focus-visible {
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.35), 0 0 0 4px rgba(255, 255, 255, 0.14),
+    0 0 0 7px var(--nc), 0 0 26px -4px var(--nc), 0 3px 14px rgba(0, 0, 0, 0.4);
+}
+.tt-hub__node:focus-visible { outline: 2px solid var(--cyan); outline-offset: 9px; }
+.tt-hub__node[aria-selected="true"] {
+  transform: scale(1.18);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 0 3px #141729, 0 0 0 5px var(--nc),
+    0 0 28px -4px var(--nc), 0 0 70px -14px var(--nc);
+}
+.tt-hub.has-sel .tt-hub__node[aria-selected="false"] { opacity: 0.45; }
+.tt-hub.has-sel .tt-hub__node[aria-selected="false"]:hover,
+.tt-hub.has-sel .tt-hub__node[aria-selected="false"]:focus-visible { opacity: 1; }
+
+/* Auswahl-Ring: einmal pro Auswahl, als Antwort auf den Klick */
+.tt-hub__node.is-burst::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 0 2px var(--nc);
+  animation: ttHubBurst 0.5s ease-out forwards;
+}
+@keyframes ttHubBurst {
+  from { transform: scale(1); opacity: 0.8; }
+  to   { transform: scale(2.1); opacity: 0; }
+}
+
+.tt-hub__label {
+  position: absolute;
+  left: 0;
+  top: 38px;
+  z-index: 3;
+  transform: translateX(-50%);
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #fff;
+  white-space: nowrap;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+  transition: background-color 200ms ease;
+}
+.tt-hub__nodewrap.is-selected .tt-hub__label {
+  font-weight: 700;
+  background: rgba(12, 18, 38, 0.86);
+}
+
+@media (max-width: 759px) {
+  .tt-hub__node { width: 46px; height: 46px; left: -23px; top: -23px; }
+  .tt-hub__glyph { width: 21px; height: 21px; }
+  .tt-hub__label { top: 29px; font-size: 0.75rem; }
+}
+
+/* ── Gedockte Detailkarte ──────────────────────────────────────── */
+.tt-hub__dock {
+  width: 100%;
+  min-height: 196px;
+  margin-top: var(--space-4);
+  display: grid;
+  justify-items: center;
+  align-items: start;
+}
+.tt-hub__panel {
+  position: relative;
+  width: min(520px, 100%);
+  padding: 16px 22px 20px;
+  text-align: left;
+  border-radius: var(--radius-md);
+  background: rgba(26, 32, 64, 0.95);
+  border: 1px solid var(--nc);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 44px -10px var(--nc);
+}
+.tt-hub__panel[hidden] { display: none; }
+.tt-hub__panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: linear-gradient(90deg, transparent, var(--nc), transparent);
+}
+.tt-hub__panel:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.tt-hub__panelhead { display: flex; align-items: center; gap: var(--space-3); }
+.tt-hub__panelicon { flex: none; width: 28px; height: 28px; color: #fff; }
+.tt-hub__panel--creator .tt-hub__panelicon,
+.tt-hub__panel--other .tt-hub__panelicon { color: var(--nc); }
+.tt-hub__panelicon .tt-hub__glyph { width: 28px; height: 28px; }
+.tt-hub__paneltitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.2rem;
+  line-height: 1.15;
+  color: #fff;
+}
+.tt-hub__paneltext {
+  margin-top: var(--space-2);
+  font-size: 0.97rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.8);
+}
+.tt-hub__cta {
+  margin-top: var(--space-4);
+  min-height: 44px;
+  padding: 10px 20px;
+  border-color: color-mix(in srgb, var(--nc) 70%, #fff);
+}
+.tt-hub__cta:link, .tt-hub__cta:visited { color: var(--text-primary); }
+.tt-hub__ext { flex: none; width: 16px; height: 16px; }
+
+@media (max-width: 759px) {
+  .tt-hub__dock { min-height: 214px; margin-top: var(--space-2); }
+  .tt-hub__panel { padding: 13px 16px 16px; }
+  .tt-hub__paneltitle { font-size: 1.08rem; }
+  .tt-hub__paneltext { font-size: 0.92rem; line-height: 1.5; }
+  .tt-hub__cta { width: 100%; }
+}
+
+/* Karte dockt an (nur mit JS und Bewegung) */
+.tt-hub--motion .tt-hub__panel:not([hidden]) {
+  animation: ttHubPanelIn 340ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes ttHubPanelIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-hub__wallimg,
+  .tt-hub__node,
+  .tt-hub__spoke,
+  .tt-hub__hint { transition: none; }
+  .tt-hub__wallimg { transform: none; }
+  .tt-hub__node.is-burst::after,
+  .tt-hub__panel:not([hidden]) { animation: none; }
+}
+
+.tt-vh {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

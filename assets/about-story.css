@@ -1,0 +1,394 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — "Wofür wir stehen" · STORY BOOK
+   Horizontal, page-turn storytelling module for the Über-uns page.
+   Three bound chapter-leaves you scroll/swipe/arrow through.
+
+   • Everything is scoped under .story-book so nothing leaks.
+   • References the global design tokens (tokens.css) verbatim —
+     never redefines a brand colour, font or motion value.
+   • Aesthetic register: editorial / graphic-novel chapters, but in
+     the TCG-Broadcast-Arcade palette (dark indigo · gold/cyan/purple
+     · glass · accent glow).
+   • Progressive enhancement: without JS every leaf renders fully.
+     JS adds .is-enhanced to opt into the page-turn reveal.
+   • Relaunch 2026-10 (VX1 §5.5, §3.4): Kapitelzeile, Fußzeile und
+     Zähler in Satzschreibung mit Outfit (keine gesperrten Mono-
+     Versalien), Medaillon steht still (Bewegung nur auf Handlung),
+     Seite etwas niedriger (Längenbudget Über uns ≤ 5 Bildschirme).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Dynamic accent — mirrors the currently-open chapter. JS rewrites
+   --sb-accent on .story-book; ribbon, dots, counter, nav all read it. */
+.story-book {
+  --sb-accent: var(--gold);
+  max-width: 980px;
+  margin-inline: auto;
+}
+
+/* ─── STAGE / BOOK COVER ─────────────────────────────────────────
+   The bound cover the leaves live inside. overflow:hidden clips the
+   ghost numerals so they bleed off the page edges like ink. */
+.story-book__stage {
+  position: relative;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 90% at 50% -12%, rgba(124, 92, 191, 0.14), transparent 60%),
+    linear-gradient(180deg, #1a1d38 0%, #14162b 100%);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Bookmark ribbon hanging from the top edge — recolours per chapter */
+.story-book__ribbon {
+  position: absolute;
+  top: 0;
+  left: clamp(24px, 7%, 76px);
+  z-index: 6;
+  width: 26px;
+  height: 62px;
+  background: var(--sb-accent);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  transition: background var(--dur-slow) var(--ease-out);
+  pointer-events: none;
+}
+
+/* ─── SCROLL TRACK ───────────────────────────────────────────────
+   Horizontal, snap-proximity (never mandatory), scrollbar hidden.
+   Focusable so arrow-key navigation has a home. */
+.story-book__track {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.story-book__track::-webkit-scrollbar { display: none; }
+.story-book__track:focus { outline: none; }
+.story-book__track:focus-visible {
+  outline: 2px solid var(--sb-accent);
+  outline-offset: -4px;
+  border-radius: var(--radius-xl);
+}
+
+/* ─── A LEAF (one chapter page) ──────────────────────────────────
+   Each leaf carries its own accent via --leaf / --leaf-soft/-mid,
+   set by the colour modifier classes below. */
+.story-leaf {
+  position: relative;
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  min-height: clamp(380px, 48vh, 500px);
+  display: grid;
+  place-items: center;
+  padding: clamp(28px, 4vw, 48px);
+  padding-bottom: clamp(60px, 6vw, 76px);
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(135% 95% at 84% 6%, var(--leaf-soft), transparent 55%),
+    radial-gradient(120% 90% at 6% 104%, var(--leaf-soft), transparent 50%);
+}
+
+.story-leaf--gold   { --leaf: var(--gold);   --leaf-soft: var(--gold-12);   --leaf-mid: var(--gold-24); }
+.story-leaf--cyan   { --leaf: var(--cyan);   --leaf-soft: var(--cyan-12);   --leaf-mid: var(--cyan-24); }
+.story-leaf--purple { --leaf: var(--purple); --leaf-soft: var(--purple-12); --leaf-mid: var(--purple-24); }
+
+/* Binding gutter — soft inner shadow on the spine (left) edge so the
+   page reads as curving into the bound spine. */
+.story-leaf::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 38px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0));
+}
+
+/* Paper grain — faint fractal-noise overlay */
+.story-leaf::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Giant ghost chapter numeral, bleeding off the top-right corner.
+   --p (−1..1, distance from viewport centre) drives the parallax. */
+.story-leaf__ghost {
+  position: absolute;
+  top: -0.16em;
+  right: 1.5%;
+  z-index: 0;
+  font-family: var(--font-display);
+  font-size: clamp(9rem, 30vw, 22rem);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: var(--leaf);
+  opacity: 0.10;
+  pointer-events: none;
+  user-select: none;
+  transform: translateX(calc(var(--p, 0) * 46px));
+  will-change: transform;
+}
+
+/* Content column (the part that reveals on page-turn) */
+.story-leaf__content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(16px, 2.4vw, 26px);
+  max-width: 54ch;
+}
+
+.story-leaf__chapter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--text-primary) 72%, transparent);
+}
+.story-leaf__chapter-num { color: var(--leaf); }
+
+/* Motif medallion */
+.story-leaf__motif {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--leaf);
+  background: var(--leaf-soft);
+  border: 1px solid var(--leaf-mid);
+  box-shadow: 0 0 30px var(--leaf-mid), inset 0 0 22px rgba(255, 255, 255, 0.04);
+}
+.story-leaf__motif svg { width: 30px; height: 30px; }
+
+.story-leaf__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h2, clamp(1.85rem, 4.2vw, 2.9rem));
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.story-leaf__body {
+  font-size: clamp(1rem, 1.5vw, 1.18rem);
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--text-primary) 76%, transparent);
+  max-width: 50ch;
+  text-wrap: pretty;
+}
+
+/* Folio — the printed page footer. Decorative, pinned to the leaf
+   bottom (outside the reveal stagger), always legible. */
+.story-leaf__folio {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: clamp(16px, 3vw, 24px) clamp(28px, 4vw, 48px);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--text-primary) 52%, transparent);
+}
+.story-leaf__colophon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+}
+.story-leaf__colophon::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--leaf);
+  box-shadow: 0 0 8px var(--leaf-mid);
+}
+
+/* Dog-ear — folded page corner (a page-turn affordance) */
+.story-leaf__fold {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 44px 44px;
+  border-color: transparent transparent var(--surface) transparent;
+  filter: drop-shadow(-3px -3px 6px rgba(0, 0, 0, 0.4));
+  transition: border-width var(--dur) var(--ease-out);
+  pointer-events: none;
+}
+.story-leaf:hover .story-leaf__fold { border-width: 0 0 62px 62px; }
+
+/* ─── CONTROLS ───────────────────────────────────────────────────*/
+.story-book__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 4vw, 34px);
+  margin-top: var(--space-4);
+}
+
+.story-nav {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: transform var(--dur) var(--ease-out),
+              border-color var(--dur) var(--ease-out),
+              background var(--dur) var(--ease-out),
+              box-shadow var(--dur) var(--ease-out);
+}
+.story-nav svg { width: 22px; height: 22px; }
+.story-nav:hover:not(:disabled) {
+  border-color: var(--sb-accent);
+  color: var(--sb-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+}
+.story-nav:active:not(:disabled) { transform: translateY(0); }
+.story-nav:disabled { opacity: 0.3; cursor: default; }
+
+.story-book__meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 128px;
+}
+.story-counter {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--text-primary) 56%, transparent);
+}
+.story-counter b {
+  color: var(--sb-accent);
+  font-weight: 600;
+  transition: color var(--dur) var(--ease-out);
+}
+
+/* Segmented chapter bars — the reading progress / clickable jumps.
+   5px visual bar inside a 44px-tall touch target. */
+.story-dots {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.story-dot {
+  position: relative;
+  width: 48px;
+  height: 48px;   /* Ziel ≥ 48 px (Coulson #14) */
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.story-dot::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+  transition: background var(--dur) var(--ease-out),
+              height var(--dur) var(--ease-out);
+}
+.story-dot:hover::before { background: var(--text-muted); }
+.story-dot.is-active::before {
+  height: 6px;
+  background: var(--sb-accent);
+  box-shadow: 0 0 12px var(--sb-accent);
+}
+
+/* Focus states */
+.story-nav:focus-visible,
+.story-dot:focus-visible {
+  outline: 2px solid var(--sb-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── PAGE-TURN REVEAL (enhanced only) ───────────────────────────
+   Content of the open leaf staggers in; other leaves hold hidden
+   until you turn to them. Guarded by .is-enhanced so a no-JS page
+   shows everything. */
+.story-book.is-enhanced .story-leaf__content > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--dur-slow) var(--ease-out),
+              transform var(--dur-slow) var(--ease-out);
+}
+.story-book.is-enhanced .story-leaf.is-active .story-leaf__content > * {
+  opacity: 1;
+  transform: none;
+}
+.story-leaf.is-active .story-leaf__content > *:nth-child(1) { transition-delay: 60ms; }
+.story-leaf.is-active .story-leaf__content > *:nth-child(2) { transition-delay: 130ms; }
+.story-leaf.is-active .story-leaf__content > *:nth-child(3) { transition-delay: 200ms; }
+.story-leaf.is-active .story-leaf__content > *:nth-child(4) { transition-delay: 270ms; }
+
+/* Medaillon steht still (Relaunch: Bewegung nur auf Handlung, VX1 §3.4 Nr. 5) */
+
+/* ─── MOBILE ─────────────────────────────────────────────────────*/
+@media (max-width: 600px) {
+  .story-leaf { min-height: clamp(360px, 52vh, 460px); }
+  .story-leaf__ghost { font-size: clamp(8rem, 44vw, 15rem); }
+  .story-book__controls { gap: 14px; }
+  .story-book__meter { min-width: 104px; }
+}
+
+/* ─── REDUCED MOTION ─────────────────────────────────────────────
+   No transforms, no parallax, no smooth scroll, no float — leaves
+   simply scroll plainly and all content is shown. */
+@media (prefers-reduced-motion: reduce) {
+  .story-book__track { scroll-behavior: auto; }
+  .story-leaf__ghost { transform: none !important; }
+  .story-book.is-enhanced .story-leaf__content > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .story-book__ribbon,
+  .story-nav,
+  .story-dot::before,
+  .story-leaf__fold,
+  .story-counter b { transition: none !important; }
+  .story-leaf:hover .story-leaf__fold { border-width: 0 0 44px 44px; }
+}

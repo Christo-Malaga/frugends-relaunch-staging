@@ -1,0 +1,258 @@
+/* SHOP DEAKTIVIERT 2026-09-24 — zum Reaktivieren Kommentar entfernen (siehe audit/DECISIONS.md E16)
+   Wird nicht mehr geladen (einziger Aufrufer sections/fg-product-main.liquid ist auskommentiert). Datei bleibt für die Reaktivierung unverändert erhalten. */
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — PAGE: PRODUCT (Produktseite)
+   ───────────────────────────────────────────────────────────────
+   Styling for the generic product page (sections/fg-product-main,
+   templates/product.json): media slider, buy-box, variant select,
+   quantity, add to cart, shipping row, description, sticky mobile
+   buy-bar.
+   Composes the shared vocabulary from components.css
+   (.chip, .cta, .chapter-headline).
+   Load LAST: tokens → base → components → page-product.
+
+   Aesthetic intent (TCG-Broadcast-Arcade): deep-indigo stage, gold
+   the hero accent, cyan + purple supporting. Atmosphere = layered
+   radial glows + glass, never flat fills.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════════
+   PAGE SHELL — atmospheric backdrop behind product content
+   ════════════════════════════════════════════════════════════════ */
+.product-page {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 80% 50% at 78% 8%, var(--gold-12), transparent 60%),
+    radial-gradient(ellipse 70% 55% at 8% 30%, var(--purple-12), transparent 58%),
+    radial-gradient(ellipse 60% 50% at 95% 70%, var(--cyan-12), transparent 60%),
+    linear-gradient(180deg, #1a1d36 0%, var(--bg-deep) 55%, #0f1120 100%);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   A — PRODUCT HERO  ·  split: gallery + buy-box
+   ════════════════════════════════════════════════════════════════ */
+.product-hero {
+  padding-block: var(--space-8) var(--space-12);
+}
+.product-hero__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  /* accent tokens of the buy column (gold) */
+  --v-accent: var(--gold); --v-contrast: var(--on-gold);
+  --v-accent-12: var(--gold-12); --v-accent-24: var(--gold-24); --v-accent-40: var(--gold-40);
+  --v-glow: var(--shadow-gold); --v-spark: var(--gold);
+}
+@media (min-width: 880px) {
+  .product-hero__grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: var(--space-12);
+    align-items: start;
+  }
+}
+
+/* ─── Gallery ─── */
+.product-gallery {
+  position: relative;
+}
+
+/* ─── Buy-box ─── */
+.buybox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.buybox__eyebrow { align-self: flex-start; }
+.buybox__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  line-height: 1.04;
+  color: var(--text-primary);
+}
+
+/* price row */
+.buybox__price-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+}
+.buybox__price {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--gold);
+  text-shadow: 0 2px 18px var(--gold-24);
+}
+.buybox__tax {
+  width: 100%;
+  font-size: var(--fs-caption);
+  color: var(--text-muted);
+}
+.buybox, .buybox * {
+  transition: border-color var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out),
+              box-shadow var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+}
+
+/* ── variant select (fieldset + legend around a native <select>) ── */
+.vswitch { border: 0; margin: 0; padding: 0; }
+.vswitch__label { display: block; font-family: var(--font-mono); font-size: var(--fs-caption);
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: var(--space-3); }
+
+/* ── quantity stepper + add row ── */
+.buy-controls { display: flex; align-items: stretch; gap: var(--space-3); margin-top: var(--space-4); }
+.qty { display: inline-flex; align-items: center; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius-pill); overflow: hidden; flex: none; }
+.qty__btn { width: 46px; height: 54px; flex: none; display: grid; place-items: center;
+  background: transparent; border: 0; cursor: pointer; color: var(--text-primary); font-size: 22px; line-height: 1; font-family: var(--font-body); }
+.qty__btn:hover:not(:disabled) { background: var(--v-accent-12); color: var(--v-accent); }
+.qty__btn:active:not(:disabled) { transform: scale(0.94); }
+.qty__btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+.qty__btn:disabled { color: var(--text-muted); cursor: not-allowed; }
+.qty__input { width: 46px; height: 54px; text-align: center; border: 0; border-inline: 1px solid var(--border);
+  background: transparent; color: var(--text-primary); font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+  font-size: 1rem; font-weight: 600; -moz-appearance: textfield; }
+.qty__input::-webkit-outer-spin-button, .qty__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.qty__input:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+.buybox__add { flex: 1 1 auto; min-height: 54px; }
+
+/* ── compact shipping icon row ── */
+.ship-note { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); padding-top: var(--space-3); }
+.ship-note__item { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--fs-caption); color: var(--text-secondary); }
+.ship-note__item svg { width: 16px; height: 16px; color: var(--v-spark); flex: none; }
+
+/* ════════════════════════════════════════════════════════════════
+   B — DETAIL SECTIONS  (product description)
+   ════════════════════════════════════════════════════════════════ */
+.product-section { padding-block: var(--space-12); }
+.product-section + .product-section { padding-top: 0; }
+
+.product-section__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+.product-section__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  line-height: 1.06;
+  color: var(--text-primary);
+}
+
+/* detail grid: description copy */
+.product-detail__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+@media (min-width: 880px) {
+  .product-detail__grid { grid-template-columns: 1.1fr 0.9fr; gap: var(--space-12); }
+}
+.product-detail__copy p {
+  color: var(--text-secondary);
+  line-height: 1.75;
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+}
+.product-detail__copy p + p { margin-top: var(--space-4); }
+
+/* divider rule between major blocks */
+.product-rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin-block: var(--space-4);
+}
+
+/* ═══ PRODUCT-SHOT SLIDER (product.media; no thumbnails) ═══ */
+.pslider {
+  position: relative;
+  width: 100%;
+  max-width: 460px;                 /* keep the desktop shot compact */
+  margin-inline: auto;
+}
+.pslider__viewport {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  background: var(--bg-deep);
+  touch-action: pan-y;
+}
+.pslider__track {
+  display: flex;
+  transition: transform var(--dur-slow) var(--ease-out);
+  will-change: transform;
+}
+.pslider__slide {
+  flex: 0 0 100%;
+  margin: 0;
+  aspect-ratio: 3 / 2;             /* native shot ratio → no letterbox */
+}
+.pslider__slide img {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none; user-select: none;
+}
+.pslider__arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; display: grid; place-items: center;
+  border-radius: var(--radius-pill); cursor: pointer;
+  color: var(--text-primary);
+  background: rgba(20,23,41,0.72); border: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  transition: background var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out);
+}
+.pslider__arrow:hover { background: var(--surface); border-color: var(--v-accent-40); color: var(--v-accent); }
+.pslider__arrow:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.pslider__arrow--prev { left: var(--space-3); }
+.pslider__arrow--next { right: var(--space-3); }
+.pslider__dots {
+  display: flex; justify-content: center; gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.pslider__dot {
+  width: 8px; height: 8px; padding: 0; border-radius: var(--radius-pill);
+  background: var(--border); border: 0; cursor: pointer;
+  transition: background var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+}
+.pslider__dot:hover { background: var(--text-muted); }
+.pslider__dot.is-active { background: var(--v-accent); transform: scale(1.25); box-shadow: 0 0 10px var(--v-accent-40); }
+.pslider__dot:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+/* ── MOBILE: lift the buy area right under the product slider ── */
+@media (max-width: 879px) {
+  .product-hero__grid { display: flex; flex-direction: column; }
+  .product-gallery, .buybox { display: contents; }
+  .pslider { order: 0; max-width: 100%; }
+  .buybox__buy { order: 1; display: flex; flex-direction: column; gap: var(--space-4); }
+}
+@media (min-width: 880px) {
+  .buybox__buy { display: flex; flex-direction: column; gap: var(--space-4); }
+}
+
+/* ── sticky mobile add-to-cart bar ── */
+.buybar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-chrome);
+  display: none; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+  background: rgba(20,23,41,0.94); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border); box-shadow: 0 -8px 30px rgba(0,0,0,0.45);
+  transform: translateY(110%); transition: transform var(--dur) var(--ease-out);
+}
+.buybar__info { display: flex; flex-direction: column; line-height: 1.15; }
+.buybar__price { font-family: var(--font-display); font-size: 1.15rem; color: var(--v-accent); }
+.buybar__variant { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+.buybar__add { flex: 1 1 auto; min-height: 48px; }
+@media (max-width: 879px) {
+  .buybar { display: flex; }
+  .buybar.is-visible { transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .buybox, .buybox * { transition: none; }
+  .qty__btn:active:not(:disabled) { transform: none; }
+  .buybar { transition: none; }
+}

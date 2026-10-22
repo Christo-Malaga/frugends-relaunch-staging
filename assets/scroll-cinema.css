@@ -1,0 +1,125 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — SCROLL-CINEMA ENGINE (vanilla)
+   ───────────────────────────────────────────────────────────────
+   Framework-free re-build of the predecessor's sticky-scrub cinema
+   (frugends-creator-onboarding-page S01EnterTheArena). The React
+   version drove per-beat opacity/x/y/scale/rotate via
+   useScroll + useTransform(progress, [stops], [values]). Here the
+   same beat/range mechanic is declared on the DOM via data-fx-*
+   attributes and computed by scroll-cinema.js.
+
+   PERF DISCIPLINE (ported from the predecessor's hard-won learnings):
+     • transform + opacity ONLY (compositor-friendly, no layout/paint)
+     • will-change is set by JS only on beats inside ACTIVE sections
+     • NO stacked animated filter: drop-shadow() — glows are done with
+       box-shadow / text-shadow / radial-gradient instead
+     • scroll-snap is `proximity` ONLY, touch/narrow only (never
+       `mandatory` — caused the initial-snap-to-bottom bug)
+     • full prefers-reduced-motion support: JS holds every beat at a
+       static "hold" value and never starts the rAF loop
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Outer scrub container ───────────────────────────────────────
+   Height is set INLINE per section, e.g. style="height:400dvh".
+   The taller the outer, the more scroll-distance the beats play over
+   (slower, more cinematic). 300–400dvh is the sweet spot. */
+.scrub {
+  position: relative;
+  width: 100%;
+}
+
+/* ─── Sticky stage — pins for the full scrub, clips overflow ─────── */
+.scrub__stage {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow: hidden;
+  /* isolate keeps beat z-index local to the stage. NOTE: predecessor
+     killed isolation on touch for compositor-budget reasons; we keep
+     it but it is cheap here since only one cinema runs at a time. */
+  isolation: isolate;
+}
+
+/* ─── Beat — one animated layer. JS writes --o/--x/--y/--s/--r. ──── */
+.beat {
+  position: absolute;
+  inset: 0;
+  opacity: var(--o, 1);
+  transform: translate(var(--x, 0), var(--y, 0)) scale(var(--s, 1)) rotate(var(--r, 0deg));
+  /* will-change is NOT declared here on purpose — JS toggles it only
+     while the parent section is active, so idle/off-screen cinemas
+     don't reserve compositor layers (the predecessor's #1 iOS cost). */
+  transform-origin: center center;
+}
+
+/* JS adds .is-live to the stage of the currently-active section. */
+.scrub__stage.is-live .beat {
+  will-change: transform, opacity;
+}
+
+/* ─── Common beat layout helpers (opt-in) ───────────────────────── */
+
+/* Center a beat's content (flex). Pairs with .beat for headlines etc. */
+.beat--center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Pin a beat to a fixed full-bleed background role (behind others). */
+.beat--bg {
+  z-index: 0;
+}
+
+/* Decorative beats never eat pointer events. */
+.beat--deco {
+  pointer-events: none;
+}
+
+/* ─── Radial-glow utility (replaces animated drop-shadow glows) ──── */
+/* Use as a .beat child or background — compositor-cheap luminance. */
+.cinema-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%,
+    var(--gold-40, rgba(255, 205, 40, 0.4)) 0%,
+    var(--gold-12, rgba(255, 205, 40, 0.12)) 35%,
+    transparent 68%);
+}
+
+/* ─── Snap section helper ─────────────────────────────────────────
+   Apply data-snap to a section to make it a snap target. Per the
+   predecessor learning, snap is PROXIMITY ONLY and TOUCH/NARROW ONLY,
+   so desktop wheel users never fight a snap magnet and the page never
+   initial-snaps to the wrong place. Global html scroll-behavior must
+   stay `auto` (the JS anchor helper opts into smooth per click). */
+@media (hover: none) and (pointer: coarse), (max-width: 640px) {
+  html.cinema-snap {
+    scroll-snap-type: y proximity;   /* NEVER mandatory */
+  }
+  [data-snap] {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+  /* A scrub section opts OUT of snap-align so its sticky-scrub plays
+     out naturally instead of being pinned at its own top. */
+  .scrub[data-snap] {
+    scroll-snap-align: none;
+  }
+}
+
+/* ─── Reduced motion ──────────────────────────────────────────────
+   JS already freezes beats at their hold value and skips the rAF
+   loop. This CSS is the belt-and-suspenders layer: kill any CSS
+   keyframe motion and disable will-change so nothing animates. */
+@media (prefers-reduced-motion: reduce) {
+  .scrub__stage.is-live .beat,
+  .beat {
+    will-change: auto;
+  }
+  .cinema-anim {
+    animation: none !important;
+  }
+}

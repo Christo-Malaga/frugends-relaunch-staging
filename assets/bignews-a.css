@@ -1,0 +1,745 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — Big News, Teil (a)
+   Sections: fg-bignews-hero · fg-bignews-burst · fg-bignews-box ·
+             fg-bignews-socials
+   Baut auf tokens.css / base.css / components.css auf.
+
+   Leitidee: Filmtitel → Box-Burst → Weißblende → Produkt auf Weiß.
+     Hero   dunkel, eine Lichtquelle von oben (Gold), kaltes Gegenlicht
+            (Cyan) — Teal/Orange-Grading aus den Brand-Farben.
+     Burst  dieselbe Bühne, der Export malt Licht und Box darüber.
+     Box    reines #fff (Vertrag mit dem weißen Endframe). Das eine laute
+            Element dort: das Produktbild auf Weiß.
+   Motion: ein Auftritt im Hero (CSS-Keyframes), Parallax über --p
+   (JS), eine Einblendung des Bildes auf Weiß. Sonst nichts Autonomes.
+   Kein statisches will-change; Bilder in bewegten Ebenen laden eager.
+   ═══════════════════════════════════════════════════════════════ */
+
+.bn-sr {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ═══ 1 · HERO ═══════════════════════════════════════════════════ */
+.bn-hero {
+  overflow-x: clip;
+  --bnh-chrome: var(--chrome-height-mobile);
+  --p: 0;
+  position: relative;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+@media (min-width: 1024px) {
+  .bn-hero { --bnh-chrome: var(--chrome-height-desktop); }
+}
+
+.bn-hero__stage {
+  position: relative;
+  height: calc(100vh - var(--bnh-chrome));
+  min-height: 560px;
+  overflow: hidden;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  /* Bühne: Vignette zu den Rändern, Kern etwas heller */
+  background:
+    radial-gradient(ellipse 55% 50% at 50% 52%, #1d2142 0%, transparent 72%),
+    radial-gradient(ellipse 110% 85% at 50% 48%, transparent 45%, rgba(3, 4, 10, 0.88) 100%),
+    var(--bg-deep);
+}
+@supports (height: 1svh) {
+  .bn-hero__stage { height: calc(100svh - var(--bnh-chrome)); }
+}
+
+/* Pin nur mit Bewegung: Bühne klebt unter dem Header, darunter liegt
+   die Scrollstrecke für den Parallax-Abgang. Section-Ende = Bühnen-
+   Unterkante → keine Parkzone. */
+@media (prefers-reduced-motion: no-preference) {
+  .bn-hero { height: calc(100vh - var(--bnh-chrome) + 70vh); }
+  .bn-hero__stage { position: sticky; top: var(--bnh-chrome); }
+}
+@supports (height: 1svh) {
+  @media (prefers-reduced-motion: no-preference) {
+    .bn-hero { height: calc(100svh - var(--bnh-chrome) + 70svh); }
+  }
+}
+
+/* Licht: ein Kegel von oben, Dunst im Raum */
+.bn-hero__sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.bn-hero__beam {
+  position: absolute;
+  left: 50%;
+  top: -30%;
+  width: min(120vw, 1500px);
+  height: 118%;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse 22% 26% at 50% 0%, rgba(255, 244, 214, 0.5), transparent 75%),
+    conic-gradient(from 180deg at 50% 0%,
+      transparent 0deg 158deg,
+      rgba(255, 205, 40, 0.16) 170deg,
+      rgba(255, 236, 170, 0.22) 180deg,
+      rgba(255, 205, 40, 0.16) 190deg,
+      transparent 202deg 360deg);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
+  opacity: calc(1 - var(--p) * 0.4);
+}
+.bn-hero__haze {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 40% 26% at 22% 30%, rgba(68, 217, 255, 0.07), transparent 70%),
+    radial-gradient(ellipse 50% 30% at 80% 64%, rgba(124, 92, 191, 0.14), transparent 70%);
+}
+
+/* Unterkante = exakt --bg-deep, damit die Naht zum Burst unsichtbar bleibt */
+.bn-hero__stage::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 18%;
+  z-index: 5;
+  background: linear-gradient(180deg, rgba(20, 23, 41, 0), var(--bg-deep));
+  pointer-events: none;
+}
+
+/* Boden-Lichtpool: gleiche Lage wie der Pool des Box-Bursts */
+.bn-hero__floor {
+  position: absolute;
+  left: 50%;
+  bottom: -9%;
+  width: min(90vw, 1100px);
+  height: 30%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 205, 40, 0.20), rgba(255, 205, 40, 0.06) 45%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+  opacity: calc(1 - var(--p));
+}
+
+/* Scroll-Hinweis: eine feine Linie, die aus dem Bild nach unten läuft */
+.bn-hero__cue {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 1px;
+  height: clamp(40px, 8vh, 80px);
+  background: linear-gradient(180deg, transparent, rgba(255, 205, 40, 0.7));
+  z-index: 6;
+  opacity: calc(1 - var(--p) * 3);
+}
+
+/* ─── Ebenen (Parallax-Wrapper; nur --p bewegt sie) ─── */
+.bn-hero__layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.bn-hero__layer--far {
+  z-index: 1;
+  transform: translate3d(0, calc(var(--p) * -5vh), 0) scale(calc(1 + var(--p) * 0.05));
+}
+.bn-hero__layer--mid {
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--container-pad);
+  padding-top: 10vh;
+  transform: translate3d(0, calc(var(--p) * -24vh), 0);
+  opacity: calc(1.7 - var(--p) * 2.1);
+  pointer-events: auto;
+}
+.bn-hero__layer--near {
+  z-index: 3;
+  transform: translate3d(calc(var(--p) * -22vw), calc(var(--p) * 16vh), 0) scale(calc(1 + var(--p) * 0.3));
+  transform-origin: 0 100%;
+}
+
+/* far: General Grapes weit hinten, im Dunst */
+.bn-hero__far {
+  position: absolute;
+  right: max(-3vw, calc(50% - 700px));
+  top: 6%;
+  width: clamp(170px, 20vw, 330px);
+  height: auto;
+  filter: brightness(0.32) saturate(0.45) blur(2.5px);
+  opacity: 0.6;
+}
+
+/* near: The Vizard, unscharf, angeschnitten, fast Silhouette */
+.bn-hero__near {
+  position: absolute;
+  left: -12vw;
+  bottom: -30vh;
+  width: clamp(320px, 44vw, 740px);
+  height: auto;
+  transform: scaleX(-1);
+  filter: brightness(0.12) saturate(0.4) blur(3px) drop-shadow(4px -3px 12px rgba(68, 217, 255, 0.5));
+}
+
+/* ─── Titel-Lockup ───────────────────────────────────────────────
+   Alles in em der Titelgröße → Figur und Buchstaben skalieren
+   zusammen, das Rotoscoping bleibt auf jeder Breite deckungsgleich.
+   --cap-top  Abstand Oberkante Box → Oberkante Versalien
+   --cap-h    Versalhöhe
+   --vil-h    Höhe der Figur; Buchstabenkante liegt bei 66 % der Figur */
+.bn-hero__lockup {
+  --size: clamp(64px, 15.2vw, 236px);
+  --cap-top: 0.075em;
+  --cap-h: 0.7em;
+  --vil-h: 1.72em;
+  --vil-w: calc(var(--vil-h) * 629 / 786);
+  --vil-x: 50%;
+  --vil-top: calc(var(--cap-top) - var(--vil-h) * 0.66);
+  position: relative;
+  font-size: var(--size);
+  line-height: 1;
+  margin-top: calc(var(--vil-h) * 0.62);
+}
+
+.bn-hero__title {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-size: 1em;
+  line-height: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bn-hero__word {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1em;
+  line-height: 0.85;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* Die Wand wird von oben beleuchtet: helles Knochenweiß an der
+     Oberkante, Gold in der Mitte, zur Grundlinie ins Dunkel */
+  background: linear-gradient(180deg,
+    #fff8e2 0%,
+    #ffe7a2 22%,
+    var(--gold) 46%,
+    #c98a17 72%,
+    #5a3a14 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold);
+  filter: drop-shadow(0 0.08em 0.12em rgba(0, 0, 0, 0.65));
+}
+.bn-hero__sub {
+  display: block;
+  margin-top: 0.16em;
+  padding-left: 0.62em; /* gleicht die Laufweite am Zeilenende aus */
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: max(15px, 0.13em);
+  line-height: 1.2;
+  letter-spacing: 0.62em;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
+}
+
+/* Rückebene: Figur hinter der Wand, endet an der Grundlinie */
+.bn-hero__behind {
+  position: absolute;
+  z-index: 1;
+  left: calc(var(--vil-x) - var(--vil-w) / 2);
+  top: var(--vil-top);
+  width: var(--vil-w);
+  height: calc(var(--vil-h) * 0.66 + var(--cap-h));
+  /* nur unten an der Grundlinie beschneiden — oben/seitlich darf das
+     Randlicht über die Box hinausstrahlen */
+  clip-path: inset(-40% -40% 0 -40%);
+}
+/* Schatten der Wand: unterhalb der Buchstabenkante liegt die Figur im Dunkel */
+.bn-hero__behind::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--vil-h) * 0.6);
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(8, 9, 20, 0) 0%, rgba(8, 9, 20, 0.88) 45%, rgba(8, 9, 20, 0.95) 100%);
+}
+.bn-hero__villain,
+.bn-hero__fist {
+  display: block;
+  width: var(--vil-w);
+  height: var(--vil-h);
+  max-width: none;
+  filter: brightness(0.84) saturate(0.8) contrast(1.06)
+          drop-shadow(0 -0.012em 0 rgba(255, 214, 120, 0.6))
+          drop-shadow(0 0 0.07em rgba(255, 205, 40, 0.22));
+}
+
+/* Vorderebene: dieselbe Grafik, auf Fäuste + Unterarm freigestellt */
+.bn-hero__grip {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--vil-x) - var(--vil-w) / 2);
+  top: var(--vil-top);
+  width: var(--vil-w);
+  height: var(--vil-h);
+  pointer-events: none;
+}
+.bn-hero__fist {
+  position: absolute;
+  inset: 0;
+}
+.bn-hero__fist--l {
+  clip-path: polygon(13% 55%, 45% 55%, 45% 66%, 46.4% 72%, 46.1% 76.9%, 41.3% 77.3%, 37.4% 76.4%, 35% 74.7%, 33.4% 73.1%, 26.2% 72.9%, 23.8% 72.1%, 23% 70.3%, 17.1% 69.4%, 15.8% 68.4%, 15.1% 66%, 13% 62%);
+}
+.bn-hero__fist--r {
+  clip-path: polygon(45% 55%, 86% 50%, 86% 62%, 80.4% 66%, 78% 68.5%, 71.6% 71.1%, 59.3% 72.4%, 58.9% 74.9%, 51.7% 75.3%, 46.8% 75.6%, 46.4% 72%, 45% 66%);
+}
+
+.bn-hero__lede {
+  position: relative;
+  z-index: 4;
+  max-width: 34ch;
+  margin-top: clamp(20px, 4vh, 40px);
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  line-height: 1.5;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ─── Der eine Auftritt (nur mit .is-armed = JS + Bewegung erlaubt) ───
+   0.0 s Dunkel → 0.2 s Licht geht an → 0.5 s Titelwand tritt aus dem
+   Dunkel → 0.9 s die Figur steigt hinter der Wand hoch → 1.7 s die
+   Fäuste greifen über die Kante → Zusatzzeile, Vordergrund, Satz. */
+@media (prefers-reduced-motion: no-preference) {
+  .bn-hero.is-armed .bn-hero__beam    { animation: bnhLight 1.6s var(--ease-out) 0.15s both; }
+  .bn-hero.is-armed .bn-hero__haze    { animation: bnhFade 2.4s var(--ease-out) 0.3s both; }
+  .bn-hero.is-armed .bn-hero__word    { animation: bnhWall 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
+  .bn-hero.is-armed .bn-hero__villain { animation: bnhRise 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both; }
+  .bn-hero.is-armed .bn-hero__grip    { animation: bnhGrip 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) 1.78s both; }
+  .bn-hero.is-armed .bn-hero__sub     { animation: bnhTrack 1.6s var(--ease-out) 1.2s both; }
+  .bn-hero.is-armed .bn-hero__far     { animation: bnhFar 2.2s var(--ease-out) 0.6s both; }
+  .bn-hero.is-armed .bn-hero__near    { animation: bnhNear 1.8s cubic-bezier(0.16, 1, 0.3, 1) 1.1s both; }
+  .bn-hero.is-armed .bn-hero__lede,
+  .bn-hero.is-armed .bn-hero__cue     { animation: bnhFade 1s var(--ease-out) 2.2s both; }
+}
+@keyframes bnhLight {
+  0%   { opacity: 0; }
+  12%  { opacity: 0.55; }
+  20%  { opacity: 0.15; }
+  100% { opacity: 1; }
+}
+@keyframes bnhFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes bnhWall {
+  from { opacity: 0; transform: scale(1.07); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes bnhRise {
+  from { transform: translateY(55%); }
+  to   { transform: none; }
+}
+@keyframes bnhGrip {
+  from { opacity: 0; transform: translateY(-4%); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes bnhTrack {
+  from { opacity: 0; letter-spacing: 1.1em; }
+  to   { opacity: 1; letter-spacing: 0.62em; }
+}
+@keyframes bnhFar {
+  from { opacity: 0; transform: translateY(3%); }
+  to   { opacity: 0.6; transform: none; }
+}
+@keyframes bnhNear {
+  from { opacity: 0; transform: scaleX(-1) translateX(12%); }
+  to   { opacity: 1; transform: scaleX(-1); }
+}
+
+/* Mobil: Figur etwas größer im Verhältnis, Vordergrund kleiner */
+@media (max-width: 599px) {
+  .bn-hero__lockup { --size: clamp(52px, 19.5vw, 110px); --vil-h: 2.05em; }
+  .bn-hero__far { right: -16vw; top: 5%; width: 48vw; }
+  .bn-hero__near { left: -34vw; bottom: -8vh; width: 88vw; }
+  .bn-hero__layer--mid { padding-top: 4vh; }
+}
+
+/* ═══ 2 · BURST ══════════════════════════════════════════════════
+   Export-CSS (frugends-burst.css) setzt Track 480vh, Sticky 100svh,
+   transparente Flächen. Hier nur: Bühne im Sticky, Poster-Modus. */
+.bn-burst { background: var(--bg-deep); }
+
+.bn-burst__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, var(--bg-deep) 0%, rgba(20, 23, 41, 0) 22%),
+    radial-gradient(ellipse 60% 45% at 50% 58%, rgba(124, 92, 191, 0.20), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(4, 5, 12, 0.6) 100%),
+    var(--bg-deep);
+}
+
+/* Poster-Modus (ohne JS oder reduced motion): kein Scroll-Track,
+   ein ruhiges Standbild, das nach unten in Weiß ausläuft */
+.bn-burst:not(.is-live) { height: auto; }
+/* Scroll-Strecke der Detonation (Export-Default 480vh war zu zäh, v. a. mobil):
+   Desktop 340vh, Mobil 230svh — der Ablauf skaliert mit, nur schneller. */
+.bn-burst.is-live { height: 340vh; }
+@media (max-width: 767px) {
+  .bn-burst.is-live { height: 230vh; height: 230svh; }
+}
+.bn-burst:not(.is-live) .frugends-burst__sticky { display: none; }
+.bn-burst.is-live .bn-burst__poster { display: none; }
+.bn-burst__poster {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+.bn-burst__poster img {
+  display: block;
+  width: 100%;
+  height: clamp(360px, 62.5vw, 88vh);
+  object-fit: cover;
+}
+.bn-burst__poster::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 30%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.85) 70%, #fff 100%);
+  pointer-events: none;
+}
+
+/* ═══ 3 · SURPRISE BOX AUF WEISS ════════════════════════════════ */
+.bn-box {
+  --ink: #141729;
+  --ink-soft: #4a4e6d;
+  position: relative;
+  background: #fff;
+  color: var(--ink);
+  color-scheme: light;
+  /* Unterkante bewusst knapp (E28): Agent b schließt weiß an */
+  padding-block: clamp(24px, 4vh, 48px) clamp(20px, 3vh, 36px);
+}
+/* Die Section schiebt sich über das letzte, bereits komplett weiße
+   Stück des Burst-Tracks (Weiß ab Fortschritt 0.91 ≙ die letzten ~34vh).
+   30vh Überlappung → der Titel kommt ohne tote Weißfläche. */
+.bn-burst.is-live + .bn-box,
+.shopify-section:has(> .bn-burst.is-live) + .shopify-section > .bn-box {
+  margin-top: -30vh;
+  z-index: 2;
+}
+.bn-box__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bn-box__title {
+  margin: 0;
+  max-width: 14ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7.4vw, 5.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: var(--ink);
+}
+
+/* Bild auf Weiß — Chris' Motiv (image_picker) oder die Decke-über-Box */
+.bn-box__visual {
+  width: min(100%, 880px);
+  margin: clamp(8px, 2vh, 24px) 0 0;
+}
+.bn-box__visual > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.bn-box.is-armed .bn-box__visual {
+  opacity: 0;
+  transform: translateY(5%) scale(0.94);
+  filter: blur(10px);
+  transition: opacity 1.1s var(--ease-out),
+              transform 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.1s var(--ease-out);
+}
+.bn-box.is-armed.is-in .bn-box__visual {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Fallback-Szene: Decke über Box, auf Weiß gelichtet */
+.bn-blanket {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 640 / 420;
+}
+.bn-blanket svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.bn-blanket__logo {
+  position: absolute;
+  left: 26.5%;
+  top: 44%;
+  width: 29%;
+  height: auto;
+  transform: rotate(-2deg) skewY(-1deg);
+}
+
+/* ─── Teaser-Punkte ─── */
+.bn-points {
+  list-style: none;
+  margin: clamp(28px, 5vh, 56px) 0 0;
+  padding: 0;
+  width: min(100%, 980px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(24px, 4vw, 40px);
+}
+@media (min-width: 760px) {
+  .bn-points { grid-template-columns: 1fr 1fr; column-gap: clamp(32px, 5vw, 72px); }
+}
+
+.bn-point {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: clamp(14px, 2vw, 22px);
+}
+/* Icons = Mini-Karten im Frugends-Kartenstil: Goldrahmen, Energie-
+   Strahlen, Blitz-Leiste, Sticker-Motiv mit weißer Stanzkante */
+.bn-point__icon {
+  width: clamp(92px, 10vw, 136px);
+  height: auto;
+  flex: none;
+  transform: rotate(-5deg);
+  filter: drop-shadow(0 12px 16px rgba(20, 23, 41, 0.28));
+}
+.bn-point:nth-child(2) .bn-point__icon { transform: rotate(4deg); }
+.bn-point__text {
+  margin: 0;
+  max-width: 30ch;
+  font-size: clamp(1.1rem, 1.7vw, 1.3rem);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+/* Kleiner CTA zu den Socials */
+.bn-box__follow {
+  margin: clamp(24px, 4vh, 40px) 0 0;
+  text-align: center;
+}
+.bn-box__follow a {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 4px;
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 7px;
+}
+.bn-box__follow a:hover { color: #6a4dc4; text-decoration-color: #6a4dc4; }
+.bn-box__follow a:focus-visible { outline: 2px solid #6a4dc4; outline-offset: 4px; }
+.bn-box__follow svg { width: 22px; height: 22px; flex: none; }
+
+@media (max-width: 559px) {
+  .bn-point { grid-template-columns: 76px 1fr; }
+  .bn-point__icon { width: 76px; }
+}
+
+/* ═══ 4 · SOCIALS ═══════════════════════════════════════════════
+   Social-Tiles 1:1 von der Startseite (fg-home-voices, page-home.css
+   „branded image tiles" + „P7" + „Twitch coming soon"). Regeln hier
+   gespiegelt statt page-home.css zu laden — die Datei trägt die ganze
+   Startseite. Klassen identisch, damit das Markup austauschbar bleibt. */
+.bn-socials {
+  position: relative;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, var(--purple-12), transparent 70%),
+    var(--bg-deep);
+  scroll-margin-top: var(--chrome-height-mobile);
+}
+@media (min-width: 1024px) {
+  .bn-socials { scroll-margin-top: var(--chrome-height-desktop); }
+}
+.bn-socials__inner {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+}
+.bn-socials__title { max-width: 18ch; }
+.bn-socials__text {
+  max-width: 52ch;
+  color: var(--text-secondary);
+  font-size: clamp(0.98rem, 2vw, 1.15rem);
+  line-height: 1.65;
+}
+.bn-socials .social-tiles {
+  list-style: none;
+  margin: var(--space-6) auto 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(var(--space-4), 3vw, var(--space-8));
+}
+@media (min-width: 720px) {
+  .bn-socials .social-tiles { grid-template-columns: repeat(4, 1fr); }
+}
+.bn-socials .social-tile { margin: 0; }
+.bn-socials .social-tile__link {
+  position: relative;
+  display: block;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  transition: transform var(--dur) var(--ease-out),
+              border-color var(--dur) var(--ease-out),
+              box-shadow var(--dur) var(--ease-out);
+}
+.bn-socials .social-tile__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.bn-socials .social-tile__glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse 90% 70% at 50% 100%, var(--gold-40), transparent 70%);
+  transition: opacity var(--dur) var(--ease-out);
+}
+.bn-socials .social-tile__link:hover,
+.bn-socials .social-tile__link:focus-visible {
+  transform: translateY(-12px) rotate(-2.2deg) scale(1.03);
+  border-color: var(--gold);
+  box-shadow: 0 26px 56px rgba(0, 0, 0, 0.5), 0 0 44px var(--gold-24);
+}
+.bn-socials .social-tile__link:hover .social-tile__img,
+.bn-socials .social-tile__link:focus-visible .social-tile__img { transform: scale(1.1); }
+.bn-socials .social-tile__link:hover .social-tile__glow,
+.bn-socials .social-tile__link:focus-visible .social-tile__glow { opacity: 1; }
+.bn-socials .social-tile__link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+/* Twitch: bald — nicht klickbar, gedimmt */
+.bn-socials .social-tile__link--soon {
+  cursor: default;
+  filter: grayscale(0.82) brightness(0.82);
+}
+.bn-socials .social-tile__link--soon:hover,
+.bn-socials .social-tile__link--soon:focus-visible {
+  transform: none;
+  border-color: var(--border);
+  box-shadow: 0 26px 56px rgba(0, 0, 0, 0.4);
+}
+.bn-socials .social-tile__link--soon:hover .social-tile__img { transform: none; }
+.bn-socials .social-tile__link--soon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(8, 9, 18, 0.15) 30%, rgba(8, 9, 18, 0.6));
+  pointer-events: none;
+}
+.bn-socials .social-tile__soon {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-5);
+  transform: translateX(-50%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(20, 23, 41, 0.74);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--purple-24);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+  white-space: nowrap;
+}
+.bn-socials .social-tile__soon-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--purple);
+}
+
+/* Schweben der Kacheln wie auf der Startseite — nur solange die
+   Section im Viewport ist (.is-near via IntersectionObserver) */
+@media (prefers-reduced-motion: no-preference) {
+  .bn-socials.is-near .social-tile:nth-child(1) { animation: bnTileFloat 5.5s ease-in-out infinite; }
+  .bn-socials.is-near .social-tile:nth-child(2) { animation: bnTileFloat 6.2s ease-in-out 0.3s infinite; }
+  .bn-socials.is-near .social-tile:nth-child(3) { animation: bnTileFloat 5.8s ease-in-out 0.6s infinite; }
+  .bn-socials.is-near .social-tile:nth-child(4) { animation: bnTileFloat 6.6s ease-in-out 0.9s infinite; }
+  .bn-socials.is-near .social-tile--soon { animation: none; }
+  .bn-socials.is-near .social-tile__soon-dot { animation: bnSoonPing 1.9s var(--ease-out) infinite; }
+}
+@keyframes bnTileFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-9px) rotate(-1deg); }
+}
+@keyframes bnSoonPing {
+  0%   { box-shadow: 0 0 0 0 rgba(124, 92, 191, 0.5); }
+  70%  { box-shadow: 0 0 0 10px rgba(124, 92, 191, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(124, 92, 191, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bn-socials .social-tile__link:hover,
+  .bn-socials .social-tile__link:focus-visible,
+  .bn-socials .social-tile__link:hover .social-tile__img,
+  .bn-socials .social-tile__link:focus-visible .social-tile__img { transform: none; }
+}

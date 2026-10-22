@@ -1,0 +1,175 @@
+/* ═══════════════════════════════════════════════════════════════
+   FRUGENDS — DESIGN TOKENS
+   Single source of truth for the whole site. Portable to Shopify
+   Liquid (pure :root custom properties, no build step required).
+
+   Aesthetic: "TCG-Broadcast-Arcade" — dark indigo base, gold/cyan/
+   purple accents, glass-morphism, broadcast/arcade energy.
+
+   Palette + fonts ported VERBATIM from the verified predecessor
+   project (frugends-creator-onboarding-page/src/styles/tokens.css).
+   DO NOT change these hex values or font stacks — they are brand.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── Color tokens (BRAND — do not alter) ─── */
+  --bg-deep:        #141729;
+  --surface:        #1e2140;
+  --card:           #262952;
+  --border:         #363a6e;
+
+  --gold:           #ffcd28;
+  --cyan:           #44d9ff;
+  --purple:         #7c5cbf;
+  --green:          #4ade80;
+  --red:            #ef4444;
+  --orange:         #f59e0b;
+
+  --text-primary:   #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-muted:     rgba(255, 255, 255, 0.35);
+
+  /* ─── Derived / convenience color tokens ─── */
+  /* Translucent accents for glows, borders, hover-washes.            */
+  --gold-12:        rgba(255, 205, 40, 0.12);
+  --gold-24:        rgba(255, 205, 40, 0.24);
+  --gold-40:        rgba(255, 205, 40, 0.40);
+  --cyan-12:        rgba(68, 217, 255, 0.12);
+  --cyan-24:        rgba(68, 217, 255, 0.24);
+  --purple-12:      rgba(124, 92, 191, 0.12);
+  --purple-24:      rgba(124, 92, 191, 0.24);
+  /* On-gold text: gold is bright, so text on a gold fill must be dark
+     for WCAG AA. Use this, never white-on-gold. */
+  --on-gold:        #141729;
+
+  /* ─── Font stacks (BRAND — do not alter) ─── */
+  /* Loaded via Google Fonts @import in base.css.                     */
+  --font-display:   'Protest Strike', system-ui, sans-serif;
+  --font-body:      'Outfit', sans-serif;
+  --font-mono:      'JetBrains Mono', monospace;
+
+  /* ─── Font-size harmony tokens ─── */
+  --fs-section-label:        11px;
+  --fs-section-label-mobile: 9px;
+  --fs-slide-title:          clamp(1.5rem, 4vw, 2.5rem);
+  --fs-subheading:           clamp(1.1rem, 2vw, 1.35rem);
+  --fs-body:                 14px;
+  --fs-body-mobile:          12px;
+  --fs-caption:              12px;
+  --fs-caption-mobile:       11px;
+  --fs-kpi-value:            clamp(1rem, 2vw, 1.25rem);
+  /* Larger display sizes for marketing pages (hero headlines etc). */
+  --fs-hero:                 clamp(2.25rem, 7vw, 4.5rem);
+  --fs-display:              clamp(1.75rem, 5vw, 3rem);
+
+  /* ─── Spacing scale (4 / 8 pt rhythm) ─── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;   /* min touch-comfortable section gap */
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ─── Radius scale ─── */
+  --radius-sm:   6px;
+  --radius:      8px;   /* default — matches .glass */
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-pill: 999px;
+
+  /* ─── Elevation / shadow scale (consistent, never random) ─── */
+  --shadow-sm:   0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow:      0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-lg:   0 12px 40px rgba(0, 0, 0, 0.45);
+  --shadow-gold: 0 0 24px var(--gold-24);
+  --shadow-cyan: 0 0 24px var(--cyan-24);
+
+  /* ─── Layout tokens ─── */
+  --chrome-height-desktop: 64px;
+  --chrome-height-mobile:  56px;
+  --container-max:         1200px;
+  --container-pad:         clamp(16px, 4vw, 40px);
+
+  /* ─── Motion tokens (one global rhythm) ─── */
+  --ease-out:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in:   cubic-bezier(0.4, 0, 1, 1);
+  --dur-fast:  150ms;
+  --dur:       240ms;
+  --dur-slow:  400ms;
+
+  /* ─── Z-index scale ─── */
+  --z-content: 1;
+  --z-chrome:  100;
+  --z-overlay: 200;
+  --z-toast:   300;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLASS MORPHISM
+   Core surface treatment of the whole system. Apply .glass to any
+   panel/card that should read as a frosted broadcast overlay.
+   ═══════════════════════════════════════════════════════════════ */
+.glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(30, 33, 64, 0.8);   /* --surface @ 80% */
+  border: 1px solid rgba(54, 58, 110, 0.6); /* --border @ 60% */
+  border-radius: var(--radius);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REVEAL ANIMATIONS
+   Lightweight scroll-in reveal. JS (Spider/Pietro) adds .visible
+   when the element enters the viewport. Staggered via delay utils.
+   ═══════════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--dur-slow) var(--ease-out),
+              transform var(--dur-slow) var(--ease-out);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
+
+/* ═══════════════════════════════════════════════════════════════
+   KEYFRAMES — shared animation library
+   ═══════════════════════════════════════════════════════════════ */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(8px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
+@keyframes goldPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 205, 40, 0.3); }
+  50%      { box-shadow: 0 0 40px rgba(255, 205, 40, 0.6); }
+}
+
+@keyframes goldShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}

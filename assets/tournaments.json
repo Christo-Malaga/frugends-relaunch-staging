@@ -1,0 +1,23 @@
+{
+  "_comment": "Termindaten der Turnier-Seite. Einziges Turnierformat: die Arena. Seit 12.10.2026 gibt es KEINE Serien- oder Wochentermine mehr: fest steht nur das nächste Turnier am 14.11.2026, danach finden Turniere spontan statt und werden über unsere Social-Kanäle und über Creator angekündigt. Die Seite liest diese Datei nicht live; Quelle für Anzeige + Event-Schema ist das Section-Setting start_date in templates/page.turniere.json (Section fg-turniere-announcements), diese Datei ist der Datenspiegel. start_iso = ISO-8601 für das Event-Schema (snippets/fg-event-schema.liquid). Bewusst NUR Datum ohne Uhrzeit: die frühere 18:00 Uhr war als Platzhalter markiert. Steht die Uhrzeit fest, hier und im Section-Setting als 2026-11-14T18:00:00+01:00 eintragen. `prizes_label` ist feste Rechtskopie, niemals €-Werte. `sponsor_ids` referenzieren sponsors-upcoming.json[].id (Platzhalter).",
+  "tournaments": [
+    {
+      "id": "arena-01",
+      "name": "Arena #01",
+      "type": "Arena für alle Editionen",
+      "edition": "Alle Editionen",
+      "day": "Samstag",
+      "date": "Samstag, 14. November 2026",
+      "start_iso": "2026-11-14",
+      "places_win": "Plätze 1–30",
+      "room_capacity": "bis zu 300 Spieler",
+      "prizes_label": "Rewards unserer Partner",
+      "sponsor_ids": [
+        "up-greenbyte",
+        "up-pixelpress",
+        "up-novacraft"
+      ],
+      "status": "upcoming"
+    }
+  ]
+}

@@ -662,7 +662,7 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
   to   { transform: translateX(calc(-100% * 15 / 16)); }
 }
 
-/* Rechts: Pille + Menü-Knopf */
+/* Rechts: Pillen + Menü-Knopf */
 .fg-kopf__rechts {
   flex: none;
   display: flex;
@@ -678,7 +678,6 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
 .fg-kopf__app--linie,
 .fg-kopf__tc { display: none; }
 .fg-kopf__app--linie { padding: 0 16px; }
-.fg-kopf__alter { font-weight: 600; font-size: 12px; opacity: 0.72; }
 @media (min-width: 600px) {
   .fg-kopf__rechts { gap: 10px; }
   .fg-kopf__app--handy { display: none; }
@@ -686,14 +685,16 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
   .fg-kopf__tc { display: inline-flex; }
 }
 
-/* Haupt-Aufruf im Kopf mit Tiefe: Glanzkante oben, weicher Schatten unten, Licht von oben. Ruhiger Impuls: alle
-   7,2 s wischt ein Glanz einmal über die Pille (nur transform/opacity, Pseudo hinter der Schrift). Zeigen hebt leicht
-   an, Drücken gibt nach. Reduzierte Bewegung: kein Glanz-Wisch. Basis .fg-pille bleibt unverändert. */
-.fg-pille--kopf {
+/* Haupt-Aufruf mit Tiefe (.fg-pille--glanz; Kopf ab 600 px und Handy-Menü): Glanzkante oben, weicher Schatten
+   unten, Licht von oben. Ruhiger Impuls: alle 7,2 s wischt ein Glanz einmal über die Pille (nur transform/opacity,
+   Pseudo hinter der Schrift); im Menü kommt der erste Wisch kurz nach dem Öffnen. Zeigen hebt leicht an, Drücken gibt
+   nach. Reduzierte Bewegung: kein Glanz-Wisch. Basis .fg-pille bleibt unverändert (Bolt 6 als --kopf, Atlas 9:
+   umbenannt, weil das Menü denselben Haupt-Aufruf trägt). */
+.fg-kopf__tc { padding: 0 18px; }
+.fg-pille--glanz {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: 0 18px;
   border-color: color-mix(in srgb, #fff 50%, transparent);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 48%),
@@ -706,7 +707,7 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
     0 0 22px var(--gold-24);
   transition: transform 260ms var(--motion-feder-objekt);
 }
-.fg-pille--kopf::after {
+.fg-pille--glanz::after {
   content: '';
   position: absolute;
   top: -30%;
@@ -720,7 +721,9 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
   pointer-events: none;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .fg-pille--kopf::after { animation: fg-pille-glanz 7.2s var(--motion-ease-move) 2.4s infinite; }
+  .fg-pille--glanz::after { animation: fg-pille-glanz 7.2s var(--motion-ease-move) 2.4s infinite; }
+  /* Menü: Die Tafel ist zu display:none, beim Öffnen startet die Animation neu → erster Wisch, wenn die Tafel steht */
+  .fg-menue .fg-pille--glanz::after { animation-delay: 560ms; }
 }
 @keyframes fg-pille-glanz {
   0%        { opacity: 0; transform: translateX(-130%) skewX(-18deg); }
@@ -729,13 +732,14 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
   14%, 100% { opacity: 0; transform: translateX(300%) skewX(-18deg); }
 }
 @media (hover: hover) and (pointer: fine) {
-  .fg-pille--kopf:hover { transform: translateY(-2px); }
+  .fg-pille--glanz:hover { transform: translateY(-2px); }
 }
-.fg-pille--kopf:active { transform: translateY(0) scale(0.97); transition-duration: 90ms; }
+.fg-pille--glanz:active { transform: translateY(0) scale(0.97); transition-duration: 90ms; }
 
-/* Menü-Knopf und Schließen-Knopf der Tafel: gleiche Form, gleiche Stelle (48 × 48) */
-.fg-kopf__burger,
-.fg-menue__zu {
+/* Menü-Knopf (48 × 48): ein Knopf für Öffnen und Schließen, bleibt an seinem Platz. Die zwei Linien morphen in zwei
+   Takten zum X (erst zusammen, dann drehen) und zurück; offen liegt ein leises Feld dahinter. Drücken gibt nach.
+   .ist-benutzt (fg-nav.js) erst nach dem ersten Tipp, damit beim Laden nichts läuft. */
+.fg-kopf__burger {
   position: relative;
   display: inline-grid;
   place-items: center;
@@ -749,7 +753,10 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
   color: var(--text-primary);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--motion-dur-base) var(--motion-ease-out), transform 260ms var(--motion-feder-objekt);
 }
+.fg-kopf__burger[aria-expanded="true"] { background: color-mix(in srgb, var(--text-primary) 9%, transparent); }
+.fg-kopf__burger:active { transform: scale(0.9); transition-duration: 90ms; }
 .fg-kopf__burger-linie {
   grid-area: 1 / 1;
   display: block;
@@ -757,17 +764,21 @@ img.fg-mini__teil { filter: drop-shadow(0 calc(2 * var(--m)) calc(3 * var(--m)) 
   height: 2px;
   border-radius: 2px;
   background: currentColor;
-  transition: transform var(--motion-dur-base) var(--motion-ease-move);
 }
 .fg-kopf__burger-linie:first-child { transform: translateY(-4px); }
 .fg-kopf__burger-linie:last-child  { transform: translateY(4px); }
-.fg-kopf__burger[aria-expanded="true"] .fg-kopf__burger-linie:first-child,
-.fg-menue__zu .fg-kopf__burger-linie:first-child { transform: rotate(45deg); }
-.fg-kopf__burger[aria-expanded="true"] .fg-kopf__burger-linie:last-child,
-.fg-menue__zu .fg-kopf__burger-linie:last-child  { transform: rotate(-45deg); }
-/* Offen: Der Schließen-Knopf im Dialog steht an der Stelle des Menü-Knopfs */
-html.fg-menue-offen .fg-kopf__burger { visibility: hidden; }
-.fg-menue__zu:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+  .fg-kopf__burger.ist-benutzt .fg-kopf__burger-linie:first-child { animation: fg-burger-oben-zu var(--motion-dur-exit) var(--motion-ease-move) both; }
+  .fg-kopf__burger.ist-benutzt .fg-kopf__burger-linie:last-child  { animation: fg-burger-unten-zu var(--motion-dur-exit) var(--motion-ease-move) both; }
+  .fg-kopf__burger[aria-expanded="true"] .fg-kopf__burger-linie:first-child { animation: fg-burger-oben-auf 340ms var(--motion-ease-out) both; }
+  .fg-kopf__burger[aria-expanded="true"] .fg-kopf__burger-linie:last-child  { animation: fg-burger-unten-auf 340ms var(--motion-ease-out) both; }
+}
+.fg-kopf__burger[aria-expanded="true"] .fg-kopf__burger-linie:first-child { transform: rotate(45deg); }
+.fg-kopf__burger[aria-expanded="true"] .fg-kopf__burger-linie:last-child  { transform: rotate(-45deg); }
+@keyframes fg-burger-oben-auf  { 0% { transform: translateY(-4px); } 42% { transform: none; } 82% { transform: rotate(50deg); } 100% { transform: rotate(45deg); } }
+@keyframes fg-burger-unten-auf { 0% { transform: translateY(4px); }  42% { transform: none; } 82% { transform: rotate(-50deg); } 100% { transform: rotate(-45deg); } }
+@keyframes fg-burger-oben-zu   { 0% { transform: rotate(45deg); }  50% { transform: none; } 100% { transform: translateY(-4px); } }
+@keyframes fg-burger-unten-zu  { 0% { transform: rotate(-45deg); } 50% { transform: none; } 100% { transform: translateY(4px); } }
 
 @media (max-width: 359px) {
   .fg-kopf__bar { gap: var(--space-2); }
@@ -794,98 +805,142 @@ html.fg-menue-offen .fg-kopf__burger { visibility: hidden; }
   .fg-kopf__weg .fg-mini { display: none; }
 }
 
-/* ─── MENÜ (Handy, < 1000 px) ──────────────────────────────────────────────
-   Modaler Dialog über der ganzen Höhe: oben eine durchsichtige Leiste in Kopfhöhe mit dem Schließen-Knopf (Logo und
-   „App laden“ des Kopfs scheinen durch und bleiben klickbar), darunter eine kompakte Liste: die drei Wege als
-   Zeilen (Mini-Visual, Titel, „Du bist hier“), die Seiten als Textlinks in einer Reihe, unten die zwei Aufrufe.
-   fg-nav.js: Dialog, Fokusfalle, ESC, Zurück, Seite dahinter steht still. */
+/* ─── MENÜ (Handy und Tablet, < 1000 px) ─────────────────────────────────────
+   Atlas 9 („nav3“). Der Kopf bleibt stehen und liegt oben; die Tafel wächst unter seiner Unterkante heraus
+   (clip-path, Kurve „sheet“, 460 ms), die Seite dahinter dimmt und wird leicht unscharf. Zeilen laufen gestaffelt
+   ein (50 ms), die drei Mini-Visuals spielen nacheinander. Schließen ist kürzer (180 ms, ease-in) und ohne Staffel.
+   Ab 600 px hängt die Tafel rechts unter dem Menü-Knopf (420 px breit). Nur transform, opacity und clip-path.
+   fg-nav.js: Klassen .ist-offen (Zustand), html.fg-menue-offen (Scroll-Sperre), html.fg-menue-sichtbar (Kopf liegt
+   über Tafel und Dimmer, bis die Tafel ganz zu ist), inert für den Rest der Seite, Fokus, ESC, Zurück, Haptik. */
 .fg-menue {
   position: fixed;
-  inset: 0 0 auto;
-  z-index: calc(var(--z-overlay) + 15);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  height: 100dvh;
+  inset: 0;
+  z-index: calc(var(--z-overlay) + 12);
   pointer-events: none;
   font-family: var(--font-body);
-  /* Tafel fährt von oben herein */
-  transform: translateY(-100%);
-  transition: transform var(--motion-dur-exit) var(--motion-ease-in);
-}
-.fg-menue__leiste {
-  box-sizing: border-box;
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-  max-width: 1360px;
-  height: var(--kopf-h);
-  margin: 0 auto;
-  padding: 0 var(--container-pad);
-}
-.fg-menue__zu { pointer-events: auto; }
-.fg-menue__flaeche {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  background: var(--bg-deep);
-  box-shadow: inset 0 1px 0 var(--kopf-linie);
-  pointer-events: auto;
 }
 .fg-menue[hidden] { display: none; }
-.fg-menue.ist-offen {
-  transform: none;
-  transition: transform var(--motion-dur-slow) var(--motion-ease-sheet);
-}
-/* Wenn die Tafel offen ist, liegt der Kopf über allem (auch über Hero-Leisten) */
-html.fg-menue-offen,
+html.fg-menue-sichtbar .site-header.fg-kopf { z-index: calc(var(--z-overlay) + 14); }
+/* Scroll-Sperre ohne Seitensprung. NUR am body: dessen overflow wandert an den Viewport, der Kopf klebt weiter am
+   Viewport. Grafikfehler vorher (Atlas 9 gemessen, 390 × 664, gescrollt 900 px): overflow:hidden auch am <html> hält
+   das body-overflow (base.css overflow-x: hidden) beim body fest → body wird eigener Scroll-Container → der klebende
+   Kopf springt auf −900 px, oben fehlten Logo und App laden. Der Platz der Bildlaufleiste bleibt reserviert. */
+html.fg-menue-offen { scrollbar-gutter: stable; }
 html.fg-menue-offen body { overflow: hidden; }
-html.fg-menue-offen .site-header.fg-kopf { z-index: calc(var(--z-overlay) + 10); }
+
+.fg-menue__dimmer {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, #05060f 64%, transparent);
+  -webkit-backdrop-filter: blur(5px) saturate(0.8);
+  backdrop-filter: blur(5px) saturate(0.8);
+  opacity: 0;
+  transition: opacity var(--motion-dur-exit) var(--motion-ease-in);
+}
+.fg-menue.ist-offen .fg-menue__dimmer {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 300ms var(--motion-ease-out);
+}
+
+/* Tafel: deckend, unten rund, Tiefe über zwei Schatten; oben liegt der Schatten des Kopfs auf ihr.
+   clip-path zu = Unterkante oben (100 %), offen = unter dem Schatten (−100 px), seitlich Luft für den Schatten. */
+.fg-menue__tafel {
+  position: absolute;
+  top: var(--kopf-h);
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  max-height: calc(100% - var(--kopf-h));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, #000 22%, transparent) 0, transparent 14px),
+    var(--bg-deep);
+  border-radius: 0 0 26px 26px;
+  box-shadow:
+    inset 0 -1px 0 color-mix(in srgb, var(--text-primary) 8%, transparent),
+    0 34px 64px -18px rgba(0, 0, 0, 0.75),
+    0 12px 26px -10px rgba(0, 0, 0, 0.5);
+  -webkit-clip-path: inset(0 -80px 100% -80px);
+  clip-path: inset(0 -80px 100% -80px);
+  opacity: 0;
+  /* Schließen: Rand zieht unter den Kopf zurück, dazu linear ausblenden (sonst wirkt der erste Teil wie Zögern,
+     weil die Kante erst durch den Schattenbereich läuft) */
+  transition: -webkit-clip-path var(--motion-dur-exit) var(--motion-ease-in), clip-path var(--motion-dur-exit) var(--motion-ease-in), opacity var(--motion-dur-exit) linear;
+}
+.fg-menue.ist-offen .fg-menue__tafel {
+  -webkit-clip-path: inset(0 -80px -100px -80px);
+  clip-path: inset(0 -80px -100px -80px);
+  pointer-events: auto;
+  opacity: 1;
+  transition: -webkit-clip-path 460ms var(--motion-ease-sheet), clip-path 460ms var(--motion-ease-sheet), opacity 140ms var(--motion-ease-out);
+}
 
 .fg-menue__innen {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
   max-width: 560px;
   margin: 0 auto;
-  padding: var(--space-2) var(--container-pad) calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
+  padding: var(--space-3) var(--container-pad) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
 }
 
-/* Die drei Wege: eine Zeile je Weg, getrennt durch Haarlinien, keine Karten */
+/* Die drei Wege: eine Zeile je Weg, keine Karten. Haarlinie zwischen den Zeilen beginnt bündig mit den Titeln. */
 .fg-menue__wege { margin: 0; padding: 0; list-style: none; }
-.fg-menue__wege > li + li { box-shadow: inset 0 1px 0 var(--kopf-linie); }
+.fg-menue__wege > li { position: relative; }
+.fg-menue__wege > li + li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 72px;
+  right: 0;
+  height: 1px;
+  background: var(--kopf-linie);
+}
 .fg-menue__weg {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
-  min-height: 64px;
-  padding: 0 4px;
-  color: color-mix(in srgb, var(--text-primary) 88%, transparent);
+  gap: 16px;
+  min-height: 72px;
+  margin: 0 -10px;
+  padding: 8px 10px;
+  border-radius: 18px;
+  color: color-mix(in srgb, var(--text-primary) 90%, transparent);
   text-decoration: none;
-  border-radius: 12px;
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  transition: transform 300ms var(--motion-feder-objekt), background-color var(--motion-dur-base) var(--motion-ease-out);
 }
-.fg-menue__weg:link, .fg-menue__weg:visited, .fg-menue__weg:hover, .fg-menue__weg:active { color: color-mix(in srgb, var(--text-primary) 88%, transparent); }
-.fg-menue__weg:active { background: color-mix(in srgb, var(--text-primary) 6%, transparent); }
-/* Bolt 6 (Coulson 3 J): jede Komposition sitzt mittig in derselben 56 × 56-Bildbox => alle Titel beginnen bündig.
-   Maßstab je Welt so, dass die Objekte gleich hoch wirken (≈ 32 px): Fragebogen 1,22 · Turniere 1,08 · Surprise 1,25 */
+.fg-menue__weg:link, .fg-menue__weg:visited, .fg-menue__weg:hover, .fg-menue__weg:active { color: color-mix(in srgb, var(--text-primary) 90%, transparent); }
+/* Druck: die Zeile gibt nach, ein Feld in der Weltfarbe steht dahinter, das Visual spielt (fg-nav.js .spielt) */
+.fg-menue__wege .fg-menue__weg:active,
+.fg-menue__wege .fg-menue__weg.ist-gedrueckt {
+  transform: scale(0.975);
+  background: color-mix(in srgb, var(--akzent) 16%, transparent);
+  transition-duration: 90ms;
+}
+@media (hover: hover) and (pointer: fine) {
+  .fg-menue__weg:hover { background: color-mix(in srgb, var(--akzent) 9%, transparent); }
+}
+/* Bildbox 56 × 56 je Weg (Titel bündig): leise Mulde mit Licht in der Weltfarbe von unten */
 .fg-menue__bild {
   flex: none;
   display: grid;
   place-items: center;
   width: 56px;
   height: 56px;
+  border-radius: 16px;
+  background:
+    radial-gradient(75% 65% at 50% 82%, color-mix(in srgb, var(--akzent) 24%, transparent), transparent 75%),
+    color-mix(in srgb, var(--text-primary) 4%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--text-primary) 9%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 5%, transparent);
 }
 .fg-menue__weg .fg-mini { --m: 1.08px; }
 .fg-menue__weg .fg-mini--fragebogen { --m: 1.22px; }
 .fg-menue__weg .fg-mini--surprise { --m: 1.25px; }
-/* Titel und „Du bist hier“ in einer Zeile; reicht die Breite nicht (Handy < 400 px), rutscht der Hinweis unter den
-   Titel, der Titel bricht nie um */
+/* Titel und „Du bist hier“ in einer Zeile; reicht die Breite nicht (< 400 px), rutscht der Hinweis unter den Titel */
 .fg-menue__text {
   flex: 1;
   min-width: 0;
@@ -898,13 +953,16 @@ html.fg-menue-offen .site-header.fg-kopf { z-index: calc(var(--z-overlay) + 10);
 .fg-menue__titel {
   white-space: nowrap;
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: 1.375rem;
   line-height: 1.05;
+  letter-spacing: 0.005em;
 }
-/* Du bist hier: weiße Schrift, kurzer ruhender Strich in der Weltfarbe vor dem Hinweis (wie im Kopf) */
+/* Du bist hier: weiße Schrift, Feld in der Weltfarbe, kurzer ruhender Strich vor dem Hinweis (wie im Kopf) */
 .fg-menue__weg[aria-current="page"],
 .fg-menue__weg[aria-current="page"]:link,
-.fg-menue__weg[aria-current="page"]:visited { color: var(--text-primary); }
+.fg-menue__weg[aria-current="page"]:visited { color: var(--text-primary); background: color-mix(in srgb, var(--akzent) 9%, transparent); }
+.fg-menue__wege > li:has(> [aria-current="page"])::before,
+.fg-menue__wege > li:has(> [aria-current="page"]) + li::before { opacity: 0; }
 .fg-menue__hier {
   display: inline-flex;
   align-items: center;
@@ -928,8 +986,8 @@ html.fg-menue-offen .site-header.fg-kopf { z-index: calc(var(--z-overlay) + 10);
 .fg-menue__links {
   display: flex;
   flex-wrap: wrap;
-  column-gap: clamp(12px, 4vw, var(--space-5));
-  margin: var(--space-2) 0 0;
+  column-gap: clamp(14px, 5vw, 28px);
+  margin: var(--space-3) 0 0;
   padding: var(--space-1) 0 0;
   list-style: none;
   border-top: 1px solid var(--kopf-linie);
@@ -946,18 +1004,48 @@ html.fg-menue-offen .site-header.fg-kopf { z-index: calc(var(--z-overlay) + 10);
   font-weight: 600;
   text-decoration: none;
   border-radius: var(--radius-sm);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 260ms var(--motion-feder-objekt), color var(--motion-dur-fast) var(--motion-ease-out);
 }
 .fg-menue__link:link, .fg-menue__link:visited { color: var(--kopf-dim); }
 .fg-menue__link:hover { color: var(--text-primary); }
+.fg-menue__link:active,
+.fg-menue__link.ist-gedrueckt { color: var(--text-primary); transform: scale(0.94); transition-duration: 90ms; }
 .fg-menue__link[aria-current="page"] { color: var(--text-primary); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
 .fg-menue__link:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
 .fg-raus { width: 14px; height: 14px; flex: none; opacity: 0.7; }
 
-/* Die zwei Aufrufe unter den Links: App laden (Gold) und Tester Club beitreten (Linie, „ab 18“) */
-.fg-menue__aufrufe { display: grid; gap: var(--space-3); padding-top: var(--space-6); }
+/* Die zwei Aufrufe: Tester Club beitreten (Haupt-Aufruf, Gold mit Tiefe) und App laden (Linie) */
+.fg-menue__aufrufe { display: grid; gap: var(--space-3); padding-top: var(--space-5); }
 .fg-menue__aufrufe .fg-pille { width: 100%; }
-.fg-menue__alter { font-weight: 500; font-size: 13px; opacity: 0.85; }
-.fg-menue__aufrufe .fg-pille--linie { gap: 10px; }
+
+/* Ab 600 px: Tafel hängt rechts unter dem Menü-Knopf */
+@media (min-width: 600px) {
+  .fg-menue__tafel {
+    left: auto;
+    right: max(8px, calc(var(--container-pad) - 12px));
+    width: 420px;
+    border-radius: 0 0 22px 22px;
+    box-shadow:
+      inset 0 -1px 0 color-mix(in srgb, var(--text-primary) 8%, transparent),
+      inset 1px 0 0 color-mix(in srgb, var(--text-primary) 5%, transparent),
+      inset -1px 0 0 color-mix(in srgb, var(--text-primary) 5%, transparent),
+      0 34px 64px -18px rgba(0, 0, 0, 0.75),
+      0 12px 26px -10px rgba(0, 0, 0, 0.5);
+  }
+  .fg-menue__innen { padding-left: 22px; padding-right: 22px; }
+}
+
+/* Auftritt: eine Antwort aufs Öffnen, Zeilen kommen 50 ms versetzt von oben an (Schließen ohne Staffel) */
+@media (prefers-reduced-motion: no-preference) {
+  .fg-menue.ist-offen .fg-menue__stufe {
+    animation: fg-zeile-ein 340ms var(--motion-ease-out) both;
+    animation-delay: calc(30ms + var(--i, 0) * 50ms);
+  }
+}
+@keyframes fg-zeile-ein {
+  from { opacity: 0; transform: translateY(-14px); }
+}
 
 /* Store-Badges (Fuß) */
 .fg-menue__stores a,
@@ -971,16 +1059,6 @@ html.fg-menue-offen .site-header.fg-kopf { z-index: calc(var(--z-overlay) + 10);
 .fg-fuss__badge:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; }
 .fg-badge-apple  { width: auto; height: 44px; }
 .fg-badge-google { width: auto; height: 64px; margin: -10px -9px; } /* Google-Badge trägt eigenen Rand */
-
-/* Auftritt der Zeilen: eine Antwort aufs Öffnen, kurz gestaffelt */
-@media (prefers-reduced-motion: no-preference) {
-  .fg-menue.ist-offen .fg-menue__wege > li { animation: fg-zeile-ein var(--motion-dur-slow) var(--motion-ease-out) both; }
-  .fg-menue.ist-offen .fg-menue__wege > li:nth-child(2) { animation-delay: 40ms; }
-  .fg-menue.ist-offen .fg-menue__wege > li:nth-child(3) { animation-delay: 80ms; }
-}
-@keyframes fg-zeile-ein {
-  from { opacity: 0; transform: translateY(calc(var(--motion-rise) * -1)); }
-}
 
 /* ─── FUSS ─────────────────────────────────────────────────────────────── */
 .fg-fuss {
@@ -1083,14 +1161,24 @@ html.fg-menue-offen .site-header.fg-kopf { z-index: calc(var(--z-overlay) + 10);
 
 /* ─── Reduzierte Bewegung: alles steht, Zustände wechseln sofort ─── */
 @media (prefers-reduced-motion: reduce) {
-  .fg-menue,
-  .fg-menue.ist-offen { transform: none; transition: none; }
-  .fg-menue.ist-offen .fg-menue__wege > li { animation: none; }
+  .fg-menue__dimmer,
+  .fg-menue.ist-offen .fg-menue__dimmer,
+  .fg-menue__tafel,
+  .fg-menue.ist-offen .fg-menue__tafel { transition: none; }
+  .fg-menue.ist-offen .fg-menue__stufe { animation: none; }
   .fg-kopf__weg,
   .fg-kopf__weg::before,
-  .fg-kopf__burger-linie,
+  .fg-kopf__burger,
+  .fg-menue__weg,
+  .fg-menue__link,
   .fg-pille,
+  .fg-mini,
   .fg-mini::before { transition: none; }
+  .fg-kopf__burger:active,
+  .fg-menue__weg:active,
+  .fg-menue__link:active,
+  .fg-menue__weg.ist-gedrueckt,
+  .fg-menue__link.ist-gedrueckt { transform: none; }
   .fg-mini__teil,
   .fg-szene__folge { animation: none !important; transition: none !important; }
 }

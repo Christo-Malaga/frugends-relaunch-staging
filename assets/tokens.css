@@ -92,8 +92,8 @@
   --shadow-cyan: 0 0 24px var(--cyan-24);
 
   /* ─── Layout tokens ─── */
-  --chrome-height-desktop: 64px;
-  --chrome-height-mobile:  56px;
+  --chrome-height-desktop: 72px;   /* Atlas 9 (Chris 2026-10-22): Kopf etwas höher, Knöpfe gleich groß (64 → 72) */
+  --chrome-height-mobile:  64px;   /* Atlas 9 (Chris 2026-10-22): 56 → 64, Luft über und unter den Knöpfen */
   --container-max:         1200px;
   --container-pad:         clamp(16px, 4vw, 40px);
 

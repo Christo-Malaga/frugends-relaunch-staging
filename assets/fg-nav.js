@@ -4,8 +4,10 @@
 
    1  (entfallen) Lesefortschritt: Runde 3 „nav2“ (Atlas 7, N1-NAV-SOTA.md) — die
       aktive Seite zeigt einen ruhenden Strich, kein Fortschritt mehr.
-   2  Menü-Tafel (Handy): modaler Dialog (Schließen-Knopf im Dialog), ESC und Zurück
-      schließen, Fokusfalle, Seite dahinter steht still.
+   2  Menü-Tafel (< 1000 px, Atlas 9 „nav3“): wächst unter dem Kopf heraus, der
+      Menü-Knopf morpht zum X und schließt auch (aria-expanded). Rest der Seite
+      inert, Fokusfalle über Kopf + Tafel, ESC, Zurück und Tipp auf den Dimmer
+      schließen, Seite dahinter steht still. Haptik: kurz beim Öffnen und Tipp.
    3  „App laden“ (Kopf und Menü-Tafel): iPhone/iPad → App Store, Android → Google Play (je mit
       Kennung), sonst das App-Fenster #app-modal (main.js initAppModal,
       window.FrugendsAppModal). Gerätelogik wie frontend/hero/Aufrufe.jsx.
@@ -66,30 +68,71 @@
     function tipp(e) {
       if (e.pointerType === 'mouse') return;
       // Haptik beim Antippen (Android/Chrome; iOS-Safari hat keine Vibrations-Schnittstelle)
-      if (!reduziert && navigator.vibrate) { try { navigator.vibrate(8); } catch (_) { /* nicht erlaubt */ } }
+      haptik(8);
       spielen(e.currentTarget);
     }
     for (var i = 0; i < alle.length; i++) alle[i].addEventListener('pointerdown', tipp);
   }
 
   /* ─── 2 Menü-Tafel ─── */
+  // Für initApp: schließt die Tafel, bevor das App-Fenster aufgeht (gesetzt von initMenue)
+  var menueZu = null;
+
+  // Haptik: kurz, nur wo der Browser vibrieren kann (Android/Chrome; iOS-Safari hat keine Schnittstelle)
+  function haptik(ms) {
+    if (reduziert || !navigator.vibrate) return;
+    try { navigator.vibrate(ms); } catch (_) { /* nicht erlaubt */ }
+  }
+
   function initMenue() {
     var knopf = document.querySelector('[data-fg-burger]');
     var tafel = document.getElementById('fg-menue');
-    if (!knopf || !tafel) return;
-    // Schließen-Knopf IM Dialog (aria-modal: Elemente außerhalb sind für Screenreader gesperrt)
-    var zu = tafel.querySelector('[data-fg-menue-zu]');
+    var kopf = document.querySelector('[data-fg-kopf]');
+    if (!knopf || !tafel || !kopf) return;
+    var dimmer = tafel.querySelector('[data-fg-menue-dimmer]');
 
     var offen = false;
     var verlauf = false;      // liegt ein eigener Eintrag im Verlauf (für „Zurück“)?
     var ziel = null;          // Link, zu dem nach dem Schließen navigiert wird
     var timer = 0;
+    var gesperrt = [];        // Geschwister, die solange inert sind
     var breit = window.matchMedia('(min-width: 1000px)');
 
+    // iOS-Safari zeigt :active (Druck-Rückmeldung der Zeilen) nur mit einem touchstart-Lauscher
+    document.addEventListener('touchstart', function () {}, { passive: true });
+    // Druck-Rückmeldung sicher und sofort (nicht jeder Browser setzt :active beim Antippen): .ist-gedrueckt mit
+    // mindestens 120 ms Sichtbarkeit, damit auch ein kurzer Tipp das Nachgeben zeigt. Wischen (pointercancel) löst.
+    var gedrueckt = null;
+    var seit = 0;
+    function loesen() {
+      var el = gedrueckt;
+      if (!el) return;
+      gedrueckt = null;
+      window.setTimeout(function () { el.classList.remove('ist-gedrueckt'); }, Math.max(0, 120 - (Date.now() - seit)));
+    }
+    tafel.addEventListener('pointerdown', function (e) {
+      var el = e.target.closest ? e.target.closest('.fg-menue__weg, .fg-menue__link') : null;
+      if (!el || e.button > 0) return;
+      loesen();
+      gedrueckt = el;
+      seit = Date.now();
+      el.classList.add('ist-gedrueckt');
+    });
+    document.addEventListener('pointerup', loesen, true);
+    document.addEventListener('pointercancel', loesen, true);
+    tafel.addEventListener('pointerleave', loesen);
+
+    function sichtbar(el) {
+      if (!el.getClientRects().length) return false;
+      return window.getComputedStyle(el).visibility !== 'hidden';
+    }
+    // Fokusfalle über Kopf + Tafel (der Menü-Knopf im Kopf ist auch der Schließen-Knopf)
     function fokussierbar() {
       var liste = [];
-      var el = tafel.querySelectorAll('a[href], button:not([disabled])');
-      for (var i = 0; i < el.length; i++) liste.push(el[i]);
+      var el = kopf.querySelectorAll('a[href], button:not([disabled])');
+      for (var i = 0; i < el.length; i++) if (sichtbar(el[i])) liste.push(el[i]);
+      el = tafel.querySelectorAll('a[href], button:not([disabled])');
+      for (var j = 0; j < el.length; j++) if (sichtbar(el[j])) liste.push(el[j]);
       return liste;
     }
 
@@ -101,12 +144,30 @@
       }
       if (e.key !== 'Tab') return;
       var f = fokussierbar();
+      if (!f.length) return;
       var erstes = f[0];
       var letztes = f[f.length - 1];
       var aktiv = document.activeElement;
-      if (f.indexOf(aktiv) === -1) { e.preventDefault(); erstes.focus(); return; }
+      if (f.indexOf(aktiv) === -1) { e.preventDefault(); (e.shiftKey ? letztes : erstes).focus(); return; }
       if (e.shiftKey && aktiv === erstes) { e.preventDefault(); letztes.focus(); }
       else if (!e.shiftKey && aktiv === letztes) { e.preventDefault(); erstes.focus(); }
+    }
+
+    // Alles außer Kopf und Tafel ist solange inert (nicht fokussierbar, für Screenreader stumm)
+    function sperren(an) {
+      var i;
+      if (!an) {
+        for (i = 0; i < gesperrt.length; i++) gesperrt[i].inert = false;
+        gesperrt = [];
+        return;
+      }
+      var kinder = document.body.children;
+      for (i = 0; i < kinder.length; i++) {
+        var k = kinder[i];
+        if (k.contains(knopf) || k.contains(tafel) || k.inert || /^(SCRIPT|STYLE|LINK|NOSCRIPT|TEMPLATE)$/.test(k.tagName)) continue;
+        k.inert = true;
+        gesperrt.push(k);
+      }
     }
 
     // Bilder der Menü-Visuals vorladen, sobald sich der Finger dem Menü-Knopf nähert (sie sind lazy)
@@ -124,24 +185,25 @@
       offen = true;
       window.clearTimeout(timer);
       tafel.hidden = false;
-      // erst sichtbar, dann im nächsten Bild der Endzustand → die Tafel fährt ein
+      doc.classList.add('fg-menue-sichtbar');
+      // erst sichtbar (zu), dann im nächsten Bild der Endzustand → die Tafel wächst unter dem Kopf heraus
       void tafel.offsetHeight;
       tafel.classList.add('ist-offen');
       doc.classList.add('fg-menue-offen');
+      knopf.classList.add('ist-benutzt');
       knopf.setAttribute('aria-expanded', 'true');
       knopf.setAttribute('aria-label', 'Menü schließen');
+      sperren(true);
       document.addEventListener('keydown', tasten, true);
-      // Fokus in den Dialog (der Menü-Knopf im Kopf tritt zurück, an seiner Stelle steht der Schließen-Knopf)
-      if (zu) zu.focus({ preventScroll: true });
-      // Antwort aufs Öffnen: die drei Mini-Visuals spielen kurz nacheinander, wenn die Tafel fast steht
-      reihe(minis, 280);
+      haptik(10);
+      // Antwort aufs Öffnen: die drei Mini-Visuals spielen kurz nacheinander, wenn ihre Zeile ankommt
+      reihe(minis, 240);
       try {
         history.pushState({ fgMenue: true }, '');
         verlauf = true;
       } catch (err) { verlauf = false; }
     }
 
-    // ausVerlauf: true, wenn der Eintrag noch im Verlauf liegt und zurückgenommen werden soll
     function schliessen(fokusZurueck) {
       if (!offen) return;
       offen = false;
@@ -149,21 +211,32 @@
       doc.classList.remove('fg-menue-offen');
       knopf.setAttribute('aria-expanded', 'false');
       knopf.setAttribute('aria-label', 'Menü öffnen');
+      sperren(false);
       document.removeEventListener('keydown', tasten, true);
       window.clearTimeout(timer);
-      timer = window.setTimeout(function () { if (!offen) tafel.hidden = true; }, reduziert ? 0 : 200);
+      // Kopf bleibt über der Tafel, bis sie ganz zu ist (Exit 180 ms)
+      timer = window.setTimeout(function () {
+        if (offen) return;
+        tafel.hidden = true;
+        doc.classList.remove('fg-menue-sichtbar');
+      }, reduziert ? 0 : 200);
       if (fokusZurueck) knopf.focus();
       if (verlauf) {
         verlauf = false;
         try { history.back(); } catch (err) { /* egal */ }
       }
     }
+    menueZu = function () { schliessen(false); };
 
     knopf.addEventListener('click', function () {
       if (offen) schliessen(false);
       else oeffnen();
     });
-    if (zu) zu.addEventListener('click', function () { schliessen(true); });
+    if (dimmer) {
+      // Tipp außerhalb der Tafel schließt; Wischen auf dem Dimmer bewegt die Seite nicht
+      dimmer.addEventListener('click', function () { schliessen(true); });
+      dimmer.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
+    }
 
     // Zurück (Android-Taste, Wischgeste): schließt die Tafel statt die Seite zu verlassen
     window.addEventListener('popstate', function () {
@@ -171,21 +244,25 @@
       if (offen) { verlauf = false; schliessen(false); }
     });
 
-    // Link in der Tafel: erst den eigenen Verlaufseintrag zurücknehmen, dann gehen.
+    // Link in Tafel oder Kopf, solange offen: erst den eigenen Verlaufseintrag zurücknehmen, dann gehen.
     // Sonst bräuchte „Zurück“ auf der Zielseite zwei Schritte.
-    tafel.addEventListener('click', function (e) {
+    function linkWeg(e) {
+      if (!offen) return;
       var a = e.target.closest ? e.target.closest('a[href]') : null;
       if (!a) return;
       if (a.target === '_blank' || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
         if (a.target === '_blank') schliessen(false);
         return;
       }
+      if (!a.hasAttribute('data-fg-mini')) haptik(8); // Wege vibrieren schon beim Antippen (initMini)
       if (!verlauf) { schliessen(false); return; }
       e.preventDefault();
       ziel = a.href;
       schliessen(false); // ruft history.back() → popstate → location.href = ziel
       window.setTimeout(function () { if (ziel) { var z = ziel; ziel = null; location.href = z; } }, 400);
-    });
+    }
+    tafel.addEventListener('click', linkWeg);
+    kopf.addEventListener('click', linkWeg);
 
     function aufBreite() { if (breit.matches) { verlauf = false; schliessen(false); } }
     if (breit.addEventListener) breit.addEventListener('change', aufBreite);
@@ -217,13 +294,10 @@
           if (!window.FrugendsAppModal || !document.getElementById('app-modal')) return; // ohne Fenster: Link folgen
           e.preventDefault();
           melden(platz, 'auswahl');
-          // Knopf in der Menü-Tafel (schmales Desktop-Fenster): erst die Tafel schließen, der Fokus kehrt danach
-          // zum Menü-Knopf zurück (der Knopf in der Tafel ist dann verborgen)
+          // Menü offen (schmales Desktop-Fenster): erst die Tafel schließen. Kam der Tipp aus der Tafel, kehrt der
+          // Fokus danach zum Menü-Knopf zurück (der Knopf in der Tafel ist dann verborgen).
           var tafel = el.closest ? el.closest('[data-fg-menue]') : null;
-          if (tafel) {
-            var zu = tafel.querySelector('[data-fg-menue-zu]');
-            if (zu) zu.click();
-          }
+          if (menueZu && doc.classList.contains('fg-menue-offen')) menueZu();
           window.FrugendsAppModal.open(tafel ? (document.querySelector('[data-fg-burger]') || el) : el);
         });
       })(knoepfe[i]);
